@@ -19,7 +19,7 @@ Route::get('/', function () {
 
 
 
-Route::resource("supervisores","SupervisoresController");
+//Route::resource("supervisores","SupervisoresController");
 
 Auth::routes();
 
@@ -58,9 +58,31 @@ Route::middleware(["auth"])->group(function(){
 			->middleware("permission:roles.destroy");
 
 
+		//Vendedores	
+	Route::get("vendedores","VendedoresController@index")->name("vendedores.index")
+			->middleware("permission:vendedores.index");
+
+	Route::get("vendedores/create","VendedoresController@create")->name("vendedores.create")
+			->middleware("permission:vendedores.create");
+
+	Route::post("vendedores","VendedoresController@store")->name("vendedores.store")
+			->middleware("permission:vendedores.create");
+
+	Route::get("vendedores/{vendedor}","VendedoresController@show")	//->where("vendedor","[0-9]+")
+	->name("vendedores.show")
+			->middleware("permission:vendedores.show");
+
+	Route::get("vendedores/edit/{vendedor}","VendedoresController@edit")->name("vendedores.edit")
+			->middleware("permission:vendedores.edit");
+
+	Route::put("vendedores/{vendedor}","VendedoresController@update")->name("vendedores.update")
+			->middleware("permission:vendedores.edit");
+			
+	Route::delete("vendedores/{vendedor}","VendedoresController@destroy")->name("vendedores.destroy");
+			
 
 	//Vendedores necesario auth
-	Route::resource("vendedores","VendedoresController");
+	//Route::resource("vendedores","VendedoresController");
 	//Supervisores necesario auth
 	Route::resource("supervisores","SupervisoresController");
 });

@@ -9,11 +9,11 @@ $factory->define(App\Vendedor::class, function (Faker $faker) {
     $random=mt_rand(10000000,99999999);
     //$random=random_int(10000000,99999999);
     return [
-        "nombre" => $faker->firstName,
+        "name" => $faker->firstName,
         //"apellidos" => $faker->lastName,
-        "apellidos" => $faker->name,
-        "telefono" => $random,
-        "correo" =>$faker->unique()->safeEmail,
+        "surname" => $faker->name,
+        "phone" => $random,
+        "email" =>$faker->unique()->safeEmail,
         //id_supervisor requiere un id de supervisor así que
         //creamos el factory de supervisor y añadimos el id
         "id_supervisor" => function(){

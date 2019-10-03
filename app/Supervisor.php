@@ -9,7 +9,7 @@ class Supervisor extends Model
 	protected $table = "supervisores";
 
 	protected $fillable=[
-		"nombre","apellidos","telefono","correo"
+		"name","surname","phone","email"
 	];
 	protected $hidden=[
 

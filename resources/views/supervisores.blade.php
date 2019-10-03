@@ -14,10 +14,10 @@
 			</thead>
 		@foreach($supervisor as $sup)
 			<tr>
-				<td>{{ $sup->nombre }}</td>
-				<td>{{ $sup->apellidos }}</td>
-				<td>{{ $sup->telefono }}</td>
-				<td>{{ $sup->correo }}</td>
+				<td>{{ $sup->name }}</td>
+				<td>{{ $sup->surname }}</td>
+				<td>{{ $sup->phone }}</td>
+				<td>{{ $sup->email }}</td>
 				<td class="text-center">
 					<a href="{{ route('supervisores.edit','2') }}" title="Editar" class="btn btn-sm btn-success">
 						Editar

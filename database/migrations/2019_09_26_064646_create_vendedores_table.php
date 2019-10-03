@@ -15,10 +15,10 @@ class CreateVendedoresTable extends Migration
     {
         Schema::create('vendedores', function (Blueprint $table) {
             $table->increments('id');
-            $table->string("nombre");
-            $table->string("apellidos");
-            $table->string("telefono",50);
-            $table->string("correo");
+            $table->string("name");
+            $table->string("surname");
+            $table->string("phone",50);
+            $table->string("email")->unique();
             $table->integer("id_supervisor")->unsigned();
             $table->timestamps();
 

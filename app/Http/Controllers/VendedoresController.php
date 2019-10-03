@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Vendedor;
+use App\Supervisor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\VendedorStoreRequest;
+use App\Http\Requests\VendedorUpdateRequest;
+
 
 class VendedoresController extends Controller
 {
@@ -15,7 +20,7 @@ class VendedoresController extends Controller
     public function index()
     {
         $vendedor=DB::table("vendedores")->paginate(10);
-        return view("vendedores",compact("vendedor"));
+        return view("vendedores.index",compact("vendedor"));
     }
 
     /**
@@ -25,7 +30,9 @@ class VendedoresController extends Controller
      */
     public function create()
     {
-        //
+        //pasamos supervisor para mostrar la lista de supervisores
+        $supervisor=Supervisor::all();
+        return view("vendedores.create",compact("supervisor"));
     }
 
     /**
@@ -34,9 +41,13 @@ class VendedoresController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
+    public function store(VendedorStoreRequest $request)
+    {   
+
+        $vendedor=Vendedor::create($request->all());
+        //dd($vendedor->id_supervisor);
+        //return redirect()->route("vendedores.index");
+        return redirect()->route("vendedores.index");
     }
 
     /**
@@ -45,9 +56,9 @@ class VendedoresController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Vendedor $vendedor)
     {
-        //
+        return view("vendedores.show",compact("vendedor"));
     }
 
     /**
@@ -56,9 +67,11 @@ class VendedoresController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Vendedor $vendedor)
     {
-        //
+
+        $supervisor=Supervisor::all();
+        return view("vendedores.edit",compact("vendedor","supervisor"));
     }
 
     /**
@@ -68,9 +81,11 @@ class VendedoresController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(VendedorUpdateRequest $request, Vendedor $vendedor)
     {
-        //
+        //dd("sdfsdfa");
+        $vendedor->update($request->all());
+        return redirect()->route("vendedores.edit",$vendedor->id);
     }
 
     /**
@@ -79,8 +94,9 @@ class VendedoresController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Vendedor $vendedor)
     {
-        //
+        $vendedor->delete();
+        return back();
     }
 }

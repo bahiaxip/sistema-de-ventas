@@ -9,7 +9,7 @@ class Vendedor extends Model
 	protected $table="vendedores";
 
     protected $fillable=[
-    	"nombre","apellidos","correo","telefono","id_supervisor"
+    	"name","surname","email","phone","id_supervisor"
     ];
     protected $hidden=[
 

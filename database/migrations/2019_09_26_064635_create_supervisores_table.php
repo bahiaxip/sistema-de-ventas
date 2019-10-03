@@ -15,10 +15,10 @@ class CreateSupervisoresTable extends Migration
     {
         Schema::create('supervisores', function (Blueprint $table) {
             $table->increments('id');
-            $table->string("nombre");
-            $table->string("apellidos");            
-            $table->string("telefono");
-            $table->string("correo");
+            $table->string("name");
+            $table->string("surname");            
+            $table->string("phone");
+            $table->string("email");
             $table->timestamps();
         });
     }
