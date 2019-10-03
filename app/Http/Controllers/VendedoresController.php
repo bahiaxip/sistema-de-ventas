@@ -17,10 +17,20 @@ class VendedoresController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $vendedor=DB::table("vendedores")->paginate(10);
-        return view("vendedores.index",compact("vendedor"));
+        $supervisor=Supervisor::all();
+        if($request->get("value")){
+            
+            $val=$request->get("value");
+            $vendedor=Vendedor::where("id_supervisor",$val)->paginate(10);
+            
+            //$vendedor=DB::table("vendedores")->where("id_supervisor",$val)->get();
+        }else{
+            $vendedor=DB::table("vendedores")->paginate(10);
+            $val=null;
+        }
+        return view("vendedores.index",compact("vendedor","supervisor","val"));
     }
 
     /**

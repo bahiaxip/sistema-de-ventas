@@ -79,10 +79,32 @@ Route::middleware(["auth"])->group(function(){
 			->middleware("permission:vendedores.edit");
 			
 	Route::delete("vendedores/{vendedor}","VendedoresController@destroy")->name("vendedores.destroy");
+
+		//Supervisores	
+	Route::get("supervisores","SupervisoresController@index")->name("supervisores.index")
+			->middleware("permission:supervisores.index");
+
+	Route::get("supervisores/create","SupervisoresController@create")->name("supervisores.create")
+			->middleware("permission:supervisores.create");
+
+	Route::post("supervisores","SupervisoresController@store")->name("supervisores.store")
+			->middleware("permission:supervisores.create");
+
+	Route::get("supervisores/{supervisor}","SupervisoresController@show")	//->where("vendedor","[0-9]+")
+	->name("supervisores.show")
+			->middleware("permission:supervisores.show");
+
+	Route::get("supervisores/edit/{supervisor}","SupervisoresController@edit")->name("supervisores.edit")
+			->middleware("permission:supervisores.edit");
+
+	Route::put("supervisores/{supervisor}","SupervisoresController@update")->name("supervisores.update")
+			->middleware("permission:supervisores.edit");
+			
+	Route::delete("supervisores/{supervisor}","SupervisoresController@destroy")->name("supervisores.destroy");
 			
 
 	//Vendedores necesario auth
 	//Route::resource("vendedores","VendedoresController");
 	//Supervisores necesario auth
-	Route::resource("supervisores","SupervisoresController");
+	//Route::resource("supervisores","SupervisoresController");
 });

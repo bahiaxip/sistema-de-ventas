@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Supervisor;
+use Illuminate\Http\Request;
+
 
 class SupervisoresController extends Controller
 {
@@ -15,7 +16,7 @@ class SupervisoresController extends Controller
     public function index()
     {
         $supervisor=Supervisor::orderBy("id","DESC")->paginate(10);
-        return view("supervisores",compact("supervisor"));
+        return view("supervisores.index",compact("supervisor"));
     }
 
     /**
@@ -25,7 +26,7 @@ class SupervisoresController extends Controller
      */
     public function create()
     {
-        //
+        return view("supervisores.create");        
     }
 
     /**
@@ -36,7 +37,8 @@ class SupervisoresController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $supervisor=Supervisor::create($request->all());
+        return redirect()->route("supervisores.index");
     }
 
     /**
@@ -45,9 +47,9 @@ class SupervisoresController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Supervisor $supervisor)
     {
-        //
+        return view ("supervisores.show",compact("supervisor"));
     }
 
     /**
@@ -56,9 +58,9 @@ class SupervisoresController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Supervisor $supervisor)
     {
-        //
+        return view("supervisores.edit",compact("supervisor"));        
     }
 
     /**
@@ -68,9 +70,10 @@ class SupervisoresController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Supervisor $supervisor)
     {
-        //
+        $supervisor->update($request->all());
+        return redirect()->route("supervisores.edit",$supervisor->id);
     }
 
     /**
@@ -79,8 +82,9 @@ class SupervisoresController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Supervisor $supervisor)
     {
-        //
+        $supervisor->delete();
+        return back();
     }
 }
