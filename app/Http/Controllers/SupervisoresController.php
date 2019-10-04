@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Supervisor;
 use Illuminate\Http\Request;
-
+use App\Http\Requests\SupervisorStoreRequest;
+use App\Http\Requests\SupervisorUpdateRequest;
 
 class SupervisoresController extends Controller
 {
@@ -35,7 +36,7 @@ class SupervisoresController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(SupervisorStoreRequest $request)
     {
         $supervisor=Supervisor::create($request->all());
         return redirect()->route("supervisores.index");
@@ -70,7 +71,7 @@ class SupervisoresController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Supervisor $supervisor)
+    public function update(SupervisorUpdateRequest $request, Supervisor $supervisor)
     {
         $supervisor->update($request->all());
         return redirect()->route("supervisores.edit",$supervisor->id);
