@@ -17,7 +17,7 @@
 <div class="form-group">
 	<!--{{ Form::select("id_supervisor",["id_supervisor"=>"manolo"],null,["placeholder"=>"Selecione..."]) }}-->
 	{{ Form::select("id_supervisor",$supervisor->pluck("name","id"),null,["placeholder"=>"Selecione..."]) }}
-</div>	
+</div>
 <div class="form-group">
 	{{ Form::submit("Guardar",["class"=>"btn btn-primary"]) }}
 </div>

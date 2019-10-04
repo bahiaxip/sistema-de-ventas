@@ -14,5 +14,10 @@ class Vendedor extends Model
     protected $hidden=[
 
     ];
+    public function supervisor(){
+    	return $this->belongsTo(Supervisor::class,"id_supervisor");
+    }
+
+
 
 }

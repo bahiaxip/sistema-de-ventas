@@ -11,6 +11,7 @@
 				<p><strong>Apellidos:</strong> &nbsp;{{ $vendedor->surname }}</p>
 				<p><strong>E-Mail:</strong> &nbsp;{{ $vendedor->email }}</p>
 				<p><strong>Teléfono:</strong> &nbsp;{{ $vendedor->phone }}</p>
+				<p><strong>Supervisor:</strong> &nbsp;{{$vendedor->supervisor->name}}</p>
 			</div>
 		</div>
 	</div>

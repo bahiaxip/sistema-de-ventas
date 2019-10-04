@@ -52,22 +52,21 @@
 	@section("scripts")
 	<script>
 
-		/*$(document).ready(function(){
-			let href=window.location.href;			
-			let final=href.lastIndexOf("?value");
-			if(final!=-1){
-				let ultimo=href.charAt(final+7);
-				$("#select_supervisor").val(ultimo);
-				console.log(ultimo);
-			}
-		});*/
+		//método para select de vendedores/index
+		//detecta un cambio en el select y le elimina el parámetro si existe
+		//para volver a añadir otro parámetro y que no se concantenen varios parámetros en la ruta
 	$("#select_supervisor").change(function(){
+		//id es opción elegida del select
 		let id=$('#select_supervisor').val();
+		//ruta actual
 		let href=window.location.href;
-		console.log(id);
-		console.log(href);		
+		//console.log(id);
+		//console.log(href);
+		//comprobamos si se añadió parámetro 
 		let final=href.lastIndexOf("?value");
 		let ruta;
+		//si existe el ?value,es decir,es distinto a -1 se extrae la ruta
+		//si es igual a -1, es decir, no existe parámetro se  mantiene la ruta
 		if(final!=-1){
 			console.log(href.lastIndexOf("?value"));
 			ruta=href.substr(0,final);
