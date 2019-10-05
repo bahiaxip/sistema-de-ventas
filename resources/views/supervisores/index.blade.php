@@ -18,7 +18,11 @@
 				<th class="text-center">Editar</th>
 				<th class="text-center">Eliminar</th>
 			</thead>
-
+			@if($supervisor->count()==0)
+				<tr>
+					<td class="text-center" colspan="5"><strong>No existen resultados</strong></td>
+				</tr>
+			@endif
 			@foreach($supervisor as $sup)
 			<tr class="">
 				<td>{{ $sup->name }}</td>

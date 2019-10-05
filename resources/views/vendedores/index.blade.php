@@ -23,7 +23,11 @@
 				<th class="text-center">Editar</th>
 				<th class="text-center">Eliminar</th>
 			</thead>
-
+			@if($vendedor->count()==0)
+				<tr>
+					<td class="text-center" colspan="5"><strong>No existen resultados</strong></td>
+				</tr>
+			@endif
 			@foreach($vendedor as $ven)
 			<tr class="">
 				<td>{{ $ven->name }}</td>

@@ -18,7 +18,11 @@
 				<th class="text-center">Editar</th>
 				<th class="text-center">Eliminar</th>
 			</thead>
-
+			@if($clientes->count()==0)
+				<tr>
+					<td class="text-center" colspan="5"><strong>No existen resultados</strong></td>
+				</tr>
+			@endif
 			@foreach($clientes as $cliente)
 			<tr class="">
 				<td>{{ $cliente->name }}</td>
