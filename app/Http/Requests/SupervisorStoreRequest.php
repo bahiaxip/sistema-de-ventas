@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+use Illuminate\Support\Facades\Auth;
+
 class SupervisorStoreRequest extends FormRequest
 {
     /**
@@ -13,7 +15,8 @@ class SupervisorStoreRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        //return true;
+        return Auth::check();
     }
 
     /**
@@ -27,7 +30,7 @@ class SupervisorStoreRequest extends FormRequest
             "name"=>"required",
             "surname"=>"required",
             "email" => "required|email|unique:supervisores,email",
-            "phone" => "required|digits_between:8,9"
+            "phone" => "required|digits_between:8,13"
         ];
     }
 }

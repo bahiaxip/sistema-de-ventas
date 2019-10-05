@@ -27,7 +27,7 @@ class VendedorUpdateRequest extends FormRequest
             "name"=> "required",
             "surname"=> "required",
             "email"=> "required|email|unique:vendedores,email,".$this->vendedor->id,
-            "phone"=> "required|digits_between:8,9",
+            "phone"=> "required|digits_between:8,13",
             //"phone"=> "required|digits:9",
             "id_supervisor"=>"required|integer",
 

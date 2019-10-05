@@ -15,19 +15,19 @@ class CreateClientesTable extends Migration
     {
         Schema::create('clientes', function (Blueprint $table) {
             $table->increments('id');
-            $table->string("nif");
-            $table->string("nombre");
-            $table->string("apellidos");
-            $table->string("direccion");
-            $table->string("provincia");
-            $table->string("pais");
-            $table->integer("c_postal");
-            $table->string("logo");
-            $table->string("correo");
-            $table->string("telefono");
-            $table->string("fax");
-            $table->string("movil");
-            $table->string("web");
+            $table->string("nif")->unique();
+            $table->string("name");
+            $table->string("surname");
+            $table->string("address");
+            $table->string("province")->nullable();
+            $table->string("country");
+            $table->string("postal_code");
+            $table->string("logo")->nullable();
+            $table->string("email")->nullable();
+            $table->string("phone");
+            $table->string("fax")->nullable();
+            $table->string("cellphone")->nullable();
+            $table->string("web")->nullable();
             $table->timestamps();
         });
     }
