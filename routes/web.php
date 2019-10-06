@@ -104,6 +104,7 @@ Route::middleware(["auth"])->group(function(){
 			
 	Route::resource("clientes","ClienteController");
 	Route::resource("destinatarios","DestinatariosController");
+	Route::resource("productos","ProductosController");
 	//Vendedores necesario auth
 	//Route::resource("vendedores","VendedoresController");
 	//Supervisores necesario auth

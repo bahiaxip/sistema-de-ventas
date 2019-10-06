@@ -89,7 +89,7 @@
 									<a href="{{ route('vendedores.index') }}" class="nav-link text-white">Vendedores</a>
 									<a href="{{route('clientes.index')}}" class="nav-link text-white">Clientes</a>
 									<a href="{{route('destinatarios.index')}}" class="nav-link text-white">Destinatarios</a>
-									<a href="#" class="nav-link text-white">Productos</a>
+									<a href="{{route('productos.index')}}" class="nav-link text-white">Productos</a>
 									<a href="#" class="nav-link text-white">Ventas</a>
 									<a href="#" class="nav-link text-white">Facturas</a>
 								</nav>								
