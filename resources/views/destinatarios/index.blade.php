@@ -5,15 +5,10 @@
 	<div class="col mt-3">
 		<div class="card pl-2 pr-2 pt-2 border-0">
 			<div class="card-title">
-				<h5 class="float-left">Vendedores</h5>
-				<a href="{{route('vendedores.create') }}" class="btn btn-sm btn-primary float-right">Crear</a>
+				<h5 class="float-left">Destinatarios</h5>
+				<a href="{{route('destinatarios.create') }}" class="btn btn-sm btn-primary float-right">Crear</a>
 			</div>
-		</div>
-		<div class="form-group">
-			{{ Form::label("supervisor","Supervisor") }}
-			{{ Form::select("supervisor",$supervisor->pluck("name","id"),$val,["id"=>"select_supervisor","placeholder"=>"Seleccione..."] ) }}
-			
-		</div>
+		</div>		
 
 		<table class="table table-bordered table-hover">
 			<thead class="thead-dark">
@@ -23,24 +18,24 @@
 				<th class="text-center">Editar</th>
 				<th class="text-center">Eliminar</th>
 			</thead>
-			@if($vendedor->count()==0)
+			@if($destinatarios->count()==0)
 				<tr>
 					<td class="text-center" colspan="5"><strong>No existen resultados</strong></td>
 				</tr>
 			@endif
-			@foreach($vendedor as $ven)
+			@foreach($destinatarios as $dest)
 			<tr class="">
-				<td>{{ $ven->name }}</td>
-				<td>{{ $ven->surname }}</td>
+				<td>{{ $dest->name }}</td>
+				<td>{{ $dest->surname }}</td>
 				
 				<td class="text-center">
-					<a href="{{ route('vendedores.show',$ven->id) }}" title="Ver" class="btn btn-outline-info btn-sm">Ver</a>
+					<a href="{{ route('destinatarios.show',$dest->id) }}" title="Ver" class="btn btn-outline-info btn-sm">Ver</a>
 				</td>
 				<td class="text-center">
-					<a href="{{ route('vendedores.edit',$ven->id) }}" title="Editar" class="btn btn-outline-success btn-sm">Editar</a>
+					<a href="{{ route('destinatarios.edit',$dest->id) }}" title="Editar" class="btn btn-outline-success btn-sm">Editar</a>
 				</td>
 				<td class="text-center">
-					{{ Form::open(["route"=>["vendedores.destroy",$ven->id],"method"=>"DELETE"]) }}
+					{{ Form::open(["route"=>["destinatarios.destroy",$dest->id],"method"=>"DELETE"]) }}
 					<button title="Eliminar" class="btn btn-outline-danger btn-sm btn-delete-data" >Eliminar</button>
 					{{ Form::close() }}
 					
@@ -50,7 +45,7 @@
 						
 		</table>
 		<div class="">
-			{{ $vendedor->links("pagination::bootstrap-4") }}
+			{{ $destinatarios->links("pagination::bootstrap-4") }}
 		</div>
 	</div>
 	@section("scripts")

@@ -88,7 +88,7 @@
 									<a href="{{ route('supervisores.index') }}" class="nav-link text-white" >Supervisores</a>
 									<a href="{{ route('vendedores.index') }}" class="nav-link text-white">Vendedores</a>
 									<a href="{{route('clientes.index')}}" class="nav-link text-white">Clientes</a>
-									<a href="#" class="nav-link text-white">Destinatarios</a>
+									<a href="{{route('destinatarios.index')}}" class="nav-link text-white">Destinatarios</a>
 									<a href="#" class="nav-link text-white">Productos</a>
 									<a href="#" class="nav-link text-white">Ventas</a>
 									<a href="#" class="nav-link text-white">Facturas</a>
@@ -106,7 +106,11 @@
 			</div>
 
 			<script>
-				$(".provincia").hide();
+				
+				
+
+
+				//evento botón eliminar registro que muestra ventana confirmación 
 				$(".btn-delete-data").on("click",function(e) {
 					e.preventDefault();
 					var btn=$(this);
@@ -117,14 +121,14 @@
 						btn.parents("form").submit();	
 					})
 				});
-				$(".pais").on("change",function(){
-					if($("#provincia").val()=="España"){
-						$(".provincia").show();
-					}else{
-						$(".provincia").hide();
-					}
+				
 
-				});
+				
+
+				
+
+
+				
 				
 			</script>
 			@yield("scripts")

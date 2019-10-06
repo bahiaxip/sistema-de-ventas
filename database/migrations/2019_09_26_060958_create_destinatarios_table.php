@@ -16,16 +16,17 @@ class CreateDestinatariosTable extends Migration
         Schema::create('destinatarios', function (Blueprint $table)
         {
             $table->increments('id');
-            $table->string("nombre");
-            $table->string("apellidos");
-            $table->string("direccion");
-            $table->string("ciudad");
-            $table->string("pais");
-            $table->integer("c_postal");
-            $table->string("telefono");
-            $table->string("correo");
-            $table->string("fax");
-            $table->string("movil");
+            $table->string("name");
+            $table->string("surname");
+            $table->string("country");
+            $table->string("province")->nullable();
+            $table->string("city");
+            $table->string("address");
+            $table->string("postal_code");
+            $table->string("email")->nullable();
+            $table->string("phone");            
+            $table->string("fax")->nullable();
+            $table->string("cellphone")->nullable();
             $table->timestamps();
         });
     }

@@ -23,13 +23,16 @@ class ClienteController extends Controller
     protected $provincias;
 
     public function __construct(){
+        
         $this->paises=new Paises();
-        $this->pais=$this->paises->all;
+        $pais=$this->paises->all;
+        //al ser solo dos métodos es posible en lugar de instanciarlos 
+        //en el construct hacerlo desde cada método    
         //combinamos el array para el select country
-        $this->pais=array_combine($this->pais,$this->pais);
-        $this->provincias=$this->paises->provincias;
+        $this->pais=array_combine($pais,$pais);
+        $provincias=$this->paises->provincias;
         //combinamos el array para el select province
-        $this->provincias=array_combine($this->provincias,$this->provincias);
+        $this->provincias=array_combine($provincias,$provincias);
     }
     
     public function index()
@@ -103,14 +106,14 @@ class ClienteController extends Controller
             if(!is_dir($dir))
                 mkdir($dir);
 
-            //modificando el config/filesystem es necesario de las 2 formas siguientes tanto el $path como el save()
+            //modificando el config/filesystem es necesario de las 2 formas siguientes tanto para las opciones para el $path como para el save()
             //opcion1 para ruta($path)
             //$path = Storage::disk("public")->put("image/",$request->file("logo"));
             //opcion2 para ruta($path)            
             $path=$request->file("logo")->store($dir);
             //opcion1 para almacenar (save)
             $cliente->fill(["logo"=>$path])->save();
-            dd($cliente->logo);
+            
             //opcion2 para almacenar (save)
             //$cliente->logo=$path;
             //$cliente->save();

@@ -20,5 +20,6 @@ class DatabaseSeeder extends Seeder
         //de supervisor
         //$this->call(SupervisorSeeder::class);
         $this->call(VendedorSeeder::class);
+        $this->call(DestinatarioSeeder::class);
     }
 }

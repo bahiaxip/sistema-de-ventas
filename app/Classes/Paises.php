@@ -1,5 +1,6 @@
 <?php
 namespace App\Classes;
+
 class Paises{
 
 	//todos los países
@@ -11,6 +12,27 @@ class Paises{
 		//provincias españolas menos Ceuta y Melilla(no son provincias
 		// pero si ciudades autónomas)
 	public $provincias=array("Álava", "Albacete", "Alicante", "Almería", "Asturias", "Ávila", "Badajoz", "Barcelona", "Burgos", "Cáceres", "Cádiz", "Cantabria", "Castellón", "Ciudad Real", "Córdoba", "Cuenca", "Gerona", "Granada", "Guadalajara", "Guipúzcoa", "Huelva", "Huesca", "Islas Baleares", "Jaén", "La Coruña", "La Rioja", "Las Palmas", "León", "Lérida", "Lugo", "Madrid", "Málaga", "Murcia", "Navarra", "Orense", "Palencia", "Pontevedra", "Salamanca", "Santa Cruz de Tenerife", "Segovia", "Sevilla", "Soria", "Tarragona", "Teruel", "Toledo", "Valencia", "Valladolid", "Vizcaya", "Zamora", "Zaragoza");
+
+		//Array principal
+    /*
+    $andalucia = array(
+        //Arrays de cada provincia con sus tres pueblos
+        "Almería" => array ("Roquetas de Mar","Mojácar","Cabo de Gata"),
+        "Granada" => array ("Almuñécar","La Zubia","Salobreña"),
+        "Jaén" => array ("Úbeda","Baeza","Linares"),
+        "Córdoba" => array ("Pozoblanco","Lucena","Fernán-Núñez"),
+        "Sevilla" => array ("Osuna","La Roda de Andalucía","Mairena del Aljarafe"),
+        "Málaga" => array ("Torremolinos","Vélez-Málaga","Marbella"),
+        "Huelva" => array ("Río Tinto","Lepe","Isla Cristina"),
+        "Cádiz" => array ("El Puerto de Santa María","Chiclana de la Frontera","Algeciras"),
+        );
+    */
+    //Como es bidimensional, necesitamos dos foreach para mostrar
+    /*foreach ($andalucia as $comunidad => $provincia) {
+        foreach ($provincia as $capital => $pueblo) {
+            echo "El municipio de ".$pueblo." pertenece a la provincia de ".$comunidad."<br>";
+        }
+    }*/
 }
 
 ?>

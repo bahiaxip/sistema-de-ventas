@@ -16,7 +16,7 @@
 </div>
 <div class="form-group pais">
 	{{ Form::label("country","País") }}
-	{{ Form::select("country",$paises,null,["id"=>"provincia","placeholder"=> "Selecione...","class"=>"form-control"]) }}
+	{{ Form::select("country",$paises,null,["id"=>"pais","placeholder"=> "Selecione...","class"=>"form-control"]) }}
 </div>
 <div class="form-group provincia">
 	{{ Form::label("province","Provincia") }}
@@ -53,3 +53,17 @@
 <div class="form-group">
 	{{ Form::submit("Guardar",["class"=>"btn btn-primary"]) }}
 </div>
+@section("scripts")
+<script>
+	//añadimos el nombre del archivo al input file (personalizado de bootstrap)
+	//cuando se ha seleccionado un archivo 
+	$(".custom-file-input").on("change",function(){
+		//split divide el array por los caracteres \ (se escriben 2 pk el  //primero solo sirve para escapar)
+		//pop() elimina el último elemento del array original y devuelve el
+		//elemento eliminado si se almacena en una variable
+		var fileName=$(this).val().split("\\").pop(); 
+		//siblings apunta al hermano o a los hermanos del elemento
+		$(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+	});
+</script>
+@endsection

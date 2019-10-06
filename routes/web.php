@@ -103,6 +103,7 @@ Route::middleware(["auth"])->group(function(){
 	Route::delete("supervisores/{supervisor}","SupervisoresController@destroy")->name("supervisores.destroy");
 			
 	Route::resource("clientes","ClienteController");
+	Route::resource("destinatarios","DestinatariosController");
 	//Vendedores necesario auth
 	//Route::resource("vendedores","VendedoresController");
 	//Supervisores necesario auth
