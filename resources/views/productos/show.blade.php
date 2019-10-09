@@ -8,7 +8,8 @@
 			</div>
 			<div class="card-body offset-3">
 				<p><strong>Nombre:</strong> &nbsp;{{ $producto->name }}</p>
-				<p><strong>Modelo:</strong> &nbsp;{{ $producto->model }}</p>
+				<p><strong>Categoría:</strong>&nbsp; {{ $producto->category->name }}</p>
+				<p><strong>Modelo:</strong> &nbsp;{{ $producto->product_model }}</p>
 				<p><strong>Precio:</strong> &nbsp;{{ $producto->price }}</p>
 				<p><strong>Descripción:</strong> &nbsp;{{ $producto->description }}</p>
 				<p><strong>Stock:</strong> &nbsp;{{ $producto->stock }}</p>				

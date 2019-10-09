@@ -6,6 +6,7 @@
 			<title>Sistema de Gestión de Ventas</title>
 			<link href="{{ asset('/css/bootstrap.min.css') }}" type="text/css" rel="stylesheet" >
 			<link href="{{ asset('css/estilos.css') }}" rel="stylesheet" type="text/css">
+			<link href="{{ asset("css/select2.css") }}" rel="stylesheet">
 			<script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
 			<script src="{{ asset('js/popper.min.js') }}" type="text/javascript"></script>
 			<script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript"></script>
@@ -90,6 +91,7 @@
 									<a href="{{route('clientes.index')}}" class="nav-link text-white">Clientes</a>
 									<a href="{{route('destinatarios.index')}}" class="nav-link text-white">Destinatarios</a>
 									<a href="{{route('productos.index')}}" class="nav-link text-white">Productos</a>
+									<a href="{{route('categories.index')}}" class="nav-link text-white">Categorías</a>
 									<a href="#" class="nav-link text-white">Ventas</a>
 									<a href="#" class="nav-link text-white">Facturas</a>
 								</nav>								
@@ -131,6 +133,7 @@
 				
 				
 			</script>
+			<script src="{{ asset("js/select2.js") }}"></script>
 			@yield("scripts")
 
 

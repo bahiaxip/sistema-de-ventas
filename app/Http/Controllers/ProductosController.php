@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Producto;
+use App\Category;
 use Illuminate\Http\Request;
 
 class ProductosController extends Controller
@@ -25,7 +26,8 @@ class ProductosController extends Controller
      */
     public function create()
     {
-        return view("productos.create");
+        $category=Category::all()->pluck("name","id");
+        return view("productos.create",compact("category"));
     }
 
     /**
@@ -36,7 +38,19 @@ class ProductosController extends Controller
      */
     public function store(Request $request)
     {
-        $productos=Producto::create($request->all());
+        //Al añadir al campo category_id un select que puede
+        //crear categorías al no ser numérico da error
+        //por tanto este método no es posible
+        //$producto=Producto::create($request->all());
+
+        $producto= new Producto($request->all());
+        
+        $category=$request->get("category_id");
+        if(!is_numeric($category)){
+            $newCategory = Category::firstOrCreate(["name"=>ucwords($category)]);
+            $producto->category_id=$newCategory->id;
+        }
+        $producto->save();
         return redirect()->route("productos.index");
     }
 
@@ -59,7 +73,8 @@ class ProductosController extends Controller
      */
     public function edit(Producto $producto)
     {
-        return view("productos.edit",compact("producto"));
+        $category=Category::all()->pluck("name","id");
+        return view("productos.edit",compact("producto","category"));
     }
 
     /**
@@ -71,7 +86,26 @@ class ProductosController extends Controller
      */
     public function update(Request $request, Producto $producto)
     {
-        $producto->update($request->all());
+        //opcion para poder insertar una categoría nueva desde el select
+        $producto=Producto::where("id",$producto->id)->first();
+
+        $producto->name=$request->name;
+        //dd($producto->product_model);       
+        $producto->product_model=$request->product_model;
+        $producto->price=$request->price;
+        $producto->description=$request->description;
+        $producto->stock=$request->stock;
+        $category=$request->category_id;
+        if(!is_numeric($category)){
+            $newCategory=Category::firstOrCreate(["name"=>ucwords($category)]);
+            $producto->category_id=$newCategory->id;
+        }else{ $producto->category_id=$request->category_id;}
+
+        //dd("bien");
+        $producto->save();
+
+        //$producto->update($request->all());
+        //dd("se puede");
         return redirect()->route("productos.edit",$producto->id);
     }
 
