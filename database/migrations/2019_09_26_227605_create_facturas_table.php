@@ -14,14 +14,13 @@ class CreateFacturasTable extends Migration
     public function up()
     {
         Schema::create('facturas', function (Blueprint $table) {
-            $table->increments('id');
-            $table->date("fecha_emision");            
-            $table->integer("neto");
-            $table->integer("iva");
+            $table->increments('id');            
+            $table->integer("net");
+            $table->integer("vat");
             $table->integer("total");
-            $table->string("estado");
-            $table->string("orden_compra");
-            $table->string("guia_despacho");
+            $table->string("state");
+            $table->string("order_buy");
+            $table->string("office guide");
             $table->integer("venta_id")->unsigned();
             $table->timestamps();
 

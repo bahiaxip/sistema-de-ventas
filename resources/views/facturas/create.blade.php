@@ -1,9 +1,8 @@
 @extends("layout/layout")
 
 @section("content")
-
-<div class="col-auto col-lg-10">
-	@if(count($errors))
+	<div class="col col-lg-10">
+		@if(count($errors))
 		<div class="alert alert-success">
             <ul>
                 @foreach($errors->all() as $error)
@@ -11,11 +10,10 @@
                 @endforeach
             </ul>
         </div>
-    @endif
-
-	{{ Form::model($venta,["route"=>["ventas.update",$venta->id],"method"=> "PUT"]) }}
-	@include("ventas.form")
-	{{ Form::close() }}
-</div>
-
+        @endif
+		{{ Form::open(["route"=> "ventas.store","files"=>true])}}
+			@include("ventas.form")
+		{{ Form::close()}}
+	</div>
+	
 @endsection

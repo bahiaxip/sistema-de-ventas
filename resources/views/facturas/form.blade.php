@@ -22,21 +22,14 @@
 	</select>
 </div>
 <div class="form-group">
-	{{ Form::label("destinatario_id","Destinatario")}}
-	<select name="destinatario_id" class="form-control">
-		<?php
-		if(isset($venta)){
-		?>
-		<option value="{{$venta->destinatario->id}}">{{$venta->destinatario->surname}}, {{$venta->destinatario->name}}</option>
-		<?php
-		}else{
-		?>
-			<option value="0">Seleccione...</option>
-		<?php
-		}
-		?>
-		@foreach($destinatarios as $destinatario)
-		<option value="{{$destinatario->id}}">{{$destinatario->surname}}, {{$destinatario->name}}</option>
+	{{ Form::label("id_factura","Factura")}}
+	<select name="id_factura" class="form-control">
+		@php
+		
+		@endphp
+		<option value="0">Seleccione...</option>
+		@foreach($facturas as $factura)
+		<option value="{{$factura->id}}">{{$factura->id_destinatario_factura}}</option>
 		@endforeach
 	</select>
 </div>

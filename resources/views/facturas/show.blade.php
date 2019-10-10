@@ -11,17 +11,9 @@
 				<p><strong>Destinatario factura:</strong> &nbsp;{{ $venta->destinatario->surname}}, {{$venta->destinatario->name}}</p>
 				<p><strong>Vendedor:</strong> &nbsp;{{ $venta->vendedor->surname }}, {{$venta->vendedor->name}}</p>
 				<p><strong>Total:</strong> &nbsp;{{number_format($venta->total,0,",",".")}}</p>
-				<p><strong>Fecha:</strong> &nbsp;{{$venta->date}}</p>
-				<p><strong>Hora:</strong> &nbsp;{{$venta->time}}</p>
-				<p><strong>Facturas:</strong> &nbsp; 
-				<?php
-				if($facturas!=null){
-					echo "No existen facturas";
-				}else{
-					echo "Crear Factura";
-				}
-				?>
-				</p>
+				<p><strong>Fecha:</strong> &nbsp;{{$venta->fecha}}</p>
+				<p><strong>Hora:</strong> &nbsp;{{$venta->hora}}</p>
+				<p><strong>Facturas:</strong> &nbsp; </p>
 			</div>
 		</div>
 	</div>
