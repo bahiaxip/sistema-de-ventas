@@ -99,7 +99,8 @@ class ProductosController extends Controller
         if(!is_numeric($category)){
             $newCategory=Category::firstOrCreate(["name"=>ucwords($category)]);
             $producto->category_id=$newCategory->id;
-        }else{ $producto->category_id=$request->category_id;}
+        }else{             
+            $producto->category_id=$request->category_id;}
 
         //dd("bien");
         $producto->save();

@@ -15,18 +15,18 @@ class CreateFacturasTable extends Migration
     {
         Schema::create('facturas', function (Blueprint $table) {
             $table->increments('id');
-            $table->date("fecha_emision");
-            $table->integer("id_destinatario_factura")->unsigned();
+            $table->date("fecha_emision");            
             $table->integer("neto");
             $table->integer("iva");
             $table->integer("total");
             $table->string("estado");
             $table->string("orden_compra");
             $table->string("guia_despacho");
+            $table->integer("venta_id")->unsigned();
             $table->timestamps();
 
-            //Relaciones
-            $table->foreign("id_destinatario_factura")->references("id")->on("destinatarios")
+            //Relaciones            
+            $table->foreign("venta_id")->references("id")->on("ventas")
                 ->onDelete("cascade")
                 ->onUpdate("cascade");
         });

@@ -16,7 +16,7 @@ class CreateVentasTable extends Migration
         Schema::create('ventas', function (Blueprint $table) {
             $table->increments('id');
             $table->integer("id_cliente")->unsigned();
-            $table->integer("id_factura")->unsigned();
+            $table->integer("destinatario_id")->unsigned();
             $table->integer("id_vendedor")->unsigned();
             $table->integer("total");
             $table->date("fecha");
@@ -27,7 +27,7 @@ class CreateVentasTable extends Migration
             $table->foreign("id_cliente")->references("id")->on("clientes")
                 ->onDelete("cascade")
                 ->onUpdate("cascade");
-            $table->foreign("id_factura")->references("id")->on("facturas")
+            $table->foreign("destinatario_id")->references("id")->on("destinatarios")
                 ->onDelete("cascade")
                 ->onUpdate("cascade");
             $table->foreign("id_vendedor")->references("id")->on("vendedores")

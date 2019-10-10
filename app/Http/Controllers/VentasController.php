@@ -1,11 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Venta;
+use App\Cliente;
+use App\Vendedor;
 use Illuminate\Http\Request;
-use App\Category;
+use Illuminate\Support\Facades\DB;
 
-class CategoryController extends Controller
+class VentasController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,8 +16,10 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories=Category::paginate(10);
-        return view("categories.index",compact("categories"));
+        $ventas=Venta::paginate(10);
+        //$clientes=Cliente::all();
+        $vendedores=Vendedor::all();
+        return view("ventas.index",compact("ventas","vendedores"));
     }
 
     /**
@@ -24,8 +28,15 @@ class CategoryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {        
-        return view("categories.create");
+    {
+
+        //$clientes=Cliente::pluck("name","surname","id");
+        $clientes=Cliente::all("surname","name","id");
+        $facturas=DB::table("facturas")->get();
+        $vendedores=Vendedor::all("surname","name","id");
+
+
+        return view("ventas.create",compact("clientes","vendedores","facturas"));
     }
 
     /**
@@ -35,15 +46,8 @@ class CategoryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {        
-        $category=Category::create($request->all());
-        if($request->name)
-        {
-            $category->name=ucwords($category->name);
-            $category->save();    
-        }
-
-        return redirect()->route("categories.index");
+    {
+        //
     }
 
     /**
@@ -52,9 +56,9 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Venta $venta)
     {
-        //
+        return view("ventas.show",compact("venta"));
     }
 
     /**
@@ -63,10 +67,12 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Category $category)
-    {   
-
-        return view("categories.edit",compact("category"));
+    public function edit(Venta $venta)
+    {
+        $clientes=Cliente::all("surname","name","id");
+        $facturas=DB::table("facturas")->get();
+        $vendedores = Vendedor::all("surname","name","id");
+        return view("ventas.edit",compact("venta","clientes","vendedores","facturas"));
     }
 
     /**
@@ -76,15 +82,9 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, $id)
     {
-        $category->update($request->all());
-        if($request->name)
-        {
-            $category->name=ucwords($category->name);
-            $category->save();    
-        }
-        return redirect()->route("categories.edit",$category->id);        
+        //
     }
 
     /**
@@ -93,9 +93,8 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy($id)
     {
-        $category->delete();
-        return back();
+        //
     }
 }
