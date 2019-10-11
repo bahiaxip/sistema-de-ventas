@@ -18,9 +18,9 @@ class CreateFacturasTable extends Migration
             $table->integer("net");
             $table->integer("vat");
             $table->integer("total");
-            $table->string("state");
+            $table->enum("state",["DUE","PAYED"]);
             $table->string("order_buy");
-            $table->string("office guide");
+            $table->string("office_guide");
             $table->integer("venta_id")->unsigned();
             $table->timestamps();
 

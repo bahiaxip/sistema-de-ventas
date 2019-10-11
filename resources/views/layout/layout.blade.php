@@ -10,10 +10,7 @@
 			<script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
 			<script src="{{ asset('js/popper.min.js') }}" type="text/javascript"></script>
 			<script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript"></script>
-			
-
 		</head>
-		
 		<body>
 			<div class="container">
 				<div class="row mb-3">
@@ -21,8 +18,6 @@
 						<header >
 							<nav class="nav justify-content-center bg-primary p-1 ">
 								<a href="{{ url('/') }}" class="nav-link text-white">Inicio</a>
-
-								
 								
 								@can("users.index")
 								<a href="{{route('users.index')}}" class="nav-link text-white">Usuarios</a>
@@ -79,8 +74,7 @@
 								</div>
 								
 							</div>
-						</div>
-						
+						</div>					
 
 						<div class="row">
 							<div class="col-auto col-lg-2 h-100">
@@ -92,29 +86,16 @@
 									<a href="{{route('destinatarios.index')}}" class="nav-link text-white">Destinatarios</a>
 									<a href="{{route('productos.index')}}" class="nav-link text-white">Productos</a>
 									<a href="{{route('categories.index')}}" class="nav-link text-white">Categorías</a>
-<<<<<<< Updated upstream
+
 									<a href="{{route('ventas.index')}}" class="nav-link text-white">Ventas</a>
-=======
-									<a href="#" class="nav-link text-white">Ventas</a>
->>>>>>> Stashed changes
-									<a href="#" class="nav-link text-white">Facturas</a>
 								</nav>								
 							</div>
-							
-
 							@yield("content")
-						</div>
-						
+						</div>						
 					</div>
-				</div>
-
-				
+				</div>				
 			</div>
-
 			<script>
-				
-				
-
 
 				//evento botón eliminar registro que muestra ventana confirmación 
 				$(".btn-delete-data").on("click",function(e) {
@@ -127,15 +108,6 @@
 						btn.parents("form").submit();	
 					})
 				});
-				
-
-				
-
-				
-
-
-				
-				
 			</script>
 			<script src="{{ asset("js/select2.js") }}"></script>
 			@yield("scripts")

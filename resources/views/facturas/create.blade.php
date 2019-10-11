@@ -11,8 +11,8 @@
             </ul>
         </div>
         @endif
-		{{ Form::open(["route"=> "ventas.store","files"=>true])}}
-			@include("ventas.form")
+		{{ Form::open(["route"=> "facturas.store","files"=>true])}}
+			@include("facturas.form")
 		{{ Form::close()}}
 	</div>
 	

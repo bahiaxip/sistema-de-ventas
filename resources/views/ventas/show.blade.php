@@ -16,9 +16,13 @@
 				<p><strong>Facturas:</strong> &nbsp; 
 				<?php
 				if($facturas->count()>0){
-					echo "Ir a facturas";
+					?>
+					<a href="{{route('facturas.index','venta='.$venta->id)}}" >Ver Facturas</a>
+					<?php					
 				}else{
-					echo "Crear primera factura";
+					?>
+					<a href="{{ route('facturas.create','venta='.$venta->id) }}">Crear Factura</a>
+					<?php
 				}
 				?>
 				</p>

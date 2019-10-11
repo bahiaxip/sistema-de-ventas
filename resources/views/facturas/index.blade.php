@@ -6,7 +6,7 @@
 		<div class="card pl-2 pr-2 pt-2 border-0">
 			<div class="card-title">
 				<h5 class="float-left">Facturas</h5>
-				<a href="{{route('ventas.create') }}" class="btn btn-sm btn-primary float-right">Crear</a>
+				<a href="{{route('facturas.create','venta='.$venta_id) }}" class="btn btn-sm btn-primary float-right">Crear</a>
 			</div>
 		</div>		
 
@@ -18,23 +18,23 @@
 				<th class="text-center">Editar</th>
 				<th class="text-center">Eliminar</th>
 			</thead>
-			@if($ventas->count()==0)
+			@if($facturas->count()==0)
 				<tr>
 					<td class="text-center" colspan="5"><strong>No existen resultados</strong></td>
 				</tr>
 			@endif
-			@foreach($ventas as $venta)
+			@foreach($facturas as $factura)
 			<tr class="">
-				<td>{{ $venta->cliente->name}} {{$venta->cliente->surname }}</td>
-				<td>{{ $venta->vendedor->name }}</td>				
+				<td>{{ $factura->net}}</td>
+				<td>{{ $factura->vat }}</td>				
 				<td class="text-center">
-					<a href="{{ route('ventas.show',$venta->id) }}" title="Ver" class="btn btn-outline-info btn-sm">Ver</a>
+					<a href="{{ route('facturas.show',$factura->id) }}" title="Ver" class="btn btn-outline-info btn-sm">Ver</a>
 				</td>
 				<td class="text-center">
-					<a href="{{ route('ventas.edit',$venta->id) }}" title="Editar" class="btn btn-outline-success btn-sm">Editar</a>
+					<a href="{{ route('facturas.edit',$factura->id) }}" title="Editar" class="btn btn-outline-success btn-sm">Editar</a>
 				</td>
 				<td class="text-center">
-					{{ Form::open(["route"=>["ventas.destroy",$venta->id],"method"=>"DELETE"]) }}
+					{{ Form::open(["route"=>["facturas.destroy",$factura->id],"method"=>"DELETE"]) }}
 					<button title="Eliminar" class="btn btn-outline-danger btn-sm btn-delete-data" >Eliminar</button>
 					{{ Form::close() }}
 					
@@ -44,7 +44,7 @@
 						
 		</table>
 		<div class="">
-			{{ $ventas->links("pagination::bootstrap-4") }}
+			{{ $facturas->links("pagination::bootstrap-4") }}
 		</div>
 	</div>
 

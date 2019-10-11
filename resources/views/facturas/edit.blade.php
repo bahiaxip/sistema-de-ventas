@@ -13,8 +13,8 @@
         </div>
     @endif
 
-	{{ Form::model($venta,["route"=>["productos.update",$venta->id],"method"=> "PUT"]) }}
-	@include("ventas.form")
+	{{ Form::model($factura,["route"=>["facturas.update",$factura->id],"method"=> "PUT"]) }}
+	@include("facturas.form")
 	{{ Form::close() }}
 </div>
 

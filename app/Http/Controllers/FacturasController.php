@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Factura;
 use Illuminate\Http\Request;
 
 class FacturasController extends Controller
@@ -11,9 +12,17 @@ class FacturasController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        //implementar acordeón
+        if($request->venta){
+            $venta_id=$request->venta;
+            $facturas=Factura::where("venta_id",$venta_id)->paginate(10);
+        }else{
+            $facturas=Factura::paginate(10);
+        }
         
+        return view("facturas.index",compact("facturas","venta_id"));
     }
 
     /**
@@ -21,9 +30,13 @@ class FacturasController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        if($request->get("venta")){
+            $venta_id=$request->get("venta");
+
+        }
+        return view("facturas.create",compact("venta_id"));
     }
 
     /**
@@ -34,7 +47,17 @@ class FacturasController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $factura=new Factura($request->all());
+        $total=$factura->total;
+        $iva=$factura->vat;
+        $neto=$total/((100+$iva)/100);
+        $factura->net=$neto;
+        //dd($neto);
+        //dd($request->all());
+        //$factura=Factura::create($request->all());
+        $factura->save();
+        //dd($factura);
+        return redirect()->route("facturas.index","venta=".$request->venta_id);
     }
 
     /**
@@ -43,9 +66,9 @@ class FacturasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Factura $factura)
     {
-        //
+        return view("facturas.show",compact("factura"));
     }
 
     /**
@@ -54,9 +77,9 @@ class FacturasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Factura $factura)
     {
-        //
+        return view("facturas.edit",compact("factura"));
     }
 
     /**
@@ -66,9 +89,18 @@ class FacturasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Factura $factura)
     {
-        //
+        $factura=Factura::where("id",$factura->id)->first();
+        $factura->vat=$request->vat;
+        $factura->total=$request->total;
+        $neto=$factura->total/((100+$factura->vat)/100);
+        $factura->net=$neto;
+        $factura->state=$request->state;
+        $factura->order_buy=$request->order_buy;
+        $factura->office_guide=$request->office_guide;
+        $factura->save();
+        return back();
     }
 
     /**
@@ -77,8 +109,9 @@ class FacturasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Factura $factura)
     {
-        //
+        $factura->delete();
+        return back();
     }
 }
