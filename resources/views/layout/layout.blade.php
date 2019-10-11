@@ -92,7 +92,11 @@
 									<a href="{{route('destinatarios.index')}}" class="nav-link text-white">Destinatarios</a>
 									<a href="{{route('productos.index')}}" class="nav-link text-white">Productos</a>
 									<a href="{{route('categories.index')}}" class="nav-link text-white">Categorías</a>
+<<<<<<< Updated upstream
 									<a href="{{route('ventas.index')}}" class="nav-link text-white">Ventas</a>
+=======
+									<a href="#" class="nav-link text-white">Ventas</a>
+>>>>>>> Stashed changes
 									<a href="#" class="nav-link text-white">Facturas</a>
 								</nav>								
 							</div>

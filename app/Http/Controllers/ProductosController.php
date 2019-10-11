@@ -99,8 +99,12 @@ class ProductosController extends Controller
         if(!is_numeric($category)){
             $newCategory=Category::firstOrCreate(["name"=>ucwords($category)]);
             $producto->category_id=$newCategory->id;
+<<<<<<< Updated upstream
         }else{             
             $producto->category_id=$request->category_id;}
+=======
+        }else{ $producto->category_id=$request->category_id;}
+>>>>>>> Stashed changes
 
         //dd("bien");
         $producto->save();

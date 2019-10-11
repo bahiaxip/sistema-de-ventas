@@ -106,8 +106,12 @@ Route::middleware(["auth"])->group(function(){
 	Route::resource("destinatarios","DestinatariosController");
 	Route::resource("productos","ProductosController");
 	Route::resource("categories","CategoryController");
+/*<<<<<<< Updated upstream*/
 	Route::resource("ventas","VentasController");
 	Route::resource("facturas","FacturasController");
+/*=======
+>>>>>>> Stashed changes*/
+	
 	//Vendedores necesario auth
 	//Route::resource("vendedores","VendedoresController");
 	//Supervisores necesario auth

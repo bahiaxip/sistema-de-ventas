@@ -15,10 +15,10 @@
 				<p><strong>Hora:</strong> &nbsp;{{$venta->time}}</p>
 				<p><strong>Facturas:</strong> &nbsp; 
 				<?php
-				if($facturas!=null){
-					echo "No existen facturas";
+				if($facturas->count()>0){
+					echo "Ir a facturas";
 				}else{
-					echo "Crear Factura";
+					echo "Crear primera factura";
 				}
 				?>
 				</p>
