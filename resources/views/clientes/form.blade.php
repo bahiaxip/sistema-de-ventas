@@ -10,10 +10,6 @@
 	{{ Form::label("surname","Apellidos") }}
 	{{ Form::text("surname",null,["class" => "form-control"]) }}
 </div>
-<div class="form-group">
-	{{ Form::label("address","Dirección") }}
-	{{ Form::text("address",null,["class"=>"form-control"]) }}
-</div>
 <div class="form-group pais">
 	{{ Form::label("country","País") }}
 	{{ Form::select("country",$paises,null,["id"=>"pais","placeholder"=> "Selecione...","class"=>"form-control"]) }}
@@ -21,6 +17,14 @@
 <div class="form-group provincia">
 	{{ Form::label("province","Provincia") }}
 	{{ Form::select("province",$provincias,null,["class"=>"form-control"]) }}
+</div>
+<div class="form-group">
+	{{ Form::label("city","Ciudad") }}
+	{{ Form::text("city",null,["class"=>"form-control"]) }}
+</div>
+<div class="form-group">
+	{{ Form::label("address","Dirección") }}
+	{{ Form::text("address",null,["class"=>"form-control"]) }}
 </div>
 <div class="form-group">
 	{{ Form::label("postal_code","Código Postal") }}
@@ -55,6 +59,8 @@
 </div>
 @section("scripts")
 <script>
+	//script para dar estilos (personalizados de bootstrap) al input file
+
 	//añadimos el nombre del archivo al input file (personalizado de bootstrap)
 	//cuando se ha seleccionado un archivo 
 	$(".custom-file-input").on("change",function(){

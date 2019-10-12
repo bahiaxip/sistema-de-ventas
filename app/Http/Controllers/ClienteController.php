@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Cliente;
+use App\Destinatario;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\ClienteStoreRequest;
@@ -96,7 +97,7 @@ class ClienteController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(ClienteStoreRequest $request)
-    {
+    {        
         $cliente=Cliente::create($request->all());
 
         if($request->file("logo")){
@@ -112,12 +113,14 @@ class ClienteController extends Controller
             //opcion2 para ruta($path)            
             $path=$request->file("logo")->store($dir);
             //opcion1 para almacenar (save)
-            $cliente->fill(["logo"=>$path])->save();
-            
+            $cliente->fill(["logo"=>$path])->save();            
             //opcion2 para almacenar (save)
             //$cliente->logo=$path;
             //$cliente->save();
         }
+
+        //creamos tb un registro en destinatarios 
+        $destinatarios=Destinatario::create($request->only("name","surname","country","province","city","address","postal_code","email","phone","fax","cellphone"));
         return redirect()->route("clientes.index");
 
     }

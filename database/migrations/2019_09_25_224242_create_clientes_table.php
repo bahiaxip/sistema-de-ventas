@@ -18,9 +18,10 @@ class CreateClientesTable extends Migration
             $table->string("nif")->unique();
             $table->string("name");
             $table->string("surname");
-            $table->string("address");
-            $table->string("province")->nullable();
             $table->string("country");
+            $table->string("province")->nullable();
+            $table->string("city");
+            $table->string("address");            
             $table->string("postal_code");
             $table->string("logo")->nullable();
             $table->string("email")->nullable();

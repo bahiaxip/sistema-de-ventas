@@ -9,9 +9,10 @@
 			<div class="card-body offset-3">
 				<p><strong>Nombre:</strong> &nbsp;{{ $cliente->name }}</p>
 				<p><strong>Apellidos:</strong> &nbsp;{{ $cliente->surname }}</p>
-				<p><strong>Dirección:</strong> &nbsp;{{ $cliente->address }}</p>
-				<p><strong>Provincia:</strong> &nbsp;{{ $cliente->province }}</p>
 				<p><strong>País:</strong> &nbsp;{{ $cliente->country }}</p>
+				<p><strong>Provincia:</strong> &nbsp;{{ $cliente->province }}</p>
+				<p><strong>Ciudad:</strong> &nbsp;{{ $cliente->city }}</p>
+				<p><strong>Dirección:</strong> &nbsp;{{ $cliente->address }}</p>				
 				<p><strong>Código Postal:</strong> &nbsp;{{ $cliente->postal_code }}</p>
 				@if($cliente->logo)
 					<label for="logo"><strong>Logo:</strong></label><br>

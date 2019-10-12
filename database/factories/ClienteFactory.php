@@ -16,6 +16,7 @@ $factory->define(Cliente::class, function (Faker $faker) {
         "surname"=> $faker->name,
         "address"=>$faker->streetName,
         "province"=> $faker->city,
+        "city"=>$faker->city,
         "country"=>$pais_aleatorio,
         "postal_code"=>$faker->postcode,
         "logo"=>$faker->imageUrl,
