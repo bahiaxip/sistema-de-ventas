@@ -16,7 +16,7 @@
 </div>
 <div class="form-group provincia">
 	{{ Form::label("province","Provincia") }}
-	{{ Form::select("province",$provincias,null,["class"=>"form-control"]) }}
+	{{ Form::select("province",$provincias,null,["class"=>"form-control prov_select","placeholder"=>"Seleccione una provincia"]) }}
 </div>
 <div class="form-group">
 	{{ Form::label("city","Ciudad") }}
@@ -70,6 +70,38 @@
 		var fileName=$(this).val().split("\\").pop(); 
 		//siblings apunta al hermano o a los hermanos del elemento
 		$(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+	});
+
+	//eventos que permiten mostrar o ocultar el select province.
+
+	//Si se selecciona España se muestra el select province, ya que es //el único del que tenemos provincias añadidas. Si se selecciona 
+	//cualquier país y anteriormente se tenía España se elimina la provincia
+
+	var provincia=$("#pais").val();
+
+	if(provincia != "España"){
+		$(".provincia").hide();
+	}
+	
+
+	$("#pais").on("change",function(){
+
+		if($("#pais").val()=="España"){
+
+			$(".provincia").show();
+
+		}else{
+
+			$(".provincia").hide();
+
+				if(provincia=="España"){
+					$(".prov_select").val("");	
+				}
+		}
+		//se actualiza provincia por si se vuelve a subir un archivo 
+		//sin recargar la página
+		provincia=$("#pais").val();
+
 	});
 </script>
 @endsection

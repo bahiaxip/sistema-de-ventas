@@ -61,7 +61,7 @@ var provincia=$("#pais").val();
 	
 
 
-$(".pais").on("change",function(){
+$("#pais").on("change",function(){
 
 	if($("#pais").val()=="España"){
 
