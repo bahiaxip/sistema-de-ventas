@@ -7,11 +7,11 @@
 	{{ Form::text("total",null,["class"=>"form-control"]) }}
 </div>
 <div class="form-group">
-	{{ Form::label("state","Estado") }}
+	{{ Form::label("state","Estado de pago") }}
 </div>
 <div class="form-group">
-	<label>{{ Form::radio("state","PAID",["class"=>"form-control"]) }}Pagado</label>
-	<label>{{ Form::radio("state","DUE",["class"=>"form-control"]) }}Debido</label>
+	<label>{{ Form::radio("state","PAID",["class"=>"form-control"]) }}Pago efectuado</label>
+	<label>{{ Form::radio("state","DUE",["class"=>"form-control"]) }}Pago pendiente</label>
 </div>
 <div class="form-group">
 	{{ Form::label("order_buy","Orden de compra") }}

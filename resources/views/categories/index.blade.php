@@ -5,7 +5,7 @@
 	<div class="col mt-3">
 		<div class="card pl-2 pr-2 pt-2 border-0">
 			<div class="card-title">
-				<h5 class="float-left">Categorías</h5>
+				<h5 class="float-left">Categorías de Productos</h5>
 				<a href="{{route('categories.create') }}" class="btn btn-sm btn-primary float-right">Crear</a>
 			</div>
 		</div>		
