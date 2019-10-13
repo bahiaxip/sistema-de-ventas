@@ -9,7 +9,7 @@
 				<h5><strong>Resumen de factura</strong></h5>
 			</div>
 		</div>
-		@if(isset($factura))
+		
 		<div class="form-group row mt-3">				
 			<div class="col-10 col-md-4 offset-2">
 				<p><strong>ID-Factura:</strong> &nbsp;{{ $factura->id }}</p>
@@ -23,7 +23,7 @@
 				<p><strong>Guía de oficina:</strong> &nbsp; {{$factura->office_guide}} </p>					
 			</div>				
 		</div>
-		@endif
+		
 
 		<div class="form-group row justify-content-center">
 			<div class="col-10 col-md-5">					
@@ -33,12 +33,12 @@
 
 		<div class="form-group row justify-content-center ">
 			<div class="col-10 col-md-5">					
-			<a href="#collapse1" data-toggle="collapse" class="btn btn-block  btn-primary">Agregar Productos</a>
+			<a href="#collapse1" data-toggle="collapse" class="btn btn-block btn-primary">Agregar Productos</a>
 		</div>
 	</div>
 	
 	<div id="collapse1" class="collapse ">
-		{{ Form::open() }}
+		{{ Form::open(["onsubmit"=>"addProductToFactura('$factura->id ',event)"]) }}
 		<div class="form-group row">
 			<div class="col-10 col-md-3">
 				{{ Form::label("categoria","Categoría de Producto") }}
@@ -54,22 +54,12 @@
 			
 		</div>
 		{{ Form::close() }}
-		<div class="card">
-			<table class="table">
-				<thead>
-					<tr>
-						<th>ID</th>
-						<th>Producto</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>hola</td>
-						<td>adios</td>
-					</tr>
-				</tbody>
-			</table>
+		@if($productos_factura->count()!=0)
+		
+		<div class="card seccion_productos">
+			@include("facturas.ajax-product")			
 		</div>
+		@endif
 	</div>
 @endsection
 
@@ -97,5 +87,31 @@
 				})
 			}
 		});
+		function addProductToFactura(id,e){
+			e.preventDefault();
+			var url="../addProduct";
+			var idProducto= $("#producto").val();
+			var idFactura=id;
+			console.log(idProducto);
+			$.ajax({
+				type:"POST",
+				data:{producto:idProducto,factura:idFactura,_token:"{{ csrf_token() }}"},
+				url:url,
+				//dataType:"json",
+				//contentType:"application/json",
+				success:function(data){
+					//console.log(data);
+					$(".seccion_productos").html("");
+					$(".seccion_productos").html(data);
+
+				},
+				error:function(){
+					console.log("ERror")
+				}
+			});
+			//console.log("bien0");
+		}
+
+
 	</script>
 @endsection

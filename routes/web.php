@@ -18,7 +18,7 @@ Route::get('/', function () {
 //Route::get("vendedores","VendedoresController@show")->name("vendedores");
 
 Route::get("/loadProduct","ProductosController@loadProduct");
-
+Route::post("addProduct","ProductosController@addProduct")->name("addProduct");
 //Route::resource("supervisores","SupervisoresController");
 
 Auth::routes();

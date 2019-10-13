@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Producto;
 use App\Category;
+use App\Detalle_factura;
 use Illuminate\Http\Request;
 
 class ProductosController extends Controller
@@ -135,10 +136,26 @@ class ProductosController extends Controller
             $dato=view("../facturas/select-ajax",compact("productos"))->render();
             return response()->json(["datos"=>$dato]);            
         }
-        
-        
-        
-        //return $producto;
-        
+    }
+
+    public function addProduct(Request $request){
+        if($request->all()){
+            //return $request->all();
+        }
+        if($request->ajax()){            
+            $id_producto= $request->producto;
+            $id_factura=$request->factura;
+            Detalle_factura::create([
+                "id_producto"=>$id_producto,
+                "cantidad"=>"1",
+                "id_factura"=>$id_factura
+            ]);
+            $productos_factura=Detalle_factura::where("id_factura",$id_factura)->get();
+            //$dato=view("../facturas/ajax-product",compact("productos_factura"))->render();
+            $dato=view("../facturas/ajax-product",compact("productos_factura"))->render();
+            return response()->json($dato);
+            
+
+        }
     }
 }
