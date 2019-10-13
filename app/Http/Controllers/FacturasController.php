@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Factura;
+use App\Producto;
+use App\Category;
 use Illuminate\Http\Request;
 
 class FacturasController extends Controller
@@ -68,7 +70,9 @@ class FacturasController extends Controller
      */
     public function show(Factura $factura)
     {
-        return view("facturas.show",compact("factura"));
+        $productos=Producto::all()->pluck("name","id");
+        $categorias=Category::all()->pluck("name","id");
+        return view("facturas.show",compact("factura","productos","categorias"));
     }
 
     /**

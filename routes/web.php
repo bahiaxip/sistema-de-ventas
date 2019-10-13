@@ -17,7 +17,7 @@ Route::get('/', function () {
 
 //Route::get("vendedores","VendedoresController@show")->name("vendedores");
 
-
+Route::get("/loadProduct","ProductosController@loadProduct");
 
 //Route::resource("supervisores","SupervisoresController");
 

@@ -119,4 +119,26 @@ class ProductosController extends Controller
         $producto->delete();
         return back();
     }
+
+    //método respuesta ajax de select filtrar productos por categoría
+    public function loadProduct(Request $request){
+
+        //return $request->all();
+        if($request->ajax()){
+            $product_id= $request->data;
+            if($product_id==0){
+                $productos=0;
+            }else{
+                $productos=Producto::where("category_id",$product_id)->pluck("name","id")->all(); //necesario el all() si no $productos no está vacío
+            }
+            
+            $dato=view("../facturas/select-ajax",compact("productos"))->render();
+            return response()->json(["datos"=>$dato]);            
+        }
+        
+        
+        
+        //return $producto;
+        
+    }
 }
