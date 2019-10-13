@@ -6,12 +6,12 @@
 		<div class="card border-0 bg-dark text-white">
 
 			<div class="card-title text-center pt-2">
-				<h5><strong>Detalle de factura</strong></h5>
+				<h5><strong>Resumen de factura</strong></h5>
 			</div>
 		</div>
 		<div class="form-group row mt-3">				
 			<div class="col-10 col-md-4 offset-2">
-				<p><strong>Factura:</strong> &nbsp;{{ $factura->id }}</p>
+				<p><strong>ID-Factura:</strong> &nbsp;{{ $factura->id }}</p>
 				<p><strong>Importe Neto:</strong> &nbsp;{{ $factura->net}}</p>
 				<p><strong>IVA:</strong> &nbsp;{{ $factura->vat }}</p>
 			<p><strong>Total:</strong> &nbsp; {{number_format($factura->total,0,",",".")}} €</p>

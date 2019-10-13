@@ -1,10 +1,35 @@
+<div class="row">
+	<div class="col text-center">
+		<h5>Productos</h5>
+	</div>
+</div>
+<div class="row">
+	<table class="table">
+		<thead>
+			<tr>
+				<th>ID Producto</th>
+				<th>Nombre</th>
+				<th>Cantidad</th>
+				<th>Precio</th>
+			</tr>
+
+			<tr>
+				<td>Id del producto</td>
+				<td>nombre del producto</td>
+				<td>cantidad de este producto</td>
+				<td>precio del producto</td>
+			</tr>
+		</thead>
+	</table>
+</div>
+
 <div class="form-group">
 	{{ Form::label("vat","Importe IVA") }}
-	{{ Form::text("vat",21,["class"=>"form-control"]) }}
+	{{ Form::number("vat",21,["class"=>"form-control"]) }}
 </div>
 <div class="form-group">
 	{{ Form::label("total","Importe Total") }}
-	{{ Form::text("total",null,["class"=>"form-control"]) }}
+	{{ Form::number("total",0,["class"=>"form-control"]) }}
 </div>
 <div class="form-group">
 	{{ Form::label("state","Estado de pago") }}

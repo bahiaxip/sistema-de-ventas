@@ -1,4 +1,4 @@
-@if(empty($productos) || $productos==0)
+@if(empty($productos))
 	<option>No existen resultados</option>
 @elseif(!empty($productos))
 	<option value="0">Seleccione producto</option>
