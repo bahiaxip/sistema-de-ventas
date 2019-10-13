@@ -9,6 +9,7 @@
 				<h5><strong>Resumen de factura</strong></h5>
 			</div>
 		</div>
+		@if(isset($factura))
 		<div class="form-group row mt-3">				
 			<div class="col-10 col-md-4 offset-2">
 				<p><strong>ID-Factura:</strong> &nbsp;{{ $factura->id }}</p>
@@ -22,6 +23,7 @@
 				<p><strong>Guía de oficina:</strong> &nbsp; {{$factura->office_guide}} </p>					
 			</div>				
 		</div>
+		@endif
 
 		<div class="form-group row justify-content-center">
 			<div class="col-10 col-md-5">					

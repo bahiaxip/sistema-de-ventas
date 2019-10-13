@@ -1,3 +1,4 @@
+@if(isset($factura))
 <div class="row">
 	<div class="col text-center">
 		<h5>Productos</h5>
@@ -22,7 +23,7 @@
 		</thead>
 	</table>
 </div>
-
+@endif
 <div class="form-group">
 	{{ Form::label("vat","Importe IVA") }}
 	{{ Form::number("vat",21,["class"=>"form-control"]) }}
