@@ -14,8 +14,10 @@
     @endif
 
 	{{ Form::model($factura,["route"=>["facturas.update",$factura->id],"method"=> "PUT"]) }}
-	@include("facturas.form")
+    <!-- booleano para campo IVA, determina el input iva para edit para create -->
+	@include("facturas.form",["iva"=>false])
 	{{ Form::close() }}
+    
 </div>
 
 @endsection

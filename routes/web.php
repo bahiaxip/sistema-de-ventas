@@ -19,6 +19,14 @@ Route::get('/', function () {
 
 Route::get("/loadProduct","ProductosController@loadProduct");
 Route::post("addProduct","ProductosController@addProduct")->name("addProduct");
+//editar productos de la factura (Detalle_factura)
+Route::get("/editProduct","ProductosController@editProduct")->name("editProduct");
+//almacenar la factura después de un cambio en un select
+Route::get("storeResult","FacturasController@storeResult")->name("storeResult");
+//eliminar producto de una factura
+Route::post("prod_factura","FacturasController@destroyProdFactura")->name("destroyProdFactura");
+
+Route::post("reload_factura","FacturasController@reloadFactura")->name("reloadFactura");
 //Route::resource("supervisores","SupervisoresController");
 
 Auth::routes();

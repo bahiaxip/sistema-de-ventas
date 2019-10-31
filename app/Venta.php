@@ -10,6 +10,7 @@ class Venta extends Model
     	"id_cliente","destinatario_id","id_vendedor","total","date","time"
     ];
 
+
     public function cliente(){
 
     	return $this->belongsTo(Cliente::class,"id_cliente");

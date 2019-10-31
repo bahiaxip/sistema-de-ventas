@@ -5,8 +5,8 @@
 	<div class="col mt-3">
 		<div class="card pl-2 pr-2 pt-2 border-0">
 			<div class="card-title">
-				<h5 class="float-left">Facturas</h5>
-				<a href="{{route('facturas.create','venta='.$venta_id) }}" class="btn btn-sm btn-primary float-right">Crear</a>
+				<h5 class="float-left">Facturas de Venta {{ $venta->id }} asociadas a {{$venta->cliente->name}} </h5>
+				<a href="{{route('facturas.create','venta='.$venta->id) }}" class="btn btn-sm btn-primary float-right">Crear</a>
 			</div>
 		</div>		
 

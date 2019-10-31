@@ -11,8 +11,9 @@
             </ul>
         </div>
         @endif
-		{{ Form::open(["route"=> "facturas.store","files"=>true])}}
-			@include("facturas.form")
+		{{ Form::open(["route"=> "facturas.store"])}}
+		<!-- booleano para campo IVA -->
+			@include("facturas.form",["iva"=>true])
 		{{ Form::close()}}
 	</div>
 	

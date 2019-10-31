@@ -1,3 +1,4 @@
+@if($productos_factura->count()!=0)
 <?php $sum=0; ?>
 <table class="table table-hover">
 	<thead>
@@ -19,15 +20,29 @@
 			<td>{{$pro->cantidad}}</td>
 			<td>{{$pro->productos->price*$pro->cantidad}}</td>
 		</tr>
-		<?php $sum=$sum+$pro->productos->price*$pro->cantidad; ?>
+		<?php 
+		$sum=$sum+$pro->productos->price*$pro->cantidad;		
+		?>
 		@endforeach
+		@php
+		$total_sum=$sum *((100+$pro->factura->vat)/100);
+		@endphp
+		<tr>
+			<td style="text-align:right" colspan="4">Total Neto</td>
+			<td class="suma"><?php echo $sum; ?></td>
+		</tr>
 		<tr>
 			<td style="text-align:right" colspan="4">IVA</td>
-			<td><?php echo $pro->factura->vat."%"; ?></td>
+			<td><?php echo $productos_factura[0]->factura->vat."%"; ?></td>
 		</tr>
 		<tr>
 			<td style="text-align:right" colspan="4"><?php echo "Total"; ?></td>
-			<td><?php echo $sum; ?></td>
+			@php
+			session()->put(["suma"=>$sum]);
+			@endphp
+
+			<td><?php echo number_format($total_sum,0,",","."); ?></td>
 		</tr>
 	</tbody>
 </table>
+@endif

@@ -12,6 +12,7 @@
 
 		<table class="table table-bordered table-hover">
 			<thead class="thead-dark">
+				<th>Venta</th>
 				<th>Cliente</th>
 				<th>Vendedor</th>				
 				<th class="text-center">Ver</th>
@@ -25,6 +26,7 @@
 			@endif
 			@foreach($ventas as $venta)
 			<tr class="">
+				<td>{{ $venta->id }}</td>
 				<td>{{ $venta->cliente->name}} {{$venta->cliente->surname }}</td>
 				<td>{{ $venta->vendedor->name }}</td>				
 				<td class="text-center">

@@ -12,7 +12,7 @@
 	@include("facturas.ajax-edit")
 </div>
 @endif
-@if(isset($venta_id))
+@if(isset($categorias))	
 	<div class="form-group row">
 		<div class="col-10 col-lg-3">
 			{{ Form::label("categoria","Categoría de Producto") }}
@@ -49,13 +49,13 @@
 	{{ Form::label("vat","IVA") }}
 	<?php 
 	if($iva==false){		
-		?>
-		{{ Form::number("vat",null,["class"=>"form-control"]) }}
-		<?php
+	 ?>
+	 {{ Form::number("vat",null,["class"=>"form-control"]) }}
+	 <?php
 	}else {
 		?>
 		{{ Form::number("vat",config("iva"),["class"=>"form-control","readonly"=>"readonly"]) }}
-		<?php
+	<?php
 	}
 	?>
 </div>
@@ -77,7 +77,8 @@
 <div class="form-group">
 	{{ Form::label("office_guide","Guía de oficina") }}
 	{{ Form::text("office_guide",null,["class"=>"form-control"]) }}
-</div>	
+</div>
+	{{ Form::hidden("collection_products",null,["id"=>"collection_products"]) }}
 	{{ Form::hidden("datos",null,["id"=>"datos"])}}
 
 	@if(isset($venta_id))
@@ -90,43 +91,17 @@
 	<script>
 		//bloque para edit
 @if(isset($factura))
-		
-
-	$("#categoria").on("change",function(){
-		if($(this).val!=0){
-			var datos=$(this).val();
-			var url="../../loadProduct";
-			$.ajax({
-				type:"GET",
-				data: {data: datos},
-				url:url,
-				//dataType:"json",
-				success: function(data){
-					//console.log(data);
-					$("select[name='producto'").html("");
-					$("select[name='producto'").html(data.datos);
-					//console.log(data.options);
-				},
-				error: function(){
-					console.log("Error");
-				}
-
-			})
-		}
-	});
-
-
-
-	//listSelected es un array de todos los id selected de productos, es decir,
+	
+	//lista es un array de todos los id selected de productos, es decir,
 	//todos los productos de la factura seleccionada que trae la db.
-	let productsSelected=listSelected(),
-		editedProducts=[],
-		sumaTotal;
+	let productsSelected=listSelected();
+	let editedProducts=[];
+	let sumaTotal;
 
-	
-	
+	//repasar todo pk solo se necesita id anterior, id del nuevo producto y cantidad 
 	function editSelectProductos(id){
-
+		
+		
 		//convertimos el elemento que viene parámetro a identificador de 
 		//tipo JQuery
 		let datos=$(id);
@@ -135,7 +110,7 @@
 		let proId=datos.parent().prev().find("input:first").val();
 		//almacenamos el ID del nuevo producto (nuevo)
 		let newProId=datos.val();
-		//productsSelected es el resultado del método listSelected()
+	//productsSelected es el resultado del método listSelected()
 		//filtramos por si ya existe ese nuevo producto en la lista productsSelected
 		let test=productsSelected.filter(res=>res==newProId);
 		//si test trae algún resultado es que ya existe ese producto en la lista
@@ -175,89 +150,83 @@
 			//al dar al botón guardar
 			editedProducts.push(Dato);
 			$("#datos").val(JSON.stringify(editedProducts));
-			loadNet(".list_edit_products");
-			loadTotal(".list_edit_products");
 			console.log(editedProducts);
 		}
 			
 	}
 
-	function editAddProductFactura(id,e){
+
+
+	//ANULADO
+		//En esta parte de Javascript la cantidad de los productos actualizalel //total del producto y el total de factura, para guardarlo en la db se //almacena en un array y al guardar se actualizan, el select en cambio
+		//es una petición ajax que actualiza cada vez que editamos un select
+		//la petición ajax para el select anulado
+
 		
-		e.preventDefault();
-		//console.log(id);return;
-		var url="../../addProduct";
-		let cantidad=document.querySelector("#cantidadAdd");
-		let product=document.querySelector("#producto");
-		if(!validacionProducto(product,cantidad))
-				return;
-		var idProducto=$("#producto").val();
-		var idFactura=id;
-		let cantidadVal=cantidad.value;
+
+		/*
+		//array de todos los productos de un select con javascript	
+		var prod=[];
+		var productos=document.getElementById("productos");
+		for(var i=0;i<productos.length;i++){
+			prod=prod+productos.options[i].text;
+			console.log(productos.options[i].text);	
+		}
+		*/
+
 		
-		//console.log(cantidad);return;
-		//console.log("llega");return;
-		//console.log("sum es: "+$(".suma").html());return;
-		//console.log(idProducto);return;
-		$.ajax({
-			type:"POST",
-			url:url,
-			data:{producto:idProducto,factura:idFactura,cantidad:cantidadVal,_token:"{{ csrf_token() }}"},
-			success: function(data){
-				//console.log(data);
-				$("#categoria").val(0);
-				$("#producto").val(0);
-				$("#cantidadAdd").val(1);
-				$(".list_edit_products").html("");
-				$(".list_edit_products").html(data.dato);
-				$("#net").val(data.suma);
-				let total=data.suma*((100+parseInt($("#vat").val()))/100);
-				$("#total").val(Math.round(total));
-			},
-			error:function(){
-				console.log("ErRor");
-			}
+		
+
+		//evento a elemento cantidad en Javascript
+		/*
+		let inputNumber=document.querySelector(".cantidad");
+		inputNumber.oninput= function(){
+			console.log(parseInt(this.parentNode.previousElementSibling.innerHTML));	
+			console.log(this.value);
+			console.log("wow");
+		}
+		*/
+		//evento a elemento cantidad en JQuery
+		/*
+		$(".cantidad").on("input",function(){
+			//console.log($(this).parent().parent().prev().find("input").val());
+			let precio=$(this).parent().parent().prev().find("input").val();
+			
+			
 		});
-	}
+		*/
+		//Cantidad Producto es una clase que almacena el id del producto y la cantidad
+		//anulada y sustituida por un objeto simple
+		/*
+		class CantidadProducto{		
 
+			constructor(id,cantidad){
+				this.id=id;
+				this.cantidad=cantidad;
+				
+			}		
+		};
+		*/
+		//data no es necesario
+		//let data=[];
 
-
-	
-
-
+//repasar pk solo se necesita id anterior, id del nuevo producto y cantidad 
 
 		//evento del input cantidad de un producto	
-		$(".seccion_factura").on("input",".cantidad",function(){
-			//si en alguno de los productos de la tabla se indica una cantidad
-			//de 0 o menor a 0 se establece la última opción válida.
-			if($(this).val()<=0){
-				alert("la cantidad mínima es 1");
-
-				//obtenemos el anterior resultado con los datos de price y total
-				let parentsTd=$(this).parents("td");
-				let price=parseInt(parentsTd.prev().find("input").val());
-				let totalProduct=parseInt(parentsTd.next().find("input").val());
-				let prevAmount=totalProduct/price;
-				//asignamos el valor al campo cantidad				
-				$(this).val(prevAmount);
-				return;
-			}
-
+		$(".seccion_factura").on("input",".cantidad",function(){			
 			//obtenemos el valor del ID Producto para el método cantidadDeProducto (al final)			
 			let id=parseInt($(this).parents("tr").find("input").first().val());
 //no necesario			//almacenamos el nombre
 			let name=$(this).parents("td").prev().prev().first().find("option:selected").html();
 			
 			//valor de precio asociado al producto seleccionado
-			let precio=parseInt($(this).parent().prev().find("input").val());
-			
+			let precio=$(this).parent().parent().prev().find("input").val();
 			//valor de cantidad
 			let cantidad = parseInt($(this).val());
 			//total del producto			
 			let total=precio*cantidad;
-
 			//actualizamos el total del producto multiplicado por la cantidad
-			$(this).parent().next().find("input").val(total);
+			$(this).parent().parent().next().find("input").val(total);
 			//almacenamos neto con el método sumaFinal()
 			let neto=sumaFinal();
 			//actualizamos el neto
@@ -266,9 +235,8 @@
 			let iva=parseInt($("#vat").val());
 			//total con iva y redondeado
 			let totalSum=Math.round(neto*((100+iva)/100));
-			$("#total").val(totalSum);
 
-		//añadimos los datos mediante un objeto que pasamos al input hidden datos
+			$("#total").val(totalSum);
 
 			//validamos si añadimos un elemento al array de objetos editedProducts
 			//o actualizamos el último elemento del array test
@@ -283,7 +251,8 @@
 				//obtenemos el último elemento del array test y actualizamos
 				//su cantidad
 				let lastTest=test.pop();
-				lastTest.amount=cantidad;				
+				lastTest.amount=cantidad;
+				console.log(lastTest);
 			}else{
 				//si no existe se añade un nuevo Dato al array editedProducts
 				let Dato={};
@@ -291,29 +260,51 @@
 				Dato.newId=id;				
 				Dato.amount=cantidad;
 				editedProducts.push(Dato);
+				$("#datos").val(JSON.stringify(editedProducts));				
 			}
-			//insertamos datos en input hidden
-			$("#datos").val(JSON.stringify(editedProducts));
 		});
 
 		//evento del input iva
 		$("input[name=vat]").on("input",function(){
-
 			//almacenamos neto,iva y total con método loadTotal()
-			let neto=parseInt($("#net").val());
+			let neto=$("#net").val();
 			let iva=parseInt($("#vat").val());
-			loadTotal(".list_edit_products");
-			//let totalSum =loadTotal(neto,iva);
-			
-			//$("#total").val(totalSum);
+			let totalSum =loadTotal(neto,iva);
+			$("#total").val(totalSum);
 		});
 		
 
 		
 		$("input[type=submit]").on("click",function(e){
 			e.preventDefault();
-			$("form").submit();
+//new Set para eliminar duplicados
 
+				//con ...new Set(array) eliminamos los duplicados
+				//en este caso al ser objeto necesitamos añadir el método map
+				//para buscar una propiedad con entero(id)
+				
+				//con este otro método elimina los duplicados y mantiene el primero pero solo devuelve un array de los enteros
+				
+		//let sinRepetidos=[...new Set(data.map(x=>x.id))];
+				
+				
+				//con este Array.from, new Set y doble map obtenemos el array //de objetos eliminando los duplicados y devuelve el array con //las 2 propiedades del objeto
+
+				//otra opción es que se puede pasar todos los datos y en php //eliminar los duplicados con array_unique
+				
+				//let listaSinDuplicados=Array.from(new Set(data.map(x=>x.id)))
+				//	.map(id=>{
+				//	return {
+				//		id:id,
+				//		cantidad: data.find(x=>x.id===id).cantidad
+				//	};
+				//});
+
+				//convertimos a string el array de objetos 
+				//let list=JSON.stringify(listaSinDuplicados);
+				
+				//asignamos data como valor del input hidden
+				//$("#data_cantidad").val(list);
 		});
 		
 
@@ -337,7 +328,8 @@
 			//creamos un array mapeo que contiene la posición de los option selected
 			let mapeo=lista.map(function(select){
 				return select.options.selectedIndex;
-			});			
+			});	
+			//console.log(mapeo);
 			//rellenamos el array prod recorriendo el array lista y pasándole 
 			//el array mapeo indicando la posición, de esta forma obtenemos un //array con los value de todos los elementos con atributo selected  
 			for(var i=0;i<lista.length;i++){
@@ -401,110 +393,105 @@
 				//modificamos el total del producto
 				//no es necesario añadir la cantidad puesto que reseteamos a 1, por //tanto, la multiplicación * 1 es la misma, aun así lo añadimos
 				let total=parseInt(price)*parseInt(inputCantidad.val());
-				datos.parent().nextAll().slice(2,3).find("input").val(total);				
-			}			
+				datos.parent().nextAll().slice(2,3).find("input").val(total);
+				//datos.parent().nextAll().slice(2,2).find("input").val(total);
+				//datos.parent().next().next().find("input").val(parseInt(price));
+				//datos.parent().next().next().find("input").val();
+			}
+			//document.querySelectorAll(".productos");
 			let list=$(".list_edit_products ");
 			let listaw=list.map((item)=>{
 				return item;
 			})
 
 			console.log(listaw);
-		}
+			/*
+			//anulado necesario modificar para que no guarde al modificar el select
+			//es decir solo modificar en el lado del cliente hasta que guarde
+			else{			
+				$.ajax({
+					type:"GET",			
+					data:{producto:pro_id,nuevoProducto:producto_id,factura:<?php echo $factura->id; ?>},
+					url:url,
+					//dataType:"json",
+					success:function(data){
+						$(".seccion_factura").html(data);
+						//actualizamos sumaTotal con el método sumaFinal que 
+						//suma todos los total de los productos
+						sumaTotal=sumaFinal();
+						//asignamos el campo de importe neto
+						$("#net").val(sumaTotal);
+						//convertimos a entero el valor de iva
+						let iva=parseInt($("#vat").val());
+						//obtenemos el total con el iva aplicado
+						let total=Math.round(sumaTotal*((100+iva)/100));
+						//asignamos el valor total de la factura
+						$("#total").val(total);
 
-		function deleteProd(el,e){
 
-			e.preventDefault();
-			//mostramos modal
-			$("#modal_delete").modal("show");
-			//evento btn aceptar del modal
-			$("#btn-modal-delete").one("click",function(e){
-				e.preventDefault();
-				//ocultamos modal
-				$("#modal_delete").modal("hide");
-				//ocultamos fila				
-				el.parentNode.parentElement.style.display="none";
-				//almacenamos cantidad para la segunda petición AJAX
-				let cantidad;
-				let producto_id=el.parentNode.parentNode.firstElementChild.firstElementChild.value;				
-				let factura_id={{$factura->id}};
+						//añadimos otra petición ajax por seguridad
+						//ya que el resultado final de la factura se ejecuta
+						//en javascript en la vista y si no se guarda manualmente
+						//podría dar error en los resultados de las facturas
 
-				var promise = $.ajax({
-					type:"POST",
-					data:{producto:producto_id,factura:factura_id,_token:"{{csrf_token()}}"},
-					url:"{{route('destroyProdFactura')}}"
-				})
-				.done(function(data){
-					$("#net").val(data.net);
-					$("#total").val(data.total);
-					//console.log(data);
+						$.ajax({						
+							type:"GET",
+							data:{id:{{$factura->id}},net:$("#net").val(),vat:$("#vat").val(),total:$("#total").val(),state:$("#state:checked").val(),order_buy:$("#order_buy").val(),office_guide:$("#office_guide").val()},
+							url:"<?php echo route('storeResult');?>",
+							success:function(dat){
+								console.log(dat);
+							},
+							error:function(){
+								console.log("ERROR");
+							}
+						});
+
+					},
+					error:function(){
+						console.log("ERror");
+					}
+
 				});
+				//actualizamos lista al editar un select
+				lista=listSelected();
+				
+				
+				
 
-				//anulamos promesa.then no necesaria, suficiente con 1 petición,
-				//en lugar de 2 peticiones (la primera para mostrar los datos
-				//de los productos y la segunda para almacenar la suma en la db,
-				//he optado por realizar la operación de suma e iva en php aunque //existe riesgo de que puedan variar de las de JS con el redondeo)
+			}
+			*/
 
-			});
+			
 		}
 		
-		//sustituir por onclick debido al include ajax-edit-table
 		/*
 		$(".delete_prod").on("click",function(e){
-
-			let btn=$(this);
-			
-			$("#modal_delete").modal("show");
-			//método one para que se vaya duplicando la llamada
-			$("#btn-modal-delete").one("click",function(e){
-				e.preventDefault();
-				$("#modal_delete").modal("hide");
-				//ocultamos fila		
-				btn.parents("tr").hide();
-				let cantidad;
-				let producto_id=btn.parents("tr").find("input").first().val();
-				console.log("producto_id: ",producto_id);
-				let factura_id={{$factura->id}};
-				var promise = $.ajax({
-					type:"POST",
-					data:{producto:producto_id,factura:factura_id,_token:"{{csrf_token()}}"},
-					url:"{{route('destroyProdFactura')}}"
-				})	
-				.done(function(data){
-					cantidad=data;
+			e.preventDefault();
+			//ocultamos fila		
+			$(this).parents("tr").hide();
+			let producto_id=$(this).parents("tr").find("input").first().val();
+			let factura_id={{$factura->id}};
+			$.ajax({
+				type:"POST",
+				data:{producto:producto_id,factura:factura_id,_token:"{{csrf_token()}}"},
+				url:"{{route('destroyProdFactura')}}",
+				success:function(data){
 					console.log(data);
-					
-				});
-				
-				promise.then(function(){
-
-					$.ajax({
-						type:"POST",
-						data:{producto:producto_id,factura:factura_id,cantidad:cantidad,_token:"{{ csrf_token() }}"},
-						url:"{{ route('reloadFactura') }}"
-					})
-					.done(function(data){
-						//console.log(data);
-						//actualizamos campos net y total de la vista
-						$("#net").val(data.net);
-						$("#total").val(data.total);						
-					})
-				});
-				
-				
-				//después de eliminar un producto es necesario actualizar la factura
+				},
+				error:function(){
+					console.log("ErRor");
+				}
 			});
 		});
 		*/
 @endif
 //bloque para create
-@if(isset($venta_id))
-		//evento categorías de productos
+@if(isset($categorias))
 		$("#categoria").on("change",function(){
 			//if($(this).val()!=0){
-				//petición ajax que clasifica el select productos mediante categorías
+
 				var datos=$(this).val();
 				var url="../loadProduct";
-
 				$.ajax({
 					type:"GET",
 					data: {data: datos},
@@ -530,13 +517,138 @@
 			}
 			*/
 		});
-		//evento en el select productos
+
 		//cada vez que seleccionamos un nuevo producto cantidad se resetea a 1.
 		$("#producto").on("change",function(){
 			//resetCantidad()
 		});
 
-//crea objetos y después añade los datos en la tabla
+//método para create
+/*
+este método sería quizás más eficiente si en lugar de insertar tr en la tabla
+y después extraer de los tr un array de objetos, al revés, es decir, crear un array de objetos y después insertar los tr en la tabla listProducts
+*/
+/*
+		let listProducts=[];			
+
+		function addProductToList(e){
+			//producto nuevo a insertar
+			let product=document.querySelector("#producto");
+			//cantidad nueva a insertar
+			let cantidad=document.querySelector("#cantidad");
+			
+			//ejemplo de validación con expresiones regulares (anulado)
+			
+			//expresión
+			//let chars=new RegExp('^[A-Z]+$','i');
+			//^indica que el patrón debe iniciar dentro de los corchetes
+			//[A-Z] indica los caracteres permitidos
+			// + indica que los caracteres en los corchetes se puede repetir
+			// $ indica que el patrón finaliza con los caracteres de los corchetes
+			// i indica que es (case-insensitive), no diferencia minúsculas y
+			//mayúsculas
+			//validar con expresiones regulares
+			
+			//if(!chars.test(producto.value)){
+			//	alert("no es una palabra permitida");
+			//}
+			
+
+			//validaciones		
+			if(!product||product.value==null||product.value==0){
+				alert("no existe producto");
+				return;
+			}
+			if(cantidad.value<=0){
+				alert("la cantidad no puede ser 0");
+				return;
+			}
+			
+			let tr=document.createElement("tr"),
+				td=document.createElement("td"),
+				//elemento option que se encuentra seleccionado				
+				productIndex=product.options[product.selectedIndex],
+				//el producto.value es el id del producto seleccionado para agregar
+				id=producto.value;
+				
+				
+				//tbody de la tabla
+			listProducts=document.querySelector(".list_products");
+			//convertimos a array la colección hijos de listProducts
+			listTr=[].slice.call(listProducts.children);
+			//creamos array filtrando los elementos tr para saber si existe el //mismo id del producto seleccionado en la tabla. Este filter //devuelve un array con el tr del producto que ya existe en la tabla y que su id coincide con el id del producto a insertar
+			let TdId=listTr.filter((item)=>{
+				return parseInt(item.firstElementChild.innerHTML)==id;
+			});
+			//SI EXISTE REPETIDO
+			//si TdId contiene algún resultado, quiere decir que intentamos insertar un producto que ya existe en la tabla
+			if(TdId.length > 0){
+				//obtenemos el campo cantidad del producto que ya existe en la //tabla convertido a entero
+				let cantidadProductoRepe=parseInt(TdId[0].children[3].innerHTML);
+				//realizamos la suma de cantidad insertado más el producto ya 
+				//existente en la tabla y actualizamos el campo
+				let suma=cantidadProductoRepe+parseInt(cantidad.value);
+				TdId[0].children[3].innerHTML=suma;
+				//actualizamos el campo TotalProducto del producto repetido
+				TdId[0].children[4].innerHTML=parseInt(TdId[0].children[2].innerHTML)*suma;
+				resetCantidad();
+				loadNet();
+				loadTotal();				
+				return;
+			}
+
+			//creamos y añadimos el nuevo registro de producto a la tabla
+			td.innerHTML=id
+			let td2=document.createElement("td");
+			
+			td2.innerHTML=productIndex.text;
+
+			let td3=document.createElement("td");
+
+			td3.innerHTML=productIndex.getAttribute("data-price");
+			let td4=document.createElement("td");
+			td4.innerHTML=cantidad.value;
+			let td5=document.createElement("td");
+			td5.innerHTML=productIndex.getAttribute("data-price")*cantidad.value;
+			tr.append(td,td2,td3,td4,td5);
+			
+			//añadimos al elemento listProducts un elemento tr que contiene 5 //elementos td donde cada td contiene sus datos correspondientes
+			listProducts.append(tr);
+			//reseteamos cantidad a 1			
+			resetCantidad();
+			//cargamos el valor de importe neto
+			loadNet();
+			//cargamos el valor de importe total
+			loadTotal();			
+				/*
+				convertimos a array la colección de todos los hijos(tr) de la tabla listProducts, un tr equivale a un registro completo que contiene 5 td:
+				el primer td contiene el id del producto,
+				el segundo td contiene el nombre del producto,
+				el tercer td contiene el precio del producto,
+				el cuarto td contiene la cantidad de productos,
+				el quinto td contiene el total del precio * la cantidad de productos) 
+				*/
+
+			//let list=[].slice.call(listProducts.children);
+				/*			
+				con el método listDatos obtenemos la colección de hijos de cada tr (cada tr contiene 5 td) y creamos una colección de objetos donde cada objeto equivale a un registro tr y sus 5 propiedades contiene los
+				valores de cada td.
+				*/
+
+			//let result=JSON.stringify(listDatos(list));
+			//document.querySelector("#colection_products").value=result;
+			//console.log("result: ",result);return;
+			
+				//jquery
+				/*
+				let tr=$("<tr></tr>").append($("<td></td>").html($"list_products"));
+				$(".list_products").html(tr);
+				console.log("tr");
+
+				*/
+		//}
+//este método es igual al anterior pero creando objetos y 
+//después asignando los datos en la tabla
 		let listProducts=[];			
 		let datos=[];
 		function addProductToList(e){
@@ -563,34 +675,38 @@
 			}
 			*/
 
-			//validación de producto y cantidad	
-			if(!validacionProducto(product,cantidad))
+			//VALIDACIONES		
+			if(!product||product.value==null||product.value==0){
+				alert("no existe producto");
 				return;
-			
-			
+			}
+			if(cantidad.value<=0){
+				alert("la cantidad no puede ser 0");
+				return;
+			}
 			
 			//creamos un array que filtra si existe algún producto repetido en el //array de objetos y si existe devuelve el objeto
 			let productRepe=datos.filter(item=>item.id==product.value);
-
 			//si productRepe trae resultado se modifica la cantidad del objeto y del //registro de la tabla
 			if(productRepe.length > 0){
 				//modificamos el objeto sumando la propiedad cantidad que ya tiene //más la nueva cantidad
 				productRepe[0].amount=productRepe[0].amount+parseInt(cantidad.value);
 				//convertimos a array la colección de hijos(tr) de la tabla //list_products				
-				let list=[].slice.call(list_products.children);				
+				let list=[].slice.call(list_products.children);
+				console.log(list);
 				//filtramos todos los tr del array convertido y el que coincida el
 				//primer td (que corresponde con el id del producto) con el id del 
 				//nuevo producto agregado
-				let lista=list.filter((item)=>{					
-					return item.children[0].firstElementChild.value==product.value;
-				});				
+				let lista=list.filter((item)=>{
+					return item.children[0].innerHTML==product.value;
+				})
 				//convertimos a array la colección de td del elemento tr que coincide
-				lista=[].slice.call(lista[0].children);				
-				//actualizamos el valor cantidad del td sumando la cantidad del //nuevo producto 				
-				lista[3].firstElementChild.value=parseInt(lista[3].firstElementChild.value)+parseInt(cantidad.value);
+				lista=[].slice.call(lista[0].children);
+				//actualizamos el valor cantidad del td sumando la cantidad del //nuevo producto 
+				lista[3].innerHTML=parseInt(lista[3].innerHTML)+parseInt(cantidad.value);
 				// actualizamos el total del producto
 				//lista[4].innerHTML=parseInt(lista[2].innerHTML)*parseInt(lista[3].innerHTML);
-				lista[4].firstElementChild.value=parseInt(lista[2].firstElementChild.value)*productRepe[0].amount;
+				lista[4].innerHTML=parseInt(lista[2].innerHTML)*productRepe[0].amount;
 
 //repasar si es necesario el precio el nombre y el total				
 			//si no se crea el nuevo elemento y se añade 
@@ -605,7 +721,6 @@
 				Dato.price=parseInt(productIndex.getAttribute("data-price"));
 				Dato.amount=parseInt(cantidad.value);
 				Dato.total=Dato.price*Dato.amount;
-
 				//añadimos el objeto al array datos
 				datos.push(Dato);
 				//podemos pasarlo a blanco y pasar el array o añadirlo uno a uno.
@@ -640,53 +755,93 @@
 							});
 							*/
 				//opción 2: añadir uno a uno
-				let td=document.createElement("td");				
-				//con JQuery
-				$("<input/>").attr({type:"number",name:"id",class:"form-control",readonly:"readonly",value:Dato.id}).appendTo(td);				
-				//con Javascript
-				/*
-				let input=document.createElement("input");
-				input.type="number";
-				input.className="form-control";
-				input.value=Dato.id;				
-				td.append(input);
-				*/				
-				let td2=document.createElement("td");
-				$("<input/>").attr({type:"text",name:"name",class:"form-control",readonly:"readonly",value:Dato.name}).appendTo(td2);
+				let td=document.createElement("td");
+				td.innerHTML=Dato.id
+				let td2=document.createElement("td");			
+				td2.innerHTML=Dato.name;
 				let td3=document.createElement("td");
-				$("<input/>").attr({type:"text",name:"price",class:"form-control",readonly:"readonly",value:Dato.price}).appendTo(td3);
+				td3.innerHTML=Dato.price;
 				let td4=document.createElement("td");
-				$("<input/>").attr({type:"text",name:"amount",class:"form-control",readonly:"readonly",value:Dato.amount}).appendTo(td4);
+				td4.innerHTML=Dato.amount;
 				let td5=document.createElement("td");
-				$("<input/>").attr({type:"text",name:"total",class:"form-control",readonly:"readonly",value:Dato.total}).appendTo(td5);		
+				td5.innerHTML=Dato.total;
 				let tr=document.createElement("tr");
 				tr.append(td,td2,td3,td4,td5);
 				list_products.append(tr);
-			}			
-			//reseteamos el formulario de productos
-			document.querySelector("#categoria").value=0;
-			product.value=0;
+
+				
+			}
 			resetCantidad();
-			//actualizamos neto y total
-			loadNet(".list_products");			
-			loadTotal(".list_products");
-			//añadimos el objeto al input
-			//document.querySelector("#collection_products").value=JSON.stringify(datos);
-			document.querySelector("#datos").value=JSON.stringify(datos);
+			loadNet();
+			loadTotal();
+
+			//solo queda añadir el objeto al input
+			document.querySelector("#collection_products").value=JSON.stringify(datos);
+			console.log(datos);
+			return;
+			
+				
+
+
+
+			
+			
+						
+			/*
+			convertimos a array la colección de todos los hijos(tr) de la tabla listProducts, un tr equivale a un registro completo que contiene 5 td:
+			el primer td contiene el id del producto,
+			el segundo td contiene el nombre del producto,
+			el tercer td contiene el precio del producto,
+			el cuarto td contiene la cantidad de productos,
+			el quinto td contiene el total del precio * la cantidad de productos) 
+			*/
+			//let list=[].slice.call(listProducts.children);
+			/*			
+			con el método listDatos obtenemos la colección de hijos de cada tr (cada tr contiene 5 td) y creamos una colección de objetos donde cada objeto equivale a un registro tr y sus 5 propiedades contiene los
+			valores de cada td.
+			*/
+
+			//let result=JSON.stringify(listDatos(list));
+			//document.querySelector("#colection_products").value=result;
+			//console.log("result: ",result);return;
+			
+			//jquery
+			/*
+			let tr=$("<tr></tr>").append($("<td></td>").html($"list_products"));
+			$(".list_products").html(tr);
+			console.log("tr");
+
+			*/
+		//}
+		
+		
+		
+		/*
+		//listDatos
+		function listDatos(lista){			
+			let nuevoDato=lista.map(tr=>tr.children).map(item=>{
+				return {
+				id:item[0].innerHTML,
+				product:item[1].innerHTML,
+				price:item[2].innerHTML,
+				amount:item[3].innerHTML,
+				totalProduct:item[4].innerHTML
+				}
+			});
+
+			return nuevoDato;
+		*/
 		}
-
-
 @endif
 
 //MÉTODOS COMPATIBLES CON LAS 2 VISTAS
 
 	//método que aplica el iva al precio indicado
-	/*
 	function loadTotal(netVal,ivaVal){
 		let sumTotal=Math.round(netVal*((100+ivaVal)/100));
 		return sumTotal;
 	}
-	*/
+
 
 	//resetea a 1 el campo cantidad de agregar producto
 	function resetCantidad(){
@@ -694,14 +849,13 @@
 	}
 		
 	//realiza la suma del total de todos los productos de la tabla
-	function suma(div){
-
-		let list_products=document.querySelector(div);
+	function suma(){			
+		let list_products=document.querySelector(".list_products");
 		//convertimos a array los hijos (tr) de la tabla list_products
 		let tr=[].slice.call(list_products.children);
 		//obtenemos todos los total de todos los productos
 		let totalProducts=tr.map((item)=>{			
-			return parseInt(item.children[4].firstElementChild.value);
+			return parseInt(item.children[4].innerHTML);
 		});
 		//realizamos la suma a los elementos del array
 		let suma=totalProducts.reduce((a,b)=>(a+b));
@@ -709,33 +863,16 @@
 	}
 		
 	//actualiza el campo importe neto
-	function loadNet(div){
-		let sum=suma(div);
+	function loadNet(){
+		let sum=suma();
 		document.querySelector("#net").value=sum;
 	}
 		
-	//actualiza el campo importe total
-	 
-	function loadTotal(div){
-		let sum=suma(div);
+	//actualiza el campo importe total 
+	function loadTotal(){
+		let sum=suma();
 		let vat=parseInt(document.querySelector("#vat").value);
 		document.querySelector("#total").value=Math.round(sum*((100+vat)/100));
-	}
-
-	//validación de producto y cantidad
-	function validacionProducto(product,cantidad){
-		if(!product||product.value==null||product.value==0){
-			alert("debe seleccionar un producto");
-			return;
-		}
-		else if(cantidad.value <= 0){
-			alert("la cantidad no puede ser menor a 1");
-			return;
-		}
-		else{
-		return true;	
-		}
-		
 	}
 		
 	</script>

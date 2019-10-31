@@ -13,9 +13,9 @@
 		<div class="form-group row mt-3">				
 			<div class="col-10 col-md-4 offset-2">
 				<p><strong>ID-Factura:</strong> &nbsp;{{ $factura->id }}</p>
-				<p><strong>Importe Neto:</strong> &nbsp;{{ $factura->net}}</p>
-				<p><strong>IVA:</strong> &nbsp;{{ $factura->vat }}</p>
-			<p><strong>Total:</strong> &nbsp; {{number_format($factura->total,0,",",".")}} €</p>
+				<p><strong>Importe Neto:</strong> &nbsp;<span id="neto">{{number_format($factura->net,0,",",".")}}</span>€</p>
+				<p><strong>IVA:</strong> &nbsp;<span id="iva">{{ $factura->vat }}</span></p>
+			<p><strong>Total:</strong> &nbsp;<span id="total"> {{number_format($factura->total,0,",",".")}} </span>€</p>
 			</div>
 			<div class="col-10 col-md-4 offset-2">
 				<p><strong>Estado:</strong> &nbsp;{{$factura->state}}</p>
@@ -40,26 +40,30 @@
 	<div id="collapse1" class="collapse ">
 		{{ Form::open(["onsubmit"=>"addProductToFactura('$factura->id ',event)"]) }}
 		<div class="form-group row">
-			<div class="col-10 col-md-3">
+			<div class="col-10 col-lg-3">
 				{{ Form::label("categoria","Categoría de Producto") }}
 				{{ Form::select("categoria",$categorias,null,["class"=>"form-control","placeholder"=>"Seleccione categoría"]) }}
 			</div>
-			<div class="col-10 col-md-7"> 
+			<div class="col-10 col-lg-5"> 
 				{{ Form::label("producto","Productos") }}
 				{{ Form::select("producto",$productos,null,["class"=>"form-control","placeholder"=>"Seleccione un producto"]) }}
 			</div>
-			<div class="col-10 col-md-2 align-self-end">
+			<div class="col-10 col-lg-2">
+				{{ Form::label("cantidad","Cantidad") }}
+				{{ Form::number("cantidad",1,["class"=> "form-control"]) }}
+			</div>
+			<div class="col-10 col-lg-2 align-self-end">
 				{{ Form::submit("Agregar",["class"=>"btn btn-primary"])}}
 			</div>
 			
 		</div>
 		{{ Form::close() }}
-		@if($productos_factura->count()!=0)
+		
 		
 		<div class="card seccion_productos">
 			@include("facturas.ajax-product")			
 		</div>
-		@endif
+		
 	</div>
 @endsection
 
@@ -77,7 +81,7 @@
 					success: function(data){
 						//console.log(data);
 						$("select[name='producto'").html("");
-						$("select[name='producto'").html(data.datos);
+						$("select[name='producto'").html(data.dato);
 						//console.log(data.options);
 					},
 					error: function(){
@@ -92,18 +96,29 @@
 			var url="../addProduct";
 			var idProducto= $("#producto").val();
 			var idFactura=id;
+			var cantidad=$("#cantidad").val();
+			console.log("sum es: "+$(".suma").html());
 			console.log(idProducto);
 			$.ajax({
 				type:"POST",
-				data:{producto:idProducto,factura:idFactura,_token:"{{ csrf_token() }}"},
+				data:{producto:idProducto,factura:idFactura,cantidad:cantidad,_token:"{{ csrf_token() }}"},
 				url:url,
 				//dataType:"json",
 				//contentType:"application/json",
-				success:function(data){
-					//console.log(data);
+				success:function(data){	
+					//console.log(data);				
+					$("#categoria").val("0");					
+					document.getElementById("producto").value="0";
+					$("#cantidad").val("1");
 					$(".seccion_productos").html("");
-					$(".seccion_productos").html(data);
-
+					$(".seccion_productos").html(data.dato);
+					console.log(data.suma);
+					//cambiamos el neto y el total ya que aunque la
+					//db está actualizada la vista no se actualiza.
+					$("#neto").html(data.suma.toLocaleString());
+					let iva=(parseInt($("#iva").html()));
+					let sumaTotal=Math.round(data.suma*((100+iva)/100));
+					$("#total").html(sumaTotal.toLocaleString("es-ES"));
 				},
 				error:function(){
 					console.log("ERror")

@@ -19,7 +19,7 @@ class VentasController extends Controller
      */
     public function index()
     {
-        $ventas=Venta::paginate(10);
+        $ventas=Venta::orderBy("id","desc")->paginate(10);
         //$clientes=Cliente::all();
         
         $vendedores=Vendedor::all();
