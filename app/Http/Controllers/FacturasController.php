@@ -13,13 +13,16 @@ use Illuminate\Support\Facades\DB;
 
 class FacturasController extends Controller
 {
+    protected $t;
+    
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {
+    {        
+        //dd($total_venta);
         //implementar acordeón
         if($request->venta){
             $venta_id=$request->venta;
@@ -27,7 +30,8 @@ class FacturasController extends Controller
             $facturas=Factura::where("venta_id",$venta_id)->paginate(10);
         }
         
-        return view("facturas.index",compact("facturas","venta"));
+        
+        return view("facturas.index",compact("facturas","venta","total_venta"));
     }
 
     /**
@@ -128,13 +132,19 @@ class FacturasController extends Controller
                     //echo $res[0]["name"];exit;
                 //o con foreach:
                     
-                    foreach($res as $key=>$value){
-                        $detalle_factura=new Detalle_factura();
-                        $detalle_factura->id_producto=$value["id"];
-                        $detalle_factura->cantidad=$value["amount"];
-                        $detalle_factura->id_factura=$factura->id;
-                        $detalle_factura->save();
-                    }
+                foreach($res as $key=>$value){
+                    $detalle_factura=new Detalle_factura();
+                    $detalle_factura->id_producto=$value["id"];
+                    $detalle_factura->cantidad=$value["amount"];
+                    $detalle_factura->id_factura=$factura->id;
+                    $detalle_factura->save();
+                }
+                //actualizamos importe total de venta
+                $total_venta=self::load_venta($factura->venta_id);
+                $venta=Venta::where("id",$factura->venta_id)->first();        
+                $venta->total=$total_venta;
+                $venta->save();
+
         }
         return redirect()->route("facturas.index","venta=".$request->venta_id);
     }
@@ -229,6 +239,11 @@ class FacturasController extends Controller
         $factura->order_buy=$request->order_buy;
         $factura->office_guide=$request->office_guide;
         $factura->save();
+        //actualizamos importe total de venta
+        $total_venta=self::load_venta($factura->venta_id);
+        $venta=Venta::where("id",$factura->venta_id)->first();        
+        $venta->total=$total_venta;
+        $venta->save();       
         return back();
     }
 
@@ -241,9 +256,14 @@ class FacturasController extends Controller
     public function destroy(Factura $factura)
     {
         $factura->delete();
+        //actualizamos importe total de venta
+        $total_venta=self::load_venta($factura->venta_id);
+        $venta=Venta::where("id",$factura->venta_id)->first();        
+        $venta->total=$total_venta;
+        $venta->save();
         return back();
     }
-
+    
     public function destroyProdFactura(Request $request){
         if($request->ajax()){
             $producto_id=$request->producto;
@@ -267,6 +287,8 @@ class FacturasController extends Controller
                 //el total equivale al precio del producto multiplicado por
                 //la cantidad que contenga ese producto
             $dato=[];
+
+            
             //extraemos el total(multiplicado por su cantidad) de cada producto
             //y lo añadimos a un array para después realizar la suma mediante el
             //método reduce y su callback $suma
@@ -282,6 +304,7 @@ class FacturasController extends Controller
                 //con array_push se añade elemento a un array, no se puede igualar
                 //a una variable                
                 array_push($dato,$total_product);
+                
             }
             //con array_reduce sumamos todos los elementos del array
             $net=array_reduce($dato,$suma);
@@ -291,6 +314,13 @@ class FacturasController extends Controller
             $total=round($net*((100+$factura->vat)/100));
             $factura->total=$total;
             $factura->save();
+
+            //actualizamos importe total de venta
+            $total_venta=self::load_venta($factura->venta_id);
+            $venta=Venta::where("id",$factura->venta_id)->first();        
+            $venta->total=$total_venta;
+            $venta->save();
+
             return response()->json(["net"=>$net,"total"=>$total]);
         }
     }
@@ -374,8 +404,21 @@ class FacturasController extends Controller
         }
     }
 
-    
-
+    public function load_venta($venta_id){
+        $facturas=Factura::where("venta_id",$venta_id)->get()->toArray();
+        $call=function($item){
+            return $item["net"];
+        };
+        $listTotal=array_map($call,(array) $facturas);
+        $suma=function($a,$b){
+            $a+=$b;
+            return $a;
+        };
+        $result=array_reduce($listTotal,$suma);
+        return $result;
+    }
+    //anulado
+    /*
     public function storeResult(Request $request){
         if($request->ajax()){
             $req=$request->all();
@@ -384,8 +427,7 @@ class FacturasController extends Controller
             $factura=Factura::where("id",$request->id)->first();
             $factura->update($req);
             print_r($request->all());
-
         }
-        
     }
+    */
 }

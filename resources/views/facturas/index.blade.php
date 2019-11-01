@@ -46,6 +46,7 @@
 		<div class="">
 			{{ $facturas->links("pagination::bootstrap-4") }}
 		</div>
+		
 	</div>
 
 @endsection

@@ -3,7 +3,7 @@
 <tr >
 	
 	<td>
-		{{ Form::number("pro_id",$pro->id_producto,["class"=>"pro_id form-control","readonly"=>true]) }}
+		{{ Form::number("pro_id",$pro->id_producto,["class"=>"pro_id form-control","readonly"=>true,"data-id"=>$pro->id_producto]) }}
 	</td>
 	<td>
 		<select name="productos" id="productos" class="productos form-control" onchange="editSelectProductos(this)">						

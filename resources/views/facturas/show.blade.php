@@ -2,7 +2,7 @@
 
 @section("content")
 	<div class="col mt-3">
-		<a href="{{URL::previous()}}">Volver Atrás</a>
+		
 		<div class="card border-0 bg-dark text-white">
 
 			<div class="card-title text-center pt-2">
@@ -24,41 +24,15 @@
 			</div>				
 		</div>
 		
-
-		<div class="form-group row justify-content-center">
-			<div class="col-10 col-md-5">					
-				<button class="btn btn-block btn-primary">Ver Factura Completa</button>
-			</div>
-		</div>
-
 		<div class="form-group row justify-content-center ">
-			<div class="col-10 col-md-5">					
-			<a href="#collapse1" data-toggle="collapse" class="btn btn-block btn-primary">Agregar Productos</a>
+			<a href="{{URL::previous()}}" class="btn btn-sm btn-primary">Volver Atrás</a>
+			<div class="col-10 col-md-5">
+
+			<a href="#collapse1" data-toggle="collapse" class="btn btn-block btn-primary">Ver Factura Completa</a>
 		</div>
 	</div>
 	
 	<div id="collapse1" class="collapse ">
-		{{ Form::open(["onsubmit"=>"addProductToFactura('$factura->id ',event)"]) }}
-		<div class="form-group row">
-			<div class="col-10 col-lg-3">
-				{{ Form::label("categoria","Categoría de Producto") }}
-				{{ Form::select("categoria",$categorias,null,["class"=>"form-control","placeholder"=>"Seleccione categoría"]) }}
-			</div>
-			<div class="col-10 col-lg-5"> 
-				{{ Form::label("producto","Productos") }}
-				{{ Form::select("producto",$productos,null,["class"=>"form-control","placeholder"=>"Seleccione un producto"]) }}
-			</div>
-			<div class="col-10 col-lg-2">
-				{{ Form::label("cantidad","Cantidad") }}
-				{{ Form::number("cantidad",1,["class"=> "form-control"]) }}
-			</div>
-			<div class="col-10 col-lg-2 align-self-end">
-				{{ Form::submit("Agregar",["class"=>"btn btn-primary"])}}
-			</div>
-			
-		</div>
-		{{ Form::close() }}
-		
 		
 		<div class="card seccion_productos">
 			@include("facturas.ajax-product")			

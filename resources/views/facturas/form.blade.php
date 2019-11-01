@@ -88,6 +88,9 @@
 
 	@section("scripts")
 	<script>
+		//listSelected es un array de todos los id selected de productos, es decir,
+		//todos los productos de la factura seleccionada que trae la db.
+		let productsSelected=listSelected();
 		//bloque para edit
 @if(isset($factura))
 		
@@ -117,16 +120,16 @@
 
 
 
-	//listSelected es un array de todos los id selected de productos, es decir,
-	//todos los productos de la factura seleccionada que trae la db.
-	let productsSelected=listSelected(),
-		editedProducts=[],
+	
+	
+	let	editedProducts=[],
 		sumaTotal;
 
 	
-	
+	//método evento de cambio producto en facturas.edit-facturas.ajax-edit-table
 	function editSelectProductos(id){
-
+		
+		console.log(productsSelected);
 		//convertimos el elemento que viene parámetro a identificador de 
 		//tipo JQuery
 		let datos=$(id);
@@ -177,11 +180,14 @@
 			$("#datos").val(JSON.stringify(editedProducts));
 			loadNet(".list_edit_products");
 			loadTotal(".list_edit_products");
-			console.log(editedProducts);
+			//actualizamos productsSelected que devuelve todos los productos selected
+			productsSelected=listSelected();
+			console.log(productsSelected);
+			
 		}
 			
 	}
-
+	//añadir productos en facturas.edit
 	function editAddProductFactura(id,e){
 		
 		e.preventDefault();
@@ -213,6 +219,8 @@
 				$("#net").val(data.suma);
 				let total=data.suma*((100+parseInt($("#vat").val()))/100);
 				$("#total").val(Math.round(total));
+				productsSelected=listSelected();
+				//console.log(productsSelected);				
 			},
 			error:function(){
 				console.log("ErRor");
@@ -325,26 +333,7 @@
 		//seleccionados  para poder comprobar si ya existe en la lista la 
 		//nueva selección y evitar campos duplicados
 		
-		function listSelected(){
-
-			var prod=[];
-			//NodeList del select productos
-			let products=document.querySelectorAll(".productos");
-
-			//convertimos el NodeList a array
-			let lista=[].slice.call(products);
-			
-			//creamos un array mapeo que contiene la posición de los option selected
-			let mapeo=lista.map(function(select){
-				return select.options.selectedIndex;
-			});			
-			//rellenamos el array prod recorriendo el array lista y pasándole 
-			//el array mapeo indicando la posición, de esta forma obtenemos un //array con los value de todos los elementos con atributo selected  
-			for(var i=0;i<lista.length;i++){
-				prod.push(lista[i].options[mapeo[i]].value);
-			}
-			return prod;
-		}
+		
 		
 		//sumaFinal es la suma de todos los input total de los productos
 		function sumaFinal(){
@@ -421,13 +410,24 @@
 				e.preventDefault();
 				//ocultamos modal
 				$("#modal_delete").modal("hide");
-				//ocultamos fila				
-				el.parentNode.parentElement.style.display="none";
+				//ocultamos fila y eliminamos
+				let parentTr=el.parentNode.parentNode				
+				parentTr.style.display="none";
+				//es necesario eliminar para el array productsSelected
+				parentTr.parentNode.removeChild(parentTr);
 				//almacenamos cantidad para la segunda petición AJAX
-				let cantidad;
-				let producto_id=el.parentNode.parentNode.firstElementChild.firstElementChild.value;				
+				//let cantidad;
+				//se ha asignado un atributo data-id al primer td 
+				//por si cambia el value al modificar el select y se 
+				//quiere eliminar, elimine el que está almacenado y no
+				//los que se hayan cambiado sin guardar. 
+				let producto_id=el.parentNode.parentNode.firstElementChild.firstElementChild.getAttribute("data-id");
+				
+				//console.log(producto_id);
+
 				let factura_id={{$factura->id}};
 
+				//console.log(factura_id);return;
 				var promise = $.ajax({
 					type:"POST",
 					data:{producto:producto_id,factura:factura_id,_token:"{{csrf_token()}}"},
@@ -436,9 +436,16 @@
 				.done(function(data){
 					$("#net").val(data.net);
 					$("#total").val(data.total);
-					//console.log(data);
+					productsSelected=listSelected();
+					console.log(productsSelected);
+					//actualizar factura y venta
 				});
+				//anulado
 
+				//promise.then(function(){
+				//	productsSelected=listSelected();
+				//	console.log(productsSelected);
+				//})
 				//anulamos promesa.then no necesaria, suficiente con 1 petición,
 				//en lugar de 2 peticiones (la primera para mostrar los datos
 				//de los productos y la segunda para almacenar la suma en la db,
@@ -735,8 +742,28 @@
 		else{
 		return true;	
 		}
-		
 	}
+
+	function listSelected(){
+
+			var prod=[];
+			//NodeList del select productos
+			let products=document.querySelectorAll(".productos");
+
+			//convertimos el NodeList a array
+			let lista=[].slice.call(products);
+			
+			//creamos un array mapeo que contiene la posición de los option selected
+			let mapeo=lista.map(function(select){
+				return select.options.selectedIndex;
+			});			
+			//rellenamos el array prod recorriendo el array lista y pasándole 
+			//el array mapeo indicando la posición, de esta forma obtenemos un //array con los value de todos los elementos con atributo selected  
+			for(var i=0;i<lista.length;i++){
+				prod.push(lista[i].options[mapeo[i]].value);
+			}
+			return prod;
+		}
 		
 	</script>
 	@endsection

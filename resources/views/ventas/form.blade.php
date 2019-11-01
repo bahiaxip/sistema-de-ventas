@@ -62,9 +62,9 @@
 <div class="form-group">
 	{{ Form::label("total","Total") }}
 	@if(!isset($venta))
-	{{ Form::number("total",0,["class"=>"form-control","disabled"=>"disabled"])}}
+	{{ Form::number("total",'0',["class"=>"form-control","readonly"=>"readonly"])}}
 	@else
-	{{ Form::number("total",null,["class"=>"form-control","disabled"=>"disabled"])}}
+	{{ Form::number("total",null,["class"=>"form-control","readonly"=>"readonly"])}}
 
 	@endif
 

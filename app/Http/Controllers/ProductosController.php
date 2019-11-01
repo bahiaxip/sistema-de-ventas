@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Producto;
 use App\Category;
 use App\Detalle_factura;
+use App\Http\Controllers\FacturasController;
+use App\Venta;
 use Illuminate\Http\Request;
 
 class ProductosController extends Controller
@@ -15,7 +17,9 @@ class ProductosController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
+    {        
+
+            
         $productos=Producto::paginate(10);
         return view("productos.index",compact("productos"));        
     }
@@ -141,6 +145,7 @@ class ProductosController extends Controller
         }
     }
 
+    //método ajax para añadir productos en facturas.edit
     public function addProduct(Request $request){
         
         if($request->all()){
@@ -212,13 +217,21 @@ class ProductosController extends Controller
             //obtenemos el primer registro de Detalle_factura para actualizar
             //la factura desde el método factura de su modelo
             $factura=Detalle_factura::where("id_factura",$id_factura)->first();
-            //print_r($suma);exit;
+            
             //actualizamos la factura en la tabla facturas
             
             $factura->factura->net=$suma;
             $factura->factura->total=round($suma*((100+$factura->factura->vat)/100));
             
             $factura->factura->save();
+            //actualizamos importe total de venta
+            $controler=new FacturasController();
+            
+            $total_venta=$controler->load_venta($factura->factura->venta_id);
+            $venta=Venta::where("id",$factura->factura->venta_id)->first();        
+            $venta->total=$total_venta;
+            $venta->save();
+
             return response()->json(array("dato"=>$dato,"suma"=>$suma));
             
 
@@ -241,7 +254,8 @@ class ProductosController extends Controller
             $p_factura->id_producto=$nuevo_producto_id;
             $p_factura->cantidad=1;
             $p_factura->save();
-            //$factura=Factura::where("id",$factura->id);
+            //actualizamos factura
+            $factura=Factura::where("id",$factura->id)->first();
 
 
             $productos=Producto::all();
