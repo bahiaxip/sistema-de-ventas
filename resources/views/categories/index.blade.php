@@ -6,7 +6,9 @@
 		<div class="card pl-2 pr-2 pt-2 border-0">
 			<div class="card-title">
 				<h5 class="float-left">Categorías de Productos</h5>
+				@can("categories.create")
 				<a href="{{route('categories.create') }}" class="btn btn-sm btn-primary float-right">Crear</a>
+				@endcan
 			</div>
 		</div>		
 
@@ -23,16 +25,19 @@
 			@endif
 			@foreach($categories as $cat)
 			<tr class="">
-				<td>{{ $cat->name }}</td>				
+				<td>{{ $cat->name }}</td>
+				@can("categories.edit")				
 				<td class="text-center">
 					<a href="{{ route('categories.edit',$cat->id) }}" title="Editar" class="btn btn-outline-success btn-sm">Editar</a>
 				</td>
+				@endcan
+				@can("categories.destroy")
 				<td class="text-center">
 					{{ Form::open(["route"=>["categories.destroy",$cat->id],"method"=>"DELETE"]) }}
 					<button title="Eliminar" class="btn btn-outline-danger btn-sm btn-delete-data" >Eliminar</button>
-					{{ Form::close() }}
-					
+					{{ Form::close() }}					
 				</td>
+				@endcan
 			</tr>
 			@endforeach
 						

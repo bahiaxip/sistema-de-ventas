@@ -55,6 +55,9 @@ class ProductosController extends Controller
             $newCategory = Category::firstOrCreate(["name"=>ucwords($category)]);
             $producto->category_id=$newCategory->id;
         }
+        //añadimos el código de barras
+        $num=self::generateBarcodeNumber();
+        $producto->code=$num;
         $producto->save();
         return redirect()->route("productos.index");
     }
@@ -265,6 +268,25 @@ class ProductosController extends Controller
             return response()->json($dato);
             //return $request->data;
         }        
+    }
+
+//bloque para código de barras
+    //métodos para generar un número aleatorio que no se repita revisando en la db
+    //si existe ya ese número
+
+    public function generateBarcodeNumber(){
+        $number= mt_rand(1000000000,9999999999);
+
+        if(self::barcodeNumberExists($number)){
+            return generateBarcodeNumber();
+        }
+
+        return $number;
+    }
+
+    public function barcodeNumberExists($number){
+        //es posible comprobar si existe el número en el campo code con el método exists
+        return Producto::wherecode($number)->exists();
     }
     
         

@@ -168,7 +168,7 @@ return [
         /*
          * Package Service Providers...
          */
-
+        'Milon\Barcode\BarcodeServiceProvider',
         /*
          * Application Service Providers...
          */
@@ -234,6 +234,9 @@ return [
         "Form" => Collective\Html\FormFacade::class,
         "Html" => Collective\Html\HtmlFacade::class,
 
+        //Milon/barcode
+        'DNS1D' => Milon\Barcode\Facades\DNS1DFacade::class,
+        'DNS2D' => Milon\Barcode\Facades\DNS2DFacade::class,
     ],
 
 ];

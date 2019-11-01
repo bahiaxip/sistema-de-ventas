@@ -109,14 +109,114 @@ Route::middleware(["auth"])->group(function(){
 			->middleware("permission:supervisores.edit");
 			
 	Route::delete("supervisores/{supervisor}","SupervisoresController@destroy")->name("supervisores.destroy");
+
+		//Clientes
+		Route::get("clientes","ClienteController@index")->name("clientes.index")
+			->middleware("permission:clientes.index");
+		Route::get("clientes/create","ClienteController@create")->name("clientes.create")
+			->middleware("permission:clientes.create");
+		Route::post("clientes","ClienteController@store")->name("clientes.store")
+			->middleware("permission:clientes.create");
+		Route::get("clientes/{cliente}","ClienteController@show")->name("clientes.show")
+			->middleware("permission:clientes.show");
+		Route::get("clientes/edit/{cliente}","ClienteController@edit")->name("clientes.edit")
+			->middleware("permission:clientes.edit");
+		Route::put("clientes/{cliente}","ClienteController@update")->name("clientes.update")
+			->middleware("permission:clientes.edit");
+		Route::delete("clientes/{cliente}","ClienteController@destroy")->name("clientes.destroy")
+			->middleware("permission:clientes.destroy");
+
+	//Route::resource("clientes","ClienteController");
 			
-	Route::resource("clientes","ClienteController");
-	Route::resource("destinatarios","DestinatariosController");
-	Route::resource("productos","ProductosController");
-	Route::resource("categories","CategoryController");
+			//adjuntado con el permiso de clientes
+		//Destinatarios
+		Route::get("destinatarios","DestinatariosController@index")->name("destinatarios.index")
+			->middleware("permission:clientes.index");
+		Route::get("destinatarios/create","DestinatariosController@create")->name("destinatarios.create")
+			->middleware("permission:clientes.create");
+		Route::post("destinatarios","DestinatariosController@store")->name("destinatarios.store")
+			->middleware("permission:clientes.create");
+		Route::get("destinatarios/{destinatario}","DestinatariosController@show")->name("destinatarios.show")
+			->middleware("permission:clientes.show");
+		Route::get("destinatarios/edit/{destinatario}","DestinatariosController@edit")->name("destinatarios.edit")
+			->middleware("permission:clientes.edit");
+		Route::put("destinatarios/{destinatario}","DestinatariosController@update")->name("destinatarios.update")
+			->middleware("permission:clientes.edit");
+		Route::delete("destinatarios/{destinatario}","DestinatariosController@destroy")->name("destinatarios.destroy")
+			->middleware("permission:clientes.destroy");
+
+	//Route::resource("destinatarios","DestinatariosController");
+
+		//Productos
+		Route::get("productos","ProductosController@index")->name("productos.index")
+			->middleware("permission:productos.index");
+		Route::get("productos/create","ProductosController@create")->name("productos.create")
+			->middleware("permission:productos.create");
+		Route::post("productos","ProductosController@store")->name("productos.store")
+			->middleware("permission:productos.create");
+		Route::get("productos/{producto}","ProductosController@show")->name("productos.show")
+			->middleware("permission:productos.show");
+		Route::get("productos/edit/{producto}","ProductosController@edit")->name("productos.edit")
+			->middleware("permission:productos.edit");
+		Route::put("productos/{producto}","ProductosController@update")->name("productos.update")
+			->middleware("permission:productos.edit");
+		Route::delete("productos/{producto}","ProductosController@destroy")->name("productos.destroy")
+			->middleware("permission:productos.destroy");
+
+		//Categorías
+		Route::get("categories","CategoryController@index")->name("categories.index")
+			->middleware("permission:categories.index");
+		Route::get("categories/create","CategoryController@create")->name("categories.create")
+			->middleware("permission:categories.create");
+		Route::post("categories","CategoryController@store")->name("categories.store")
+			->middleware("permission:categories.create");
+		Route::get("categories/{category}","CategoryController@show")->name("categories.show")
+			->middleware("permission:categories.show");
+		Route::get("categories/edit/{category}","CategoryController@edit")->name("categories.edit")
+			->middleware("permission:categories.edit");
+		Route::put("categories/{category}","CategoryController@update")->name("categories.update")
+			->middleware("permission:categories.edit");
+		Route::delete("categories/{category}","CategoryController@destroy")->name("categories.destroy")
+			->middleware("permission:categories.destroy");
+
+		//Ventas
+		Route::get("ventas","VentasController@index")->name("ventas.index")
+			->middleware("permission:ventas.index");
+		Route::get("ventas/create","VentasController@create")->name("ventas.create")
+			->middleware("permission:ventas.create");
+		Route::post("ventas","VentasController@store")->name("ventas.store")
+			->middleware("permission:ventas.create");
+		Route::get("ventas/{venta}","VentasController@show")->name("ventas.show")
+			->middleware("permission:ventas.show");
+		Route::get("ventas/edit/{venta}","VentasController@edit")->name("ventas.edit")
+			->middleware("permission:ventas.edit");
+		Route::put("ventas/{venta}","VentasController@update")->name("ventas.update")
+			->middleware("permission:ventas.edit");
+		Route::delete("ventas/{venta}","VentasController@destroy")->name("ventas.destroy")
+			->middleware("permission:ventas.destroy");			
+		
+		//Facturas
+		Route::get("facturas","FacturasController@index")->name("facturas.index")
+			->middleware("permission:ventas.index");
+		Route::get("facturas/create","FacturasController@create")->name("facturas.create")
+			->middleware("permission:ventas.create");
+		Route::post("facturas","FacturasController@store")->name("facturas.store")
+			->middleware("permission:ventas.create");
+		Route::get("facturas/{factura}","FacturasController@show")->name("facturas.show")
+			->middleware("permission:ventas.show");
+		Route::get("facturas/edit/{factura}","FacturasController@edit")->name("facturas.edit")
+			->middleware("permission:facturas.edit");
+		Route::put("facturas/{factura}","FacturasController@update")->name("facturas.update")
+			->middleware("permission:ventas.edit");
+		Route::delete("facturas/{factura}","FacturasController@destroy")->name("facturas.destroy")
+			->middleware("permission:ventas.destroy");
+
+
+	//Route::resource("productos","ProductosController");
+	//Route::resource("categories","CategoryController");
 /*<<<<<<< Updated upstream*/
-	Route::resource("ventas","VentasController");
-	Route::resource("facturas","FacturasController");
+	//Route::resource("ventas","VentasController");
+	//Route::resource("facturas","FacturasController");
 /*=======
 >>>>>>> Stashed changes*/
 	

@@ -21,6 +21,7 @@ class CreateProductosTable extends Migration
             $table->string("description");
             $table->string("stock");
             $table->integer("category_id")->unsigned();
+            $table->string("code")->nullable();
             $table->timestamps();
 
             //Relaciones

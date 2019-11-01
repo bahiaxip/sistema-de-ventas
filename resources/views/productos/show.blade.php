@@ -12,7 +12,8 @@
 				<p><strong>Modelo:</strong> &nbsp;{{ $producto->product_model }}</p>
 				<p><strong>Precio:</strong> &nbsp;{{ $producto->price }}</p>
 				<p><strong>Descripción:</strong> &nbsp;{{ $producto->description }}</p>
-				<p><strong>Stock:</strong> &nbsp;{{ $producto->stock }}</p>				
+				<p><strong>Stock:</strong> &nbsp;{{ $producto->stock }}</p>
+				<p><strong>Código:</strong> &nbsp;{!! DNS1D::getBarcodeHTML($producto->code,"C128",3,33,"black") !!}</p>				
 			</div>
 		</div>
 	</div>

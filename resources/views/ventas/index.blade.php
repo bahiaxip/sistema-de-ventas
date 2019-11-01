@@ -6,7 +6,9 @@
 		<div class="card pl-2 pr-2 pt-2 border-0">
 			<div class="card-title">
 				<h5 class="float-left">Ventas</h5>
+				@can("ventas.create")
 				<a href="{{route('ventas.create') }}" class="btn btn-sm btn-primary float-right">Crear</a>
+				@endcan
 			</div>
 		</div>		
 
@@ -15,9 +17,9 @@
 				<th>Venta</th>
 				<th>Cliente</th>
 				<th>Vendedor</th>				
-				<th class="text-center">Ver</th>
-				<th class="text-center">Editar</th>
-				<th class="text-center">Eliminar</th>
+				@can("ventas.show")<th class="text-center">Ver</th>@endcan
+				@can("ventas.show")<th class="text-center">Editar</th>@endcan
+				@can("ventas.show")<th class="text-center">Eliminar</th>@endcan
 			</thead>
 			@if($ventas->count()==0)
 				<tr>
@@ -28,19 +30,24 @@
 			<tr class="">
 				<td>{{ $venta->id }}</td>
 				<td>{{ $venta->cliente->name}} {{$venta->cliente->surname }}</td>
-				<td>{{ $venta->vendedor->name }}</td>				
+				<td>{{ $venta->vendedor->name }}</td>
+				@can("ventas.show")
 				<td class="text-center">
 					<a href="{{ route('ventas.show',$venta->id) }}" title="Ver" class="btn btn-outline-info btn-sm">Ver</a>
 				</td>
+				@endcan
+				@can("ventas.show")
 				<td class="text-center">
 					<a href="{{ route('ventas.edit',$venta->id) }}" title="Editar" class="btn btn-outline-success btn-sm">Editar</a>
 				</td>
+				@endcan
+				@can("ventas.show")
 				<td class="text-center">
 					{{ Form::open(["route"=>["ventas.destroy",$venta->id],"method"=>"DELETE"]) }}
 					<button title="Eliminar" class="btn btn-outline-danger btn-sm btn-delete-data" >Eliminar</button>
-					{{ Form::close() }}
-					
+					{{ Form::close() }}					
 				</td>
+				@endcan
 			</tr>
 			@endforeach
 						

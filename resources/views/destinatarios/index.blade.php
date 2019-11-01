@@ -6,7 +6,9 @@
 		<div class="card pl-2 pr-2 pt-2 border-0">
 			<div class="card-title">
 				<h5 class="float-left">Destinatarios</h5>
+				@can("clientes.create")
 				<a href="{{route('destinatarios.create') }}" class="btn btn-sm btn-primary float-right">Crear</a>
+				@endcan
 			</div>
 		</div>		
 
@@ -14,9 +16,9 @@
 			<thead class="thead-dark">
 				<th>Nombre</th>
 				<th>Apellidos</th>				
-				<th class="text-center">Ver</th>
-				<th class="text-center">Editar</th>
-				<th class="text-center">Eliminar</th>
+				@can("ventas.show")<th class="text-center">Ver</th>@endcan
+				@can("ventas.edit")<th class="text-center">Editar</th>@endcan
+				@can("ventas.destroy")<th class="text-center">Eliminar</th>@endcan
 			</thead>
 			@if($destinatarios->count()==0)
 				<tr>
@@ -27,19 +29,23 @@
 			<tr class="">
 				<td>{{ $dest->name }}</td>
 				<td>{{ $dest->surname }}</td>
-				
+				@can("clientes.show")
 				<td class="text-center">
 					<a href="{{ route('destinatarios.show',$dest->id) }}" title="Ver" class="btn btn-outline-info btn-sm">Ver</a>
 				</td>
+				@endcan
+				@can("clientes.edit")
 				<td class="text-center">
 					<a href="{{ route('destinatarios.edit',$dest->id) }}" title="Editar" class="btn btn-outline-success btn-sm">Editar</a>
 				</td>
+				@endcan
+				@can("clientes.destroy")
 				<td class="text-center">
 					{{ Form::open(["route"=>["destinatarios.destroy",$dest->id],"method"=>"DELETE"]) }}
 					<button title="Eliminar" class="btn btn-outline-danger btn-sm btn-delete-data" >Eliminar</button>
-					{{ Form::close() }}
-					
+					{{ Form::close() }}					
 				</td>
+				@endcan
 			</tr>
 			@endforeach
 						

@@ -6,7 +6,9 @@
 		<div class="card pl-2 pr-2 pt-2 border-0">
 			<div class="card-title">
 				<h5 class="float-left">Supervisores</h5>
+				@can("supervisores.create")
 				<a href="{{route('supervisores.create') }}" class="btn btn-sm btn-primary float-right">Crear</a>
+				@endcan
 			</div>
 		</div>
 
@@ -14,9 +16,9 @@
 			<thead class="thead-dark">
 				<th>Nombre</th>
 				<th>Apellidos</th>				
-				<th class="text-center">Ver</th>
-				<th class="text-center">Editar</th>
-				<th class="text-center">Eliminar</th>
+				@can("ventas.show")<th class="text-center">Ver</th>@endcan
+				@can("ventas.edit")<th class="text-center">Editar</th>@endcan
+				@can("ventas.destroy")<th class="text-center">Eliminar</th>@endcan
 			</thead>
 			@if($supervisor->count()==0)
 				<tr>
@@ -27,19 +29,24 @@
 			<tr class="">
 				<td>{{ $sup->name }}</td>
 				<td>{{ $sup->surname }}</td>
-				
+				@can("supervisores.show")
 				<td class="text-center">
 					<a href="{{ route('supervisores.show',$sup->id) }}" title="Ver" class="btn btn-outline-info btn-sm">Ver</a>
 				</td>
+				@endcan
+				@can("supervisores.edit")
 				<td class="text-center">
 					<a href="{{ route('supervisores.edit',$sup->id) }}" title="Editar" class="btn btn-outline-success btn-sm">Editar</a>
 				</td>
+				@endcan
+				@can("supervisores.destroy")
 				<td class="text-center">
 					{{ Form::open(["route"=>["supervisores.destroy",$sup->id],"method"=>"DELETE"]) }}
 					<button title="Eliminar" class="btn btn-outline-danger btn-sm btn-delete-data" >Eliminar</button>
 					{{ Form::close() }}
 					
 				</td>
+				@endcan
 			</tr>
 			@endforeach
 						

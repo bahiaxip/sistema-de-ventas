@@ -44,7 +44,7 @@
                             			</ul>
 				                    @else
 				                        <a href="{{ route('login') }}" class="nav-link text-white">Login</a>
-				                        <a href="{{ route('register') }}" class="nav-link text-white">Register</a>
+				                        <a href="{{ route('register') }}" class="nav-link text-white">Registro</a>
 				                    @endauth
 				                
 		            			@endif
@@ -79,15 +79,27 @@
 						<div class="row">
 							<div class="col-auto col-lg-2 h-100">
 								<nav class="fm-nav bg-dark nav flex-column">
-
+								@can("supervisores.index")
 									<a href="{{ route('supervisores.index') }}" class="nav-link text-white" >Supervisores</a>
+								@endcan
+								@can("vendedores.index")
 									<a href="{{ route('vendedores.index') }}" class="nav-link text-white">Vendedores</a>
+								@endcan
+								@can("clientes.index")
 									<a href="{{route('clientes.index')}}" class="nav-link text-white">Clientes</a>
+								@endcan
+								@can("destinatarios.index")
 									<a href="{{route('destinatarios.index')}}" class="nav-link text-white">Destinatarios</a>
+								@endcan
+								@can("productos.index")
 									<a href="{{route('productos.index')}}" class="nav-link text-white">Productos</a>
+								@endcan
+								@can("categories.index")
 									<a href="{{route('categories.index')}}" class="nav-link text-white">Categorías</a>
-
+								@endcan
+								@can("ventas.index")
 									<a href="{{route('ventas.index')}}" class="nav-link text-white">Ventas</a>
+								@endcan
 								</nav>								
 							</div>
 							@yield("content")
