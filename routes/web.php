@@ -205,7 +205,7 @@ Route::middleware(["auth"])->group(function(){
 		Route::get("facturas/{factura}","FacturasController@show")->name("facturas.show")
 			->middleware("permission:ventas.show");
 		Route::get("facturas/edit/{factura}","FacturasController@edit")->name("facturas.edit")
-			->middleware("permission:facturas.edit");
+			->middleware("permission:ventas.edit");
 		Route::put("facturas/{factura}","FacturasController@update")->name("facturas.update")
 			->middleware("permission:ventas.edit");
 		Route::delete("facturas/{factura}","FacturasController@destroy")->name("facturas.destroy")
