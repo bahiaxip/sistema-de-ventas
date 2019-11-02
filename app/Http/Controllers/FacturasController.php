@@ -8,8 +8,10 @@ use App\Category;
 use App\Detalle_factura;
 use App\Venta;
 use Illuminate\Http\Request;
-
 use Illuminate\Support\Facades\DB;
+use App\Exports\FacturasExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Collection as Collection;
 
 class FacturasController extends Controller
 {
@@ -430,4 +432,24 @@ class FacturasController extends Controller
         }
     }
     */
+
+    public function export($id){
+        
+
+    //crear collection
+        //$collection=new Collection(["id"=>"2","nombre"=>"hola"]);
+        //$collection=new Collection(["id"=>"2","nombre"=>"hola"]);
+        //$var=["id"=>"2","nombre"=>"hola"];
+        //con alias Collection
+        //$collection=Collection::make($var);
+        //con helper        
+        //$collection=collect([1,2,3]);
+        
+        
+        //pasamos la colección en el constructor o pasamos el $id y
+        //creamos en el método view o collection la colección
+        $productos_factura=Detalle_factura::where("id_factura",$id)->get();
+        return Excel::download(new FacturasExport($productos_factura),"factura.xlsx");
+
+    }   
 }

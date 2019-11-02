@@ -10,10 +10,18 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+use App\Exports\FacturasExport;
 Route::get('/', function () {
     return view('index');
 });
+//Exportar a Excel
+Route::get("exportar/{id}","FacturasController@export")->name("exportar");
+//pruebas con Excel
+/*
+Route::get("/exportar/{id}",function(){
+	return (new FacturasExport())->download("products.tsv", \Maatwebsite\Excel\Excel::TSV);
+})->name("exportar");
+*/
 
 //Route::get("vendedores","VendedoresController@show")->name("vendedores");
 

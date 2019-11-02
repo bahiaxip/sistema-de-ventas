@@ -37,7 +37,9 @@
 		<div class="card seccion_productos">
 			@include("facturas.ajax-product")			
 		</div>
-		
+	</div>
+	<div>
+		<a href ="{{route('exportar',$factura->id)}}">Excel</button>
 	</div>
 @endsection
 

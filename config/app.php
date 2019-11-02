@@ -168,7 +168,11 @@ return [
         /*
          * Package Service Providers...
          */
+        //Código de barras
         'Milon\Barcode\BarcodeServiceProvider',
+        //Export Excel
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+
         /*
          * Application Service Providers...
          */
@@ -237,6 +241,8 @@ return [
         //Milon/barcode
         'DNS1D' => Milon\Barcode\Facades\DNS1DFacade::class,
         'DNS2D' => Milon\Barcode\Facades\DNS2DFacade::class,
+        //alias export a Excel
+        "Excel"=> Maatwebsite\Excel\Facades\Excel::class,
     ],
 
 ];
