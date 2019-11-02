@@ -40,6 +40,7 @@
 	</div>
 	<div>
 		<a href ="{{route('exportar',$factura->id)}}">Excel</button>
+			<a href ="{{route('exportarPDF',$factura->id)}}">PDF</button>
 	</div>
 @endsection
 

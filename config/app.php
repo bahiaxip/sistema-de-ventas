@@ -172,6 +172,8 @@ return [
         'Milon\Barcode\BarcodeServiceProvider',
         //Export Excel
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        //Export PDF
+        Barryvdh\DomPDF\ServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -243,6 +245,9 @@ return [
         'DNS2D' => Milon\Barcode\Facades\DNS2DFacade::class,
         //alias export a Excel
         "Excel"=> Maatwebsite\Excel\Facades\Excel::class,
+        //alias export a PDF
+        'PDF' => Barryvdh\DomPDF\Facade::class,
+
     ],
 
 ];

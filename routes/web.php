@@ -22,7 +22,8 @@ Route::get("/exportar/{id}",function(){
 	return (new FacturasExport())->download("products.tsv", \Maatwebsite\Excel\Excel::TSV);
 })->name("exportar");
 */
-
+//Exportar a PDF
+Route::get("/exportarPDF/{id}","FacturasController@exportPDF")->name("exportarPDF");
 //Route::get("vendedores","VendedoresController@show")->name("vendedores");
 
 Route::get("/loadProduct","ProductosController@loadProduct");

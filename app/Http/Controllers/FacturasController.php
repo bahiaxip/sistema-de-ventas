@@ -450,6 +450,12 @@ class FacturasController extends Controller
         //creamos en el método view o collection la colección
         $productos_factura=Detalle_factura::where("id_factura",$id)->get();
         return Excel::download(new FacturasExport($productos_factura),"factura.xlsx");
+    }
 
-    }   
+    public function exportPDF($id){
+        $productos_factura=Detalle_factura::where("id_factura",$id)->get();
+        $pdf = \PDF::loadView("facturas.ajax-product",compact("productos_factura"));
+        return $pdf->download("factura.pdf");
+    }
+
 }
