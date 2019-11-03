@@ -1,6 +1,6 @@
 @if($productos_factura->count()!=0)
 <?php $sum=0; ?>
-<table class="table table-hover">
+<table style="font-family:sans-serif !important;font-size:20px !important;line-height:40px" class="table table-hover ">
 	<thead>
 		<tr>
 			<th>ID</th>

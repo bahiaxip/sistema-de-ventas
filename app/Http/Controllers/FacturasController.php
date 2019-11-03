@@ -454,7 +454,13 @@ class FacturasController extends Controller
 
     public function exportPDF($id){
         $productos_factura=Detalle_factura::where("id_factura",$id)->get();
-        $pdf = \PDF::loadView("facturas.ajax-product",compact("productos_factura"));
+        //$pdf = \PDF::loadView("facturas.ajax-product",compact("productos_factura"))->setPaper("a3");
+        $view="facturas.ajax-product";
+        $html="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown.";
+
+        $pdf= \PDF::loadView($view,compact("productos_factura"));
+        //$pdf->setOptions(["defaultFont"=>"arial","dpi"=>"150"]);
+
         return $pdf->download("factura.pdf");
     }
 
