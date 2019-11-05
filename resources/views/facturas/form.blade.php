@@ -15,7 +15,7 @@
 @if(isset($venta_id))
 	<div class="form-group row">
 		<div class="col-10 col-lg-3">
-			{{ Form::label("categoria","Categoría de Producto") }}
+			{{ Form::label("categoria","Categoría ") }}
 			{{ Form::select("categoria",$categorias,null,["class"=>"form-control"]) }}
 		</div>
 		<div class="col-10 col-lg-5"> 
@@ -33,7 +33,7 @@
 		</div>
 		<div class="col-10 col-lg-2 align-self-end">
 			<!--@{{ Form::submit("Agregar",["class"=>"btn btn-primary","onclick"=>"addProductToList(event)"])}}-->
-			{{ Form::button("Agregar",["class"=>"btn btn-primary","onclick"=>"addProductToList()"])}}
+			{{ Form::button("Agregar",["class"=>"btn btn-black","onclick"=>"addProductToList()"])}}
 		</div>
 		
 	</div>
@@ -84,7 +84,7 @@
 		{{ Form::hidden("venta_id",$venta_id) }}
 	@endif
 
-{{ Form::submit("Guardar",["class"=>"btn btn-primary"]) }}
+{{ Form::submit("Guardar",["class"=>"btn btn-black"]) }}
 
 	@section("scripts")
 	<script>

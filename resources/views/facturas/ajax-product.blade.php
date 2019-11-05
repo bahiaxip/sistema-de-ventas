@@ -1,17 +1,18 @@
 @if($productos_factura->count()!=0)
 <?php $sum=0; ?>
-<table style="font-family:sans-serif !important;font-size:20px !important;line-height:40px" class="table table-hover ">
-	<thead>
-		<tr>
-			<th>ID</th>
-			<th>Producto</th>
-			<th>Precio</th>
-			<th>Cantidad</th>
-			<th>Total Producto</th>
+<table style="" class="table table-hover">
+	<thead style="background:rgba(255,140,0,1);
+	color:#FFF;">
+		<tr >
+			<th >ID</th>
+			<th >Producto</th>
+			<th >Precio</th>
+			<th >Cantidad</th>
+			<th >Total Producto</th>
 		</tr>
 	</thead>
 
-	<tbody>
+	<tbody style="background-color:#EEE9E9">
 		@foreach($productos_factura as $pro)
 		<tr>
 			<td>{{$pro->productos->id}}</td>
@@ -29,7 +30,7 @@
 		@endphp
 		<tr>
 			<td style="text-align:right" colspan="4">Total Neto</td>
-			<td class="suma"><?php echo $sum; ?></td>
+			<td class="suma"><?php echo number_format($sum,0,",","."); ?></td>
 		</tr>
 		<tr>
 			<td style="text-align:right" colspan="4">IVA</td>
@@ -41,7 +42,7 @@
 			session()->put(["suma"=>$sum]);
 			@endphp
 
-			<td><?php echo number_format($total_sum,0,",","."); ?></td>
+			<td><?php echo number_format($total_sum,0,",","."); ?>€</td>
 		</tr>
 	</tbody>
 </table>

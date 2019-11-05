@@ -3,31 +3,119 @@
 @section("content")
 	<div class="col mt-3">
 		<div class="card border-0">
-			<div class="card-title text-center pt-2">
+			<div class="card-header text-center pt-3 fondo-gris text-white">
 				<h5><strong>Detalle de venta</strong></h5>
 			</div>
-			<div class="card-body offset-3">
-				<p><strong>ID:</strong> &nbsp;{{ $venta->id }}</p>
-				<p><strong>Cliente:</strong> &nbsp;{{ $venta->cliente->surname }}, {{$venta->cliente->name}}</p>
-				<p><strong>Destinatario factura:</strong> &nbsp;{{ $venta->destinatario->surname}}, {{$venta->destinatario->name}}</p>
-				<p><strong>Vendedor:</strong> &nbsp;{{ $venta->vendedor->surname }}, {{$venta->vendedor->name}}</p>
-				<p><strong>Neto Total:</strong> &nbsp;{{number_format($venta->total,0,",",".")}}€</p>
-				<p><strong>Fecha:</strong> &nbsp;{{$venta->date}}</p>
-				<p><strong>Hora:</strong> &nbsp;{{$venta->time}}</p>
-				<p><strong>Facturas:</strong> &nbsp; 
-				<?php
-				if($facturas->count()>0){
-					?>
-					<a href="{{route('facturas.index','venta='.$venta->id)}}" >Ver Facturas</a>
-					<?php					
-				}else{
-					?>
-					<a href="{{ route('facturas.create','venta='.$venta->id) }}">Crear Factura</a>
-					<?php
-				}
-				?>
-				</p>
+			<div class="card-body">
+				<div class="row div-show">
+					<div class="col-12 text-center col-md-3 text-md-left">
+						<span class="badge p-2 span-show">
+							ID:
+						</span>
+					</div>				
+
+					<div class="col-12 text-center col-md-9 pt-2 text-md-left">	
+						<span>
+							{{ $venta->id }}
+						</span>
+					</div>
+				</div>
+				<div class="row div-show pt-3">
+					<div class="col-12 text-center col-md-3 text-md-left">
+						<span class="badge p-2 span-show">
+							Cliente:
+						</span>
+					</div>
+					<div class="col-12 text-center col-md-9 pt-2 text-md-left">	
+						<span>
+							{{ $venta->cliente->surname }}, {{$venta->cliente->name}}
+						</span>
+					</div>
+				</div>
+				<div class="row div-show pt-3">
+					<div class="col-12 text-center col-md-3 text-md-left">
+						<span class="badge p-2 span-show">
+							Destinatario:
+						</span>
+					</div>
+					<div class="col-12 text-center col-md-9 pt-2 text-md-left">	
+						<span>
+							{{ $venta->destinatario->surname}}, {{$venta->destinatario->name}}
+						</span>
+					</div>
+				</div>
+				<div class="row div-show pt-3">
+					<div class="col-12 text-center col-md-3 text-md-left">
+						<span class="badge p-2 span-show">
+							Vendedor:
+						</span>
+					</div>
+					<div class="col-12 text-center col-md-9 pt-2 text-md-left">	
+						<span>
+							{{ $venta->vendedor->surname}}, {{$venta->vendedor->name}}
+						</span>
+					</div>
+				</div>
+				<div class="row div-show pt-3">
+					<div class="col-12 text-center col-md-3 text-md-left">
+						<span class="badge p-2 span-show">
+							Neto:
+						</span>
+					</div>
+					<div class="col-12 text-center col-md-9 pt-2 text-md-left">	
+						<span>
+							{{number_format($venta->total,0,",",".")}}€
+						</span>
+					</div>
+				</div>
+				<div class="row div-show pt-3">
+					<div class="col-12 text-center col-md-3 text-md-left">
+						<span class="badge p-2 span-show">
+							Fecha:
+						</span>
+					</div>
+					<div class="col-12 text-center col-md-9 pt-2 text-md-left">	
+						<span>
+							{{ $venta->date }}
+						</span>
+					</div>
+				</div>
+				<div class="row div-show pt-3">
+					<div class="col-12 text-center col-md-3 text-md-left">
+						<span class="badge p-2 span-show">
+							Hora:
+						</span>
+					</div>
+					<div class="col-12 text-center col-md-9 pt-2 text-md-left">	
+						<span>
+							{{ $venta->time }}
+						</span>
+					</div>
+				</div>
+				<div class="row div-show pt-3">
+					<div class="col-12 text-center col-md-3 text-md-left">
+						<span class="badge p-2 span-show">
+							Facturas:
+						</span>
+					</div>
+					<div class="col-12 text-center col-md-9 pt-2 text-md-left">	
+						<span>
+							<?php
+							if($facturas->count()>0){
+								?>
+								<a href="{{route('facturas.index','venta='.$venta->id)}}" >Ver Facturas</a>
+								<?php					
+							}else{
+								?>
+								<a href="{{ route('facturas.create','venta='.$venta->id) }}">Crear Factura</a>
+								<?php
+							}
+							?>
+						</span>
+					</div>
+				</div>
 			</div>
+			
 		</div>
 	</div>
 @endsection

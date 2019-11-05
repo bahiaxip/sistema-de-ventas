@@ -1,5 +1,5 @@
 <table class="table table-hover">
-	<thead>
+	<thead class="table-titulo">
 		<tr>
 			<th>ID</th>
 			<th>Producto</th>

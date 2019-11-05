@@ -43,7 +43,7 @@
 	{{ Form::text("cellphone",null,["class"=>"form-control"]) }}
 </div>
 <div class="form-group">
-	{{ Form::submit("Guardar",["class"=>"btn btn-primary"]) }}
+	{{ Form::submit("Guardar",["class"=>"btn btn-black"]) }}
 </div>
 
 @section("scripts")

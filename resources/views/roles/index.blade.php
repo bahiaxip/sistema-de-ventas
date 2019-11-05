@@ -4,15 +4,15 @@
 
 	
 		<div class="col mt-3">
-			<div class="card  pl-2 pr-2 pt-2 border-0">
-				<div class="card-title">
+			<div class="card  pl-2 pr-2 pt-2 border-0 navegador">
+				<div class="card-header">
 					<h5 class="float-left">Roles</h5>
 					<a href="{{route('roles.create') }}" class="btn btn-sm btn-primary float-right">Crear</a>
 				</div>
 			</div>
 			
-			<table class="table table-hover">
-				<thead class="bg-dark text-white">
+			<table class="table text-white table-roles">
+				<thead class="thead-dark text-white">
 					<th>Nombre</th>
 					<th>Ver</th>
 					<th>Editar</th>
