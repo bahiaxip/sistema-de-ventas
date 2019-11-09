@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Category;
-
+use App\Http\Controllers\HomeController as home;
 class CategoryController extends Controller
 {
     /**
@@ -14,6 +14,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
+        //anulado método estático
+        //$route=home::ruta();
+        //dd($route);
         $categories=Category::paginate(10);
         return view("categories.index",compact("categories"));
     }
@@ -93,9 +96,18 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy(Request $request)
     {
-        $category->delete();
-        return back();
+        if($request->ajax()){            
+            //método estático que obtiene el nombre del controlador y //añade el prefijo . y el sufijo _table para pasar el nombre //del div que recarga los datos          
+            $div=home::ruta();            
+            $category=Category::where("id",$request->id)->first();
+            $category->delete();
+            $categories=Category::paginate(10);
+            //withPath permite que al eliminar con ajax no cambie la paginación
+            $categories->withPath("");
+            $dato=view("categories.table_categories",compact("categories"))->render();
+            return response()->json(["dato"=>$dato,"div"=>$div]);
+        }
     }
 }

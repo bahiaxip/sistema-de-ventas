@@ -14,7 +14,7 @@ use App\Exports\FacturasExport;
 Route::get('/', function () {
     return view('index');
 });
-//Exportar a Excel
+//Exportar factura a Excel
 Route::get("exportar/{id}","FacturasController@export")->name("exportar");
 //pruebas con Excel
 /*
@@ -22,9 +22,12 @@ Route::get("/exportar/{id}",function(){
 	return (new FacturasExport())->download("products.tsv", \Maatwebsite\Excel\Excel::TSV);
 })->name("exportar");
 */
-//Exportar a PDF
+//Exportar factura a PDF
 Route::get("/exportarPDF/{id}","FacturasController@exportPDF")->name("exportarPDF");
 //Route::get("vendedores","VendedoresController@show")->name("vendedores");
+//Enviar correo de factura
+Route::post("exportarEmail","FacturasController@exportEmail")->name("exportarEmail");
+
 
 Route::get("/loadProduct","ProductosController@loadProduct");
 Route::post("addProduct","ProductosController@addProduct")->name("addProduct");
@@ -37,6 +40,11 @@ Route::post("prod_factura","FacturasController@destroyProdFactura")->name("destr
 
 Route::post("reload_factura","FacturasController@reloadFactura")->name("reloadFactura");
 //Route::resource("supervisores","SupervisoresController");
+
+
+//eliminar registros 
+Route::post("deleteData","HomeController@deleteData")->name("deleteData");
+
 
 Auth::routes();
 
@@ -94,8 +102,11 @@ Route::middleware(["auth"])->group(function(){
 
 	Route::put("vendedores/{vendedor}","VendedoresController@update")->name("vendedores.update")
 			->middleware("permission:vendedores.edit");
-			
+	//modificado por ajax
+	/*
 	Route::delete("vendedores/{vendedor}","VendedoresController@destroy")->name("vendedores.destroy");
+	*/
+	Route::post("vendedores_destroy","VendedoresController@destroy")->name("vendedores.destroy");
 
 		//Supervisores	
 	Route::get("supervisores","SupervisoresController@index")->name("supervisores.index")
@@ -116,8 +127,11 @@ Route::middleware(["auth"])->group(function(){
 
 	Route::put("supervisores/{supervisor}","SupervisoresController@update")->name("supervisores.update")
 			->middleware("permission:supervisores.edit");
-			
+	//modificado por ajax
+	/*		
 	Route::delete("supervisores/{supervisor}","SupervisoresController@destroy")->name("supervisores.destroy");
+	*/
+	Route::post("supervisores_destroy","SupervisoresController@destroy")->name("supervisores.destroy");
 
 		//Clientes
 		Route::get("clientes","ClienteController@index")->name("clientes.index")
@@ -132,8 +146,14 @@ Route::middleware(["auth"])->group(function(){
 			->middleware("permission:clientes.edit");
 		Route::put("clientes/{cliente}","ClienteController@update")->name("clientes.update")
 			->middleware("permission:clientes.edit");
+		/*
 		Route::delete("clientes/{cliente}","ClienteController@destroy")->name("clientes.destroy")
 			->middleware("permission:clientes.destroy");
+		*/
+			//método delete con ajax
+		Route::post("clientes_destroy","ClienteController@destroy")->name("clientes.destroy")
+		->middleware("permission:clientes.destroy");
+
 
 	//Route::resource("clientes","ClienteController");
 			
@@ -151,7 +171,12 @@ Route::middleware(["auth"])->group(function(){
 			->middleware("permission:clientes.edit");
 		Route::put("destinatarios/{destinatario}","DestinatariosController@update")->name("destinatarios.update")
 			->middleware("permission:clientes.edit");
+		//modificado a método con ajax
+		/*
 		Route::delete("destinatarios/{destinatario}","DestinatariosController@destroy")->name("destinatarios.destroy")
+			->middleware("permission:clientes.destroy");
+		*/
+		Route::post("destinatarios_destroy","DestinatariosController@destroy")->name("destinatarios.destroy")
 			->middleware("permission:clientes.destroy");
 
 	//Route::resource("destinatarios","DestinatariosController");
@@ -169,7 +194,8 @@ Route::middleware(["auth"])->group(function(){
 			->middleware("permission:productos.edit");
 		Route::put("productos/{producto}","ProductosController@update")->name("productos.update")
 			->middleware("permission:productos.edit");
-		Route::delete("productos/{producto}","ProductosController@destroy")->name("productos.destroy")
+			//pasamos delete a POST para ajax
+		Route::post("productos_destroy","ProductosController@destroy")->name("productos.destroy")
 			->middleware("permission:productos.destroy");
 
 		//Categorías
@@ -185,8 +211,11 @@ Route::middleware(["auth"])->group(function(){
 			->middleware("permission:categories.edit");
 		Route::put("categories/{category}","CategoryController@update")->name("categories.update")
 			->middleware("permission:categories.edit");
+			/*
 		Route::delete("categories/{category}","CategoryController@destroy")->name("categories.destroy")
 			->middleware("permission:categories.destroy");
+			*/
+			Route::post("categories_destroy","CategoryController@destroy")->name("categories.destroy")->middleware("permission:categories.destroy");
 
 		//Ventas
 		Route::get("ventas","VentasController@index")->name("ventas.index")

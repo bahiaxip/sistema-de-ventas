@@ -17,13 +17,24 @@ class VentasController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+
+
     public function index()
-    {
+    {   
+        
+     
+     
+        if(!session()->has("design"))
+            session("design");        
+        session()->put("design","true");
+        $design=session("design");
+        
         $ventas=Venta::orderBy("id","desc")->paginate(10);
         //$clientes=Cliente::all();
         
         $vendedores=Vendedor::all();
-        return view("ventas.index",compact("ventas","vendedores"));
+        return view("ventas.index",compact("ventas","vendedores","design"));
     }
 
     /**

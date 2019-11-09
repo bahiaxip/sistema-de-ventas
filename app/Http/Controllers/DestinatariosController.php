@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use App\Destinatario;
 use Illuminate\Http\Request;
 use App\Classes\Paises;
-
+use App\Http\Controllers\HomeController as home;
 class DestinatariosController extends Controller
 {
     
@@ -107,9 +107,29 @@ class DestinatariosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
+    //modificado  a destroy con ajax
+    /*
     public function destroy(Destinatario $destinatario)
     {
         $destinatario->delete();
         return back();
     }
-}
+    */
+
+    public function destroy(Request $request){
+
+        if($request->ajax()){            
+            $div=home::ruta();
+            $destinatario=Destinatario::where("id",$request->id)->first();
+            $destinatario->delete();
+            $destinatarios=Destinatario::paginate(10);
+            //withPath permite que al eliminar con ajax no cambie la paginación
+            $destinatarios->withPath("");
+            $dato=view("destinatarios.table_destinatarios",compact("destinatarios"))->render();
+            return response()->json(["dato"=>$dato,"div"=>$div]);
+
+        }
+    }
+
+}   

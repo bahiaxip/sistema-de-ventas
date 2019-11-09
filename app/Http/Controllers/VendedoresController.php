@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\VendedorStoreRequest;
 use App\Http\Requests\VendedorUpdateRequest;
-
+use App\Http\Controllers\HomeController as home;
 
 class VendedoresController extends Controller
 {
@@ -104,9 +104,27 @@ class VendedoresController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
+    //modificado a destroy con ajax
+    /*
     public function destroy(Vendedor $vendedor)
     {
         $vendedor->delete();
         return back();
+    }
+    */
+
+    public function destroy(Request $request){
+        if($request->ajax()){
+            $div=home::ruta();
+
+            $vended=Vendedor::where("id",$request->id)->first();
+            $vended->delete();
+            $vendedor=Vendedor::paginate(10);
+            //withPath permite que al eliminar con ajax no cambie la paginación
+            $vendedor->withPath("");
+            $dato=view("vendedores.table_vendedores",compact("vendedor"))->render();
+            return response()->json(["dato"=>$dato,"div"=>$div]);
+        }
     }
 }

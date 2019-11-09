@@ -12,19 +12,26 @@ use Illuminate\Support\Facades\DB;
 use App\Exports\FacturasExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Collection as Collection;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Factura as emailFactura;
 
 class FacturasController extends Controller
 {
     protected $t;
     
+
+    public function __construct(){
+        //asignamos el iva a 21
+        config(["datos.IVA"=>"21"]);
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {        
-        //dd($total_venta);
+    {   
+        
         //implementar acordeón
         if($request->venta){
             $venta_id=$request->venta;
@@ -462,6 +469,26 @@ class FacturasController extends Controller
         //$pdf->setOptions(["defaultFont"=>"arial","dpi"=>"150"]);
 
         return $pdf->download("factura.pdf");
+    }
+    //necesario SendEmailRequest
+    public function exportEmail(Request $request){
+        if(isset($request)){ 
+        
+            //email de destino seleccionado
+            $destino=$request->hiddenEmail;            
+            $id_factura=$request->id_factura;
+            //consulta de todos los productos de la factura
+            $productos_factura=Detalle_factura::where("id_factura",$id_factura)->get();
+            //Envío de factura por Mail
+            Mail::to($destino)->send(new emailFactura($productos_factura,$destino));
+        }
+        return back();
+
+        //$mensaje= new class{};
+        //$mensaje->email=$request->email;
+
+
+        
     }
 
 }

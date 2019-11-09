@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Classes\Paises;
 //convertir array en objeto Laravel
 use Illuminate\Support\Collection as Collection;
+use App\Http\Controllers\HomeController as home;
 
 class ClienteController extends Controller
 {
@@ -192,9 +193,21 @@ class ClienteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cliente $cliente)
+    //public function destroy(Cliente $cliente)
+    public function destroy(Request $request)
     {
-        $cliente->delete();
-        return back();
+        if($request->ajax()){
+            //método estático que obtiene el nombre del controlador y //añade el prefijo . y el sufijo _table para pasar el nombre //del div que recarga los datos
+            $div=home::ruta();
+            $cliente=Cliente::where("id",$request->id)->first();
+            $cliente->delete();
+            $clientes=Cliente::paginate(10);
+            //withPath permite que al eliminar con ajax no cambie la paginación
+            $clientes->withPath("");
+            $dato=view("clientes.table_clientes",compact("clientes"))->render();
+            return response()->json(["dato"=>$dato,"div"=>$div]);
+        }
+        
+        
     }
 }

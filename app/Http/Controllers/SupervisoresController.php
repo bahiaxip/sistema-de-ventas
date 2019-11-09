@@ -6,7 +6,7 @@ use App\Supervisor;
 use Illuminate\Http\Request;
 use App\Http\Requests\SupervisorStoreRequest;
 use App\Http\Requests\SupervisorUpdateRequest;
-
+use App\Http\Controllers\HomeController as home;
 class SupervisoresController extends Controller
 {
     /**
@@ -83,9 +83,21 @@ class SupervisoresController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    //modificado por destroy con ajax
+    /*
     public function destroy(Supervisor $supervisor)
     {
         $supervisor->delete();
         return back();
+    }
+    */
+    public function destroy(Request $request){
+        $div=home::ruta();
+        $supervis=Supervisor::where("id",$request->id)->first();
+        $supervis->delete();
+        $supervisor=Supervisor::paginate(10);
+        $supervisor->withPath("");
+        $dato=view("supervisores.table_supervisores",compact("supervisor"))->render();
+        return response()->json(["dato"=>$dato,"div"=>$div]);
     }
 }

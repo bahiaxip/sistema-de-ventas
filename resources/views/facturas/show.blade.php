@@ -99,15 +99,17 @@
 				
 		</div>
 		
-		<div class="form-group row justify-content-center pt-2">
+		<div class="form-group row justify-content-center pt-2 ">
 			<!--<a href="{{URL::previous()}}" class="btn btn-sm btn-primary">Volver Atrás</a>-->
 			<div>
 				<a class="btn btn-black" href ="{{route('exportar',$factura->id)}}" title="Descargar en Excel">Excel</a>
 				<a class="btn btn-black" href ="{{route('exportarPDF',$factura->id)}}" title="Descargar en PDF">PDF</a>
+				<button id="btn-modal-factura" class="btn btn-black">Enviar Correo</button>
 			</div>
 			<div class="col-10 col-md-5">
 
 			<a href="#collapse1" data-toggle="collapse" class="btn btn-block btn-black btn-ver_factura" title="Ver factura completa" onclick="cambiarTexto()">Ver factura completa</a>
+
 		</div>
 	</div>
 	
@@ -117,11 +119,76 @@
 			@include("facturas.ajax-product")			
 		</div>
 	</div>
+	<div class="modal fade" id="modal-mail-factura">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title">
+						Indique el correo de destino
+					</div>
+
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						{{ Form::open(["route"=>"exportarEmail","id"=>"sendEmail"]) }}
+						@if($factura->venta->destinatario->email==$factura->venta->cliente->email)
+							{{ Form::select("email",[$factura->venta->destinatario->email],null,["class"=>"form-control select2","id"=>"selectEmail"])}}
+						@else
+							{{ Form::select("email",[$factura->venta->destinatario->email,$factura->venta->cliente->email],null,["class"=>"form-control select2"])}}
+						@endif
+						{{Form::hidden("hiddenEmail",null,["id"=>"hiddenEmail"])}}
+						{{Form::hidden("id_factura",$factura->id)}}
+						{{ Form::close() }}
+
+					</div>
+					<div class="row pt-3">
+						<div class="col">
+							<button class="btn btn-outline-success" data-dismiss="modal" >Cancelar</button>
+							<button id="btn-mail-factura" class="btn btn-outline-danger">
+								Enviar
+							</button>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 @endsection
 
 @section("scripts")
 	<script>
+			//select para modal (enviar correo)
+		$(document).ready(function(){
+			$(".select2").select2({
+				tags:true
+			})
+		});
+		//modal enviar correo
+		$("#btn-modal-factura").on("click",function(e){
+			e.preventDefault();
+			$("#modal-mail-factura").modal("show");
+			$("#btn-mail-factura").on("click",function(){				
+				let select=document.querySelector("#selectEmail"),		
+					val=select.options[select.options.selectedIndex].innerHTML,
+					hidden=document.querySelector("#hiddenEmail"),
+					Dato={};
+					hidden.value=val;
+					
 
+				//Dato.email=val;
+				//Dato.productos_factura=hidden.value;
+				//let dato=JSON.stringify(Dato);
+
+				
+				document.querySelector("#sendEmail").submit();
+			});
+			
+			
+			
+		})
+		
+		//cambiar texto en boton ver factura completa
 		function cambiarTexto(){
 			let btn=document.querySelector(".btn-ver_factura");
 			if(btn.innerHTML=="Ver factura completa"){
@@ -131,8 +198,8 @@
 				btn.title="Ver factura completa";
 				btn.innerHTML="Ver factura completa";	
 			}
-			
 		}
+		//selección de productos según categoría
 		$("#categoria").on("change",function(){
 			if($(this).val!=0){
 				var datos=$(this).val();
@@ -155,6 +222,9 @@
 				})
 			}
 		});
+
+		//añadir producto a factura anulado
+		/*
 		function addProductToFactura(id,e){
 			e.preventDefault();
 			var url="../addProduct";
@@ -190,6 +260,8 @@
 			});
 			//console.log("bien0");
 		}
+		*/
+
 
 
 	</script>

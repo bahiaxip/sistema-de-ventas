@@ -152,23 +152,87 @@
 								</nav>								
 							</div>
 							@yield("content")
+
 						</div>						
 					</div>
 				</div>				
 			</div>
 			<script>
 
-				//evento botón eliminar registro que muestra ventana confirmación 
+				//evento botón eliminar registro que muestra ventana confirmación anulado por cambio a ajax
+				/*
 				$(".btn-delete-data").on("click",function(e) {
 					e.preventDefault();
 					var btn=$(this);
 					$("#modal_delete").modal("show");
 					//modo sin ajax, versión ajax en mundaxip
 					$("#btn-modal-delete").click(function(e){
+						btn.parents("tr").hide();return;
 						e.preventDefault();
-						btn.parents("form").submit();	
+						$.ajax({
+							type:"POST",
+							
+						})
+						//btn.parents("form").submit();	
 					})
 				});
+				*/
+				//necesaria variable btn y _id para que no se repita 
+				var btn="";
+				let _id="";
+			function deleteData(id,ide,ruta,e){
+				e.preventDefault();
+				
+				$("#modal_delete").modal("show");
+					btn=ide;
+					_id=id;
+
+					console.log("ide de sol: ",ide);
+				$("#btn-modal-delete").on("click",function(e){
+					//para que no se repita la petición					
+					e.stopImmediatePropagation();					
+					console.log("btn: ",btn);
+					console.log("ide:  ",ide);
+					let parent=btn.parentElement.parentElement.parentElement;
+					//let url="{{route('productos.destroy')}}";
+
+					//añadimos productos.destroy como válido 
+					// y reemplazamos por el parámetro ruta
+					let url="{{ route('productos.destroy') }}";
+					url=url.replace(/productos.destroy/g,ruta);
+					
+					//ocultamos y eliminamos
+					console.log("parent: ",parent);
+					//console.log(btn);
+					parent.style.display="none";
+					parent.parentElement.removeChild(parent);
+
+					//ocultamos modal
+					$("#modal_delete").modal("hide");
+					
+					$.ajax({
+						type:"POST",
+						url:url,
+						data:{id:_id,_token:"{{csrf_token()}}" },
+						success:function(data){
+							$(data.div).html("");
+							$(data.div).html(data.dato);
+							console.log(data);						
+						},
+						error:function(){
+							console.log("ErRor");
+						}
+					});
+				});
+				
+				
+				
+				
+				
+				
+
+
+			}
 
 			//menu lateral para pantallas más pequeñas
             $(function()

@@ -13,5 +13,12 @@
 		</div>
 	</div>
 	-->
+	<div class="row bg-white ">
+		<div class="col-12 w-100">
+			asdfsdf
+			<i class="fas fa-plus-circle fa-lg" style="color:orange "></i>
+		</div>
+
+	</div>
 
 @endsection

@@ -54,7 +54,7 @@
 		<?php
 	}else {
 		?>
-		{{ Form::number("vat",config("iva"),["class"=>"form-control","readonly"=>"readonly"]) }}
+		{{ Form::number("vat",config("datos.IVA"),["class"=>"form-control","readonly"=>"readonly"]) }}
 		<?php
 	}
 	?>

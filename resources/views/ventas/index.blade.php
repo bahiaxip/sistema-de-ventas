@@ -34,18 +34,38 @@
 					<td>{{ $venta->vendedor->name }}</td>
 					@can("ventas.show")
 					<td class="text-center">
-						<a href="{{ route('ventas.show',$venta->id) }}" title="Ver" class="btn btn-outline-info btn-sm">Ver</a>
+						@if($design=="true")
+						<a href="{{ route('ventas.show',$venta->id) }}" title="Ver">
+							<i class="fab fa-sistrix fa-lg"></i>
+						</a>
+						@else
+						<a href="{{ route('ventas.show',$venta->id) }}" title="Ver" class="btn btn-outline-info btn-sm">
+							Ver
+						</a>
+						@endif
 					</td>
 					@endcan
 					@can("ventas.show")
 					<td class="text-center">
-						<a href="{{ route('ventas.edit',$venta->id) }}" title="Editar" class="btn btn-outline-success btn-sm">Editar</a>
+						@if($design=="true")
+						<a href="{{ route('ventas.edit',$venta->id) }}" title="Editar">							
+							<i class="far fa-edit fa-lg"></i>
+						</a>
+						@else
+						<a href="{{ route('ventas.edit',$venta->id) }}" title="Editar {{$venta->id}}" class="btn btn-outline-success btn-sm">
+							Editar
+						</a>							
+						@endif
 					</td>
 					@endcan
 					@can("ventas.show")
-					<td class="text-center">
+					<td class="text-center">						
 						{{ Form::open(["route"=>["ventas.destroy",$venta->id],"method"=>"DELETE"]) }}
+						@if($design=="true")
+							<i class="fas fa-times-circle fa-lg btn-delete-data" title="Eliminar"></i>
+						@else
 						<button title="Eliminar" class="btn btn-outline-danger btn-sm btn-delete-data" >Eliminar</button>
+						@endif
 						{{ Form::close() }}					
 					</td>
 					@endcan

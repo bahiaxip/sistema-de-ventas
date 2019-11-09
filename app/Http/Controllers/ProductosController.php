@@ -8,20 +8,43 @@ use App\Detalle_factura;
 use App\Http\Controllers\FacturasController;
 use App\Venta;
 use Illuminate\Http\Request;
-
+//use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController as home;
 class ProductosController extends Controller
 {
+    //método que obtiene el nombre del controlador y lo convierte 
+    //en una ruta con método destroy
+    //anulado enviado a HomeController estático
+    /*
+    public function getRoute(){
+        //ruta del controlador con su método
+        //$ruta=Route::getCurrentRoute()->getActionName();
+        //array de ruta del controlador
+        $ruta=Route::getCurrentRoute()->getAction();
+        //extraemos el nombre del controlador   
+        $controlador=class_basename($ruta["controller"]);        
+        //$b=explode("@",Route::getCurrentRoute()->getActionName())[0];
+        //dividimos el nombre del controlador con su método en un array
+        $arr_controlador=explode("@",$controlador);
+        //extraemos el sufijo Controller 
+        $result=explode("Controller",$arr_controlador[0])[0];        
+        //pasamos a minúsculas
+        $res=strtolower($result);
+        return $res.".destroy";
+    }
+    */
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {        
-
-            
+    {       
+        //anulado método estático
+        //$route=home::ruta();
+        
         $productos=Producto::paginate(10);
-        return view("productos.index",compact("productos"));        
+        return view("productos.index",compact("productos"));
     }
 
     /**
@@ -122,10 +145,31 @@ class ProductosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    //método destroy anulado por cambio con ajax
+    /*
     public function destroy(Producto $producto)
     {
+        if($request->ajax()){
+            return "hola desde productos.destroy";
+        }
         $producto->delete();
         return back();
+    }
+    */
+
+    public function destroy(Request $request)
+    {
+        if($request->ajax()){
+            //método estático que obtiene el nombre del controlador y //añade el prefijo . y el sufijo _table para pasar el nombre //del div que recarga los datos
+            $div=home::ruta();
+            $producto=Producto::where("id",$request->id)->first();
+            $producto->delete();
+            $productos=Producto::paginate(10);
+            //withPath permite que al eliminar con ajax no cambie la paginación
+            $productos->withPath("");
+            $dato=view("productos.table_productos",compact("productos"))->render();
+            return response()->json(["dato"=>$dato,"div"=>$div]);
+        }
     }
 
     //método respuesta ajax de select filtrar productos por categoría
