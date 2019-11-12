@@ -14,6 +14,8 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Collection as Collection;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Factura as emailFactura;
+use App\Http\Requests\FacturaStoreRequest;
+use App\Http\Requests\FacturaUpdateRequest;
 
 class FacturasController extends Controller
 {
@@ -71,7 +73,7 @@ class FacturasController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(FacturaStoreRequest $request)
     {
         //dd($request->all());
         //$factura=new Factura($request->all());        
@@ -219,7 +221,7 @@ class FacturasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Factura $factura)
+    public function update(FacturaUpdateRequest $request, Factura $factura)
     {   
         
         //revisar y rehacer el update

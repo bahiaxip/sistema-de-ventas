@@ -1,10 +1,8 @@
 <?php
-
 namespace App\Http\Requests;
-
 use Illuminate\Foundation\Http\FormRequest;
-
-class VendedorUpdateRequest extends FormRequest
+use Auth;
+class UserUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +11,7 @@ class VendedorUpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return Auth::check();
     }
 
     /**
@@ -24,13 +22,9 @@ class VendedorUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            "name"=> "required|string",
-            "surname"=> "required|string",
-            "email"=> "required|email|unique:vendedores,email,".$this->vendedor->id,
-            "phone"=> "required|digits_between:8,13",
-            //"phone"=> "required|digits:9",
-            "id_supervisor"=>"required|exists:supervisores,id",
-
+            "name"=>"required|string",
+            "roles"=>"nullable",
+            "roles.*"=>"integer"
         ];
     }
 }

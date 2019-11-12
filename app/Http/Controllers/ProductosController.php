@@ -10,6 +10,8 @@ use App\Venta;
 use Illuminate\Http\Request;
 //use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController as home;
+use App\Http\Requests\ProductoStoreRequest;
+use App\Http\Requests\ProductoUpdateRequest;
 class ProductosController extends Controller
 {
     //método que obtiene el nombre del controlador y lo convierte 
@@ -64,7 +66,7 @@ class ProductosController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductoStoreRequest $request)
     {
         //Al añadir al campo category_id un select que puede
         //crear categorías al no ser numérico da error
@@ -115,7 +117,7 @@ class ProductosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Producto $producto)
+    public function update(ProductoUpdateRequest $request, Producto $producto)
     {
         //opcion para poder insertar una categoría nueva desde el select
         $producto=Producto::where("id",$producto->id)->first();

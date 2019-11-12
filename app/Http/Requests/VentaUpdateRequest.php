@@ -3,9 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
+use Auth;
 
-class SupervisorUpdateRequest extends FormRequest
+class VentaUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,8 +14,8 @@ class SupervisorUpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        //return true;
         return Auth::check();
+        
     }
 
     /**
@@ -25,11 +25,12 @@ class SupervisorUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            "name"=>"required|string",
-            "surname"=>"required|string",
-            "email" => "required|email|unique:supervisores,email,".$this->supervisor->id,
-            "phone" => "required|digits_between:8,13"
+        $rules = [
+            "id_cliente"=>"required|exists:clientes,id",
+            "destinatario_id"=>"required|exists:destinatarios,id",
+            "id_vendedor"=>"required|exists:vendedores,id",
+            "total"=>"required|numeric"            
         ];
+        return $rules;
     }
 }

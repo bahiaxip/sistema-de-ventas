@@ -7,6 +7,7 @@ use Caffeinated\Shinobi\Models\Role;
 use Illuminate\Http\Request;
 use App\Http\Controllers\HomeController as home;
 use Auth;
+use App\Http\Requests\UserUpdateRequest;
 
 class UserController extends Controller
 {
@@ -79,7 +80,7 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(UserUpdateRequest $request, User $user)
     {
         $user->update($request->all());
         $user->roles()->sync($request->get("roles"));

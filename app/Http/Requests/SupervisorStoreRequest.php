@@ -27,8 +27,8 @@ class SupervisorStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            "name"=>"required",
-            "surname"=>"required",
+            "name"=>"required|string",
+            "surname"=>"required|string",
             "email" => "required|email|unique:supervisores,email",
             "phone" => "required|digits_between:8,13"
         ];

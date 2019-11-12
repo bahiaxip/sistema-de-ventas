@@ -101,14 +101,16 @@ class ClienteController extends Controller
     {        
         $cliente=Cliente::create($request->all());
 
+        
+
         if($request->file("logo")){
-            $dir="image/".$cliente->id;
-            //dd($request->file("logo"));
+            //si no existe (no debe existir) creamos directorio del //cliente para el logo
+            $dir="image/".$cliente->id;            
             //si no existe el directorio se crea
             if(!is_dir($dir))
                 mkdir($dir);
 
-            //modificando el config/filesystem es necesario de las 2 formas siguientes tanto para las opciones para el $path como para el save()
+            //modificando el config/filesystem es necesario de las 2 formas siguientes tanto para la opción con el $path como para el save()
             //opcion1 para ruta($path)
             //$path = Storage::disk("public")->put("image/",$request->file("logo"));
             //opcion2 para ruta($path)            
@@ -120,7 +122,7 @@ class ClienteController extends Controller
             //$cliente->save();
         }
 
-        //creamos tb un registro en destinatarios 
+        //creamos tb un registro en destinatarios con los mismos datos 
         $destinatarios=Destinatario::create($request->only("name","surname","country","province","city","address","postal_code","email","phone","fax","cellphone"));
         return redirect()->route("clientes.index");
 
@@ -162,24 +164,22 @@ class ClienteController extends Controller
         $cliente->update($request->all());
 
         if($request->file("logo")){
-            $dir="image/".$cliente->id;
-            //no es necesario revisar el directorio ya que en el //método store se crea aunque no se suba imagen
-            /*
-            if(!is_dir("image"))
-                mkdir("image");
-            */
-            
+             //si no existe creamos directorio del cliente para el logo
+            $dir="image/".$cliente->id;            
+            //si no existe el directorio se crea
+            if(!is_dir($dir))
+                mkdir($dir);
+            //escaneo del directorio
             $scan=@scandir($dir);
             //un directorio siempre tiene un array de 2 elementos
             //que son . y .. por tanto creamos la condición >2
-            //de esta forma si al crear el cliente no se sube ninguna 
-            //al subirla en la edición no es necesario eliminar
+            //de esta forma si al crear el cliente no se inserta ninguna 
+            //imagen, al subirla en la edición no es necesario eliminar //nada, si existen eliminamos todo.
             if(count($scan)>2){
                 $mask=$dir."/*.*";
                 //hacemos unlink a todos los elementos del directorio
                 array_map("unlink",glob($mask));
             }
-
             $path=$request->file("logo")->store($dir);
             $cliente->logo=$path;
             $cliente->save();

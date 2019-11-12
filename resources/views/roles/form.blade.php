@@ -21,9 +21,9 @@
 <div class="form-group row">
 	<div class="col">
 		
-		<label>{{ Form::radio("special","all-access") }}Acceso Total</label>
+		<label>{{ Form::radio("special","all-access") }}&nbsp;&nbsp;Acceso Total</label>
 		&nbsp;&nbsp;&nbsp;
-		<label>{{ Form::radio("special","no-access") }}Ningún Acceso</label>
+		<label>{{ Form::radio("special","no-access") }}&nbsp;&nbsp;Ningún Acceso</label>
 	</div>
 </div>
 <h5>Lista de Permisos</h5>

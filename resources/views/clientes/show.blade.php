@@ -100,7 +100,9 @@
 					</div>
 					<div class="col-12 text-center col-md-9 text-md-left pt-1">
 						<span>
-							<img name="logo" id="logo" src="{{$cliente->logo }}" width="100">
+							<img name="logo" id="logo" src="{{asset($cliente->logo) }}" width="100">
+							<!-- para imágenes de lorempixel (sin asset)-->
+							<!--<img name="logo" id="logo" src="{{$cliente->logo}}" width="100">-->
 						</span>
 					</div>
 				</div>

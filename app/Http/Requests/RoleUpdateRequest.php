@@ -3,9 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
-
-class SupervisorUpdateRequest extends FormRequest
+use Auth;
+use Illuminate\Validation\Rule;
+class RoleUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,7 +14,6 @@ class SupervisorUpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        //return true;
         return Auth::check();
     }
 
@@ -27,9 +26,11 @@ class SupervisorUpdateRequest extends FormRequest
     {
         return [
             "name"=>"required|string",
-            "surname"=>"required|string",
-            "email" => "required|email|unique:supervisores,email,".$this->supervisor->id,
-            "phone" => "required|digits_between:8,13"
+            "slug"=>"required|string",
+            "description"=>"required|string",
+            "special"=>["nullable",Rule::in(["all-access","no-access"])],
+            "permissions"=>"nullable",
+            "permissions.*"=>"integer|exists:permissions,id"
         ];
     }
 }
