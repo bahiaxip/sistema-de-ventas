@@ -7,7 +7,7 @@
 			<div class="card  pl-2 pr-2 pt-2 border-0 navegador">
 				<div class="card-header">
 					<h5 class="float-left">Roles</h5>
-					<a href="{{route('roles.create') }}" class="btn btn-sm btn-primary float-right">Crear</a>
+					<a href="{{route('roles.create') }}" class="btn btn-sm btn-primary float-right btn-black">Crear</a>
 				</div>
 			</div>
 			

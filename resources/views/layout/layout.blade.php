@@ -80,9 +80,9 @@
 				                    @auth			                    
 				                        <a href="#" class="nav-link text-white dropdown-toggle" data-toggle="dropdown">{{Auth::user()->name}}</a>
 
-				                        <ul class="dropdown-menu menu-user ">			                                
-			                                <li class="nav-link ">
-			                                    <a href="{{ route('logout') }}"
+				                        <ul class="dropdown-menu menu-user submenu-user">
+			                                <li class="nav-link  ">
+			                                    <a href="{{ route('logout') }}" class="text-white" 
 			                                        onclick="event.preventDefault();
 			                                                 document.getElementById('logout-form').submit();">
 			                                        Cerrar Sesión

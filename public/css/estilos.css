@@ -22,6 +22,19 @@
 	background-color:#EE7600;
 }
 
+.submenu-user{
+	color:#FFF;
+	background-color:#363636;
+
+}
+.submenu-user:hover{
+	background-color:#EE7600;
+	
+}
+.submenu-user a{
+	text-decoration:none;
+}
+
 /* barra lateral oculta */
 /* menu de fondo al desplegar menú oculto lateral  */
 #fondo_menu
