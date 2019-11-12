@@ -1,31 +1,37 @@
 @extends("layout/layout")
 
 @section("content")
-
-	<div class="row">		
-		<div class="col-12 col-md-6">
-			<div class="card">
-				<div class="card-text">
-					<p class=" bg-dark text-white p-2 text-center">Nombre</p>
+	<div class="col mt-3">
+		<div class="card border-0">
+			<div class="card-header text-center pt-3 fondo-gris text-white">
+				<h5><strong>Detalle de producto</strong></h5>
+			</div>
+			<div class="card-body">
+				<div class="row div-show">
+					<div class="col-12 text-center col-md-3 text-md-left">
+						<span class="badge span-show p-2">
+							Nombre:
+						</span>
+					</div>
+					<div class="col-12 text-center col-md-9 text-md-left pt-2">
+						<span>
+							{{$user->name }}
+						</span>
+					</div>
 				</div>
-				<div class="card-body">
-					<h4 class="text-center">{{$user->name }}</h4>
-				</div>
+				<div class="row div-show pt-3">
+					<div class="col-12 text-center col-md-3 text-md-left">
+						<span class="badge span-show p-2">
+							E-Mail:
+						</span>
+					</div>
+					<div class="col-12 text-center col-md-9 text-md-left pt-2">
+						<span>
+							{{$user->email }}
+						</span>
+					</div>
+				</div>												
 			</div>
 		</div>
 	</div>
-	<div class="row mt-3">
-		<div class="col-12 col-md-6">
-			<div class="card">
-				<div class="card-text">
-					<p class="bg-dark text-white p-2 text-center">Email</p>
-				</div>
-				<div class="card-body">
-					<h4 class="text-center">{{$user->email}}</h4>
-				</div>
-				
-			</div>
-		</div>
-	</div>
-
 @endsection

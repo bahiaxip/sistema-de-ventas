@@ -9,6 +9,7 @@ use App\Destinatario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Http\Controllers\HomeController as home;
 
 class VentasController extends Controller
 {
@@ -21,20 +22,11 @@ class VentasController extends Controller
 
 
     public function index()
-    {   
-        
-     
-     
-        if(!session()->has("design"))
-            session("design");        
-        session()->put("design","true");
-        $design=session("design");
-        
-        $ventas=Venta::orderBy("id","desc")->paginate(10);
-        //$clientes=Cliente::all();
-        
+    {
+        $ventas=Venta::paginate(10);
+        //$clientes=Cliente::all();        
         $vendedores=Vendedor::all();
-        return view("ventas.index",compact("ventas","vendedores","design"));
+        return view("ventas.index",compact("ventas","vendedores"));
     }
 
     /**
@@ -125,9 +117,19 @@ class VentasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Venta $venta)
+    public function destroy(Request $request)
     {
-        $venta->delete();
-        return back();
+
+        if($request->ajax()){
+            $div=home::ruta();
+            $venta=Venta::where("id",$request->id)->first();
+            $venta->delete();
+            $ventas=Venta::paginate(10);
+            
+            $ventas->withPath("");
+            $design=session("design");
+            $dato=view("ventas.table_ventas",compact("ventas","design"))->render();            
+            return response()->json(["dato"=>$dato,"div"=>$div]);
+        }        
     }
 }

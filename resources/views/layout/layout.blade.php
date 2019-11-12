@@ -63,7 +63,7 @@
 				<div class="row mb-3">
 					<div class="col">
 						<header >
-							<nav class="p-1 navegador">								
+							<nav class="p-1 navegador">
 								<a  class="nav-link d-lg-none" style="float:left;color: #FFF" id="botonmenu">
 									<i class="fas fa-bars fa-lg" ></i>
 								</a>
@@ -177,6 +177,9 @@
 					})
 				});
 				*/
+
+				//eliminar registros excepto roles
+
 				//necesaria variable btn y _id para que no se repita 
 				var btn="";
 				let _id="";
@@ -194,6 +197,7 @@
 					console.log("btn: ",btn);
 					console.log("ide:  ",ide);
 					let parent=btn.parentElement.parentElement.parentElement;
+
 					//let url="{{route('productos.destroy')}}";
 
 					//añadimos productos.destroy como válido 
@@ -202,7 +206,7 @@
 					url=url.replace(/productos.destroy/g,ruta);
 					
 					//ocultamos y eliminamos
-					console.log("parent: ",parent);
+					console.log("parent: ",parent);//return;
 					//console.log(btn);
 					parent.style.display="none";
 					parent.parentElement.removeChild(parent);
@@ -224,15 +228,19 @@
 						}
 					});
 				});
-				
-				
-				
-				
-				
-				
-
+			}
+			function deleteDataRole(ide,e){
+				e.preventDefault();
+				$("#modal_delete").modal("show");
+				btn=ide;
+				$("#btn-modal-delete").on("click",function(e){					
+					btn.parentElement.submit();
+				});
+				return;
 
 			}
+
+			
 
 			//menu lateral para pantallas más pequeñas
             $(function()

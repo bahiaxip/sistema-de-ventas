@@ -57,13 +57,19 @@ Route::middleware(["auth"])->group(function(){
 
 	Route::get("users","UserController@index")->name("users.index")
 			->middleware("permission:users.index");
-	Route::get("users/{user}","UserController@show")->name("users.show")
-			->middleware("permission:users.show");
+	Route::get("users/{user}","UserController@show")->name("users.show");
+			
 	Route::get("users/edit/{user}","UserController@edit")->name("users.edit")
 			->middleware("permission:users.edit");
 	Route::put("users/update/{user}","UserController@update")->name("users.update")
 			->middleware("permission:users.edit");
+
+	//modificado con ajax
+	/*
 	Route::delete("user/destroy/{user}","UserController@destroy")->name("users.destroy")
+			->middleware("permission:users.destroy");
+	*/
+	Route::post("users_destroy","UserController@destroy")->name("users.destroy")
 			->middleware("permission:users.destroy");
 
 			//Roles
@@ -230,8 +236,13 @@ Route::middleware(["auth"])->group(function(){
 			->middleware("permission:ventas.edit");
 		Route::put("ventas/{venta}","VentasController@update")->name("ventas.update")
 			->middleware("permission:ventas.edit");
+		//modificado a método con ajax
+		/*
 		Route::delete("ventas/{venta}","VentasController@destroy")->name("ventas.destroy")
-			->middleware("permission:ventas.destroy");			
+			->middleware("permission:ventas.destroy");
+		*/
+		Route::post("ventas_destroy","VentasController@destroy")->name("ventas.destroy")
+			->middleware("permission:ventas.destroy");	
 		
 		//Facturas
 		Route::get("facturas","FacturasController@index")->name("facturas.index")

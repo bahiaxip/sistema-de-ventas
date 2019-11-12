@@ -3,7 +3,7 @@
 
 return [
 	"IVA"=>"",
-	"DESIGN"=>"",
+	"design"=>"false",
 ];
 
 

@@ -18,18 +18,34 @@
 					<td>{{ $dest->surname }}</td>
 					@can("clientes.show")
 					<td class="text-center">
-						<a href="{{ route('destinatarios.show',$dest->id) }}" title="Ver" class="btn btn-outline-info btn-sm">Ver</a>
+						@if(config('datos.design')=="true")
+							<a href="{{ route('destinatarios.show',$dest->id) }}" title="Ver">
+								<i class="fab fa-sistrix fa-lg"></i>
+							</a>
+						@else
+							<a href="{{ route('destinatarios.show',$dest->id) }}" title="Ver" class="btn btn-outline-info btn-sm">Ver</a>
+						@endif
 					</td>
 					@endcan
 					@can("clientes.edit")
 					<td class="text-center">
-						<a href="{{ route('destinatarios.edit',$dest->id) }}" title="Editar" class="btn btn-outline-success btn-sm">Editar</a>
+						@if(config('datos.design')=="true")
+							<a href="{{ route('destinatarios.edit',$dest->id) }}" title="Editar">							
+								<i class="far fa-edit fa-lg"></i>
+							</a>
+						@else
+							<a href="{{ route('destinatarios.edit',$dest->id) }}" title="Editar" class="btn btn-outline-success btn-sm">Editar</a>
+						@endif
 					</td>
 					@endcan
 					@can("clientes.destroy")
 					<td class="text-center">
 						{{ Form::open(["route"=>["destinatarios.destroy",$dest->id],"method"=>"DELETE"]) }}
-						<button title="Eliminar" class="btn btn-outline-danger btn-sm btn-delete-data" onclick="deleteData({{$dest->id}},this,'destinatarios_destroy',event)" >Eliminar</button>
+						@if(config('datos.design')=="true")
+							<i class="fas fa-times-circle fa-lg btn-delete-data" title="Eliminar" onclick="deleteData({{$dest->id}},this,'destinatarios_destroy',event)"></i>
+						@else
+							<button title="Eliminar" class="btn btn-outline-danger btn-sm btn-delete-data" onclick="deleteData({{$dest->id}},this,'destinatarios_destroy',event)" >Eliminar</button>
+						@endif
 						{{ Form::close() }}					
 					</td>
 					@endcan

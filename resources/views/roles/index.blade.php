@@ -25,7 +25,7 @@
 					<td><a href="{{route('roles.edit',$role->id) }}" class="btn btn-sm btn-outline-primary">Editar</a></td>
 					<td>
 						{{ Form::open(["route"=>["roles.destroy",$role->id],"method"=>"DELETE"]) }}
-						<button class="btn btn-sm btn-outline-danger">
+						<button class="btn btn-sm btn-outline-danger" onclick="deleteDataRole(this,event)">
 						Eliminar
 						</button>
 						{{ Form::close() }}
