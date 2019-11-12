@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Http\Controllers\HomeController as home;
+use App\Http\Requests\VentaStoreRequest;
+use App\Http\Requests\VentaUpdateRequest;
 
 class VentasController extends Controller
 {
@@ -55,9 +57,8 @@ class VentasController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        
+    public function store(VentaStoreRequest $request)
+    {        
         $now=Carbon::now();
         //dd($now);
         $venta=new Venta($request->all());
@@ -105,8 +106,9 @@ class VentasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Venta $venta)
+    public function update(VentaUpdateRequest $request, Venta $venta)
     {
+        
         $venta->update($request->all());
         return back();
     }

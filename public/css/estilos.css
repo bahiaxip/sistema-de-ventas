@@ -2,12 +2,17 @@
 	cursor:pointer;
 }
 
-.navegador{
+.navegador.layout{
 	/*background:rgba(0,0,0,.7);*/
 	/*background:linear-gradient(to bottom, rgba(238,118,118,.6), rgba(238,118,0,1) 25%, rgba(238,118,0,1) 70%,rgba(238,118,0,.6));*/
 	background-color:#363636;
 	color:#FFF;
-
+}
+.navegador.layout a{
+	color:#FFF ;
+}
+.navegador.layout a:hover{
+	color:#EE7600 ;
 }
 .menu{
 	background-color:#696969 !important;
@@ -22,16 +27,12 @@
 	background-color:#EE7600;
 }
 
-.submenu-user{
-	color:#FFF;
-	background-color:#363636;
+/*****desplegable de sesión**************/
 
+.navegador .submenu-user {
+	background-color:#363636;	
 }
-.submenu-user:hover{
-	background-color:#EE7600;
-	
-}
-.submenu-user a{
+.navegador .submenu-user a{
 	text-decoration:none;
 }
 

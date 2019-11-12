@@ -5,6 +5,8 @@ use App\Destinatario;
 use Illuminate\Http\Request;
 use App\Classes\Paises;
 use App\Http\Controllers\HomeController as home;
+use App\Http\Requests\DestinatarioStoreRequest;
+use App\Http\Requests\DestinatarioUpdateRequest;
 class DestinatariosController extends Controller
 {
     
@@ -46,7 +48,7 @@ class DestinatariosController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(DestinatarioStoreRequest $request)
     {
         Destinatario::create($request->all());
         return redirect()->route("destinatarios.index");
@@ -90,7 +92,7 @@ class DestinatariosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Destinatario $destinatario)
+    public function update(DestinatarioUpdateRequest $request, Destinatario $destinatario)
     {
         /*
         if($destinatario->country=="España" && $request->country!="España"){

@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
-
-class ClienteStoreRequest extends FormRequest
+use Auth;
+class DestinatarioStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +23,7 @@ class ClienteStoreRequest extends FormRequest
      */
     public function rules()
     {
-        $rules= [
-            "nif"=>"required|unique:clientes,nif",
+        $rules = [
             "name"=>"required|string",
             "surname"=>"required|string",
             "country"=>"required|string",
@@ -33,15 +31,11 @@ class ClienteStoreRequest extends FormRequest
             "city"=>"required|string",
             "address"=>"required|string",
             "postal_code"=>"required|string",
-            "logo"=>"nullable|image|mimes:jpg,jpeg,png|max:2048",
             "email"=>"nullable|email",
             "phone"=>"required|numeric",
             "fax"=>"nullable|numeric",
-            "cellphone"=>"nullable|numeric",
-            "web"=>"nullable|string"
+            "cellphone"=>"nullable|numeric"
         ];
-        /*if($this->get("logo"))
-            $rules=array_merge($rules,["logo"=>"mimes:jpg,jpeg,png|max:2048"]);*/
 
         return $rules;
     }

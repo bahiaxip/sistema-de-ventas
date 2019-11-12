@@ -63,26 +63,26 @@
 				<div class="row mb-3">
 					<div class="col">
 						<header >
-							<nav class="p-1 navegador">
+							<nav class="p-1 navegador layout">
 								<a  class="nav-link d-lg-none" style="float:left;color: #FFF" id="botonmenu">
 									<i class="fas fa-bars fa-lg" ></i>
 								</a>
 								<div class="nav justify-content-center" >
-									<a href="{{ url('/') }}" class="nav-link text-white">Inicio</a>
+									<a href="{{ url('/') }}" class="nav-link">Inicio</a>
 									
 									@can("users.index")
-									<a href="{{route('users.index')}}" class="nav-link text-white">Usuarios</a>
+									<a href="{{route('users.index')}}" class="nav-link">Usuarios</a>
 									@endcan
 									@can("roles.index")
-									<a href="{{route('roles.index')}}" class="nav-link text-white">Roles</a>
+									<a href="{{route('roles.index')}}" class="nav-link">Roles</a>
 									@endcan								
 								@if (Route::has('login'))
 				                    @auth			                    
-				                        <a href="#" class="nav-link text-white dropdown-toggle" data-toggle="dropdown">{{Auth::user()->name}}</a>
+				                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">{{Auth::user()->name}}</a>
 
 				                        <ul class="dropdown-menu menu-user submenu-user">
 			                                <li class="nav-link  ">
-			                                    <a href="{{ route('logout') }}" class="text-white" 
+			                                    <a href="{{ route('logout') }}" 
 			                                        onclick="event.preventDefault();
 			                                                 document.getElementById('logout-form').submit();">
 			                                        Cerrar Sesión

@@ -55,6 +55,10 @@
 	{{ Form::text("cellphone",null,["class"=>"form-control"]) }}
 </div>
 <div class="form-group">
+	{{ Form::label("web","Web") }}
+	{{ Form::text("web",null,["class"=>"form-control"]) }}
+</div>
+<div class="form-group">
 	{{ Form::submit("Guardar",["class"=>"btn btn-black"]) }}
 </div>
 @section("scripts")

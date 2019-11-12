@@ -53,7 +53,6 @@ class VendedoresController extends Controller
      */
     public function store(VendedorStoreRequest $request)
     {   
-
         $vendedor=Vendedor::create($request->all());
         //dd($vendedor->id_supervisor);
         //return redirect()->route("vendedores.index");

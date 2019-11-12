@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Caffeinated\Shinobi\Models\Role;
 use Caffeinated\Shinobi\Models\Permission;
 use Illuminate\Http\Request;
-
+use App\Http\Requests\RoleStoreRequest;
+use App\Http\Requests\RoleUpdateRequest;
 
 class RoleController extends Controller
 {
@@ -38,9 +39,8 @@ class RoleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        dd($request->all());
+    public function store(RoleStoreRequest $request)
+    {        
         $role=Role::create($request->all());
         $role->permissions()->sync($request->get("permissions"));
         return redirect()->route("roles.edit",$role->id);
@@ -79,7 +79,7 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Role $role)
+    public function update(RoleUpdateRequest $request, Role $role)
     {
         //actualiza rol
         $role->update($request->all());

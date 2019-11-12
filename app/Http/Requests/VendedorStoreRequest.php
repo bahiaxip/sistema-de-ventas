@@ -24,12 +24,12 @@ class VendedorStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            "name"=> "required",
-            "surname"=> "required",
+            "name"=> "required|string",
+            "surname"=> "required|string",
             "email"=> "required|email|unique:vendedores,email",
             "phone"=> "required|digits_between:8,13",
             //"phone"=> "required|digits:9",
-            "id_supervisor"=>"required|integer"
+            "id_supervisor"=>"required|exists:supervisores,id"
         ];
     }
 }
