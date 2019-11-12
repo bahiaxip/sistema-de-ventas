@@ -7,7 +7,7 @@
 			<div class="card  pl-2 pr-2 pt-2 border-0 navegador">
 				<div class="card-header">
 					<h5 class="float-left">Roles</h5>
-					<a href="{{route('roles.create') }}" class="btn btn-sm btn-primary float-right">Crear</a>
+					<a href="{{route('roles.create') }}" class="btn btn-sm btn-black float-right">Crear</a>
 				</div>
 			</div>
 			
@@ -25,7 +25,7 @@
 					<td><a href="{{route('roles.edit',$role->id) }}" class="btn btn-sm btn-outline-primary">Editar</a></td>
 					<td>
 						{{ Form::open(["route"=>["roles.destroy",$role->id],"method"=>"DELETE"]) }}
-						<button class="btn btn-sm btn-outline-danger">
+						<button class="btn btn-sm btn-outline-danger" onclick="deleteDataRole(this,event)">
 						Eliminar
 						</button>
 						{{ Form::close() }}

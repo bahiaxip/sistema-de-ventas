@@ -6,6 +6,7 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\DB;
 
 class RegisterController extends Controller
 {
@@ -62,10 +63,18 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user= User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+        //creamos perfil
+        DB::table("profiles")->insert([
+            "design_bar"=>"false",
+            "design_index"=>"false",
+            "user_id"=>$user->id
+        ]);
+
+        return $user;
     }
 }

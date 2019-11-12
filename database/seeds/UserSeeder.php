@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use Caffeinated\Shinobi\Models\Role;
+use Illuminate\Support\Facades\DB;
 
 class UserSeeder extends Seeder
 {
@@ -14,12 +15,18 @@ class UserSeeder extends Seeder
     {
         factory(App\User::class,22)->create([]);
         //añadimos el user xip, los 3 roles y asignamos el rol admin al usuario xip
-        App\User::create([
+        $user=App\User::create([
             "name" => "xip",
             "email" => "mundaxip@gmail.com",
             "password" => bcrypt("laravel")
         ]);
-
+        //añadimos profile a xip
+        DB::table("profiles")->insert([
+            "design_bar"=>"false",
+            "design_index"=>"false",
+            "user_id"=>$user->id
+        ]);
+        //creamos los roles por defecto
         Role::create([
         	"name" => "Admin",
         	"slug" => "admin",

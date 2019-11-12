@@ -18,18 +18,34 @@
 			<td>{{ $sup->surname }}</td>
 			@can("supervisores.show")
 			<td class="text-center">
+			@if(config('datos.design')=="true")
+				<a href="{{ route('supervisores.show',$sup->id) }}" title="Ver">
+					<i class="fab fa-sistrix fa-lg"></i>
+				</a>				
+			@else
 				<a href="{{ route('supervisores.show',$sup->id) }}" title="Ver" class="btn btn-outline-info btn-sm">Ver</a>
+			@endif
 			</td>
 			@endcan
 			@can("supervisores.edit")
 			<td class="text-center">
+			@if(config('datos.design')=="true")
+				<a href="{{ route('supervisores.edit',$sup->id) }}" title="Editar">							
+					<i class="far fa-edit fa-lg"></i>
+				</a>
+			@else
 				<a href="{{ route('supervisores.edit',$sup->id) }}" title="Editar" class="btn btn-outline-success btn-sm">Editar</a>
+			@endif
 			</td>
 			@endcan
 			@can("supervisores.destroy")
 			<td class="text-center">
 				{{ Form::open(["route"=>["supervisores.destroy",$sup->id],"method"=>"DELETE"]) }}
-				<button title="Eliminar" class="btn btn-outline-danger btn-sm btn-delete-data" onclick="deleteData({{$sup->id}},this,'supervisores_destroy',event)" >Eliminar</button>
+				@if(config('datos.design')=="true")
+					<i class="fas fa-times-circle fa-lg btn-delete-data" title="Eliminar" onclick="deleteData({{$sup->id}},this,'supervisores_destroy',event)"></i>
+				@else
+					<button title="Eliminar" class="btn btn-outline-danger btn-sm btn-delete-data" onclick="deleteData({{$sup->id}},this,'supervisores_destroy',event)" >Eliminar</button>
+				@endif
 				{{ Form::close() }}
 				
 			</td>
