@@ -24,17 +24,12 @@ class FacturaStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            //incluimos varios campos en un array y así usamos un solo
-            //mensaje para varios campos
-            
             "net"=>"required|integer",
             "vat"=>"required|integer",
             "total"=>"required|integer",
             "state"=>"required|string",
             "order_buy"=>"nullable|numeric",
             "office_guide"=>"nullable|numeric"
-
-            //"state"=>"required|string",
         ];
     }
     public function messages(){
