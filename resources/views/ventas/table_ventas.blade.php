@@ -10,7 +10,7 @@
 	<tbody class="table-sistema">		
 	@if($ventas->count()==0)			
 		<tr>
-			<td class="text-center" colspan="5"><strong>No existen resultados</strong></td>
+			<td class="text-center" colspan="6"><strong>No existen resultados</strong></td>
 		</tr>
 	@endif
 	@foreach($ventas as $venta)

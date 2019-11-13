@@ -24,39 +24,50 @@
 	            	
 					@can("ventas.index")
 	                <li>
-						<a href="{{route('ventas.index')}}" class="nav-link text-white">Ventas</a>								
+						<a href="{{route('ventas.index')}}" class="nav-link">Ventas</a>								
 	                </li>
 	                @endcan
 	                @can("categories.index")
 	                <li >
-	                    <a href="{{route('categories.index')}}" class="nav-link text-white">Categorías</a>								
+	                    <a href="{{route('categories.index')}}" class="nav-link">Categorías</a>								
 	                </li>
 	                @endcan
 	                @can("productos.index")
 	                <li>
-						<a href="{{route('productos.index')}}" class="nav-link text-white">Productos</a>						
+						<a href="{{route('productos.index')}}" class="nav-link">Productos</a>						
 	                </li>
 	                @endcan
 					@can("clientes.index")
 					<li>
-						<a href="{{route('clientes.index')}}" class="nav-link text-white">Clientes</a>
+						<a href="{{route('clientes.index')}}" class="nav-link">Clientes</a>
 					</li>
 					@endcan
 					@can("destinatarios.index")
 	                <li>
-						<a href="{{route('destinatarios.index')}}" class="nav-link text-white">Destinatarios</a>
+						<a href="{{route('destinatarios.index')}}" class="nav-link">Destinatarios</a>
 					</li>
 					@endcan
 	                @can("vendedores.index")
 					<li>
-						<a href="{{ route('vendedores.index') }}" class="nav-link text-white">Vendedores</a>
+						<a href="{{ route('vendedores.index') }}" class="nav-link">Vendedores</a>
 					</li>
 					@endcan
 	                @can("supervisores.index")
 					<li>
-						<a href="{{ route('supervisores.index') }}" class="nav-link text-white" >Supervisores</a>
+						<a href="{{ route('supervisores.index') }}" class="nav-link" >Supervisores</a>
 					</li>
 					@endcan
+
+					@can("users.index")
+					<li>
+						<a href="{{route('users.index')}}" class="nav-link">Usuarios</a>
+					</li>
+					@endcan
+					@can("roles.index")
+					<li>
+						<a href="{{route('roles.index')}}" class="nav-link">Roles</a>
+					</li>
+					@endcan				
 	            </ul>
 	        </div>
 			<div class="container">
@@ -64,18 +75,19 @@
 					<div class="col">
 						<header >
 							<nav class="p-1 navegador layout">
-								<a  class="nav-link d-lg-none" style="float:left;color: #FFF" id="botonmenu">
+								<a  class="nav-link d-lg-none" style="float:left;color: #FFF;cursor:pointer" id="botonmenu">
 									<i class="fas fa-bars fa-lg" ></i>
 								</a>
 								<div class="nav justify-content-center" >
 									<a href="{{ url('/') }}" class="nav-link">Inicio</a>
-									
-									@can("users.index")
-									<a href="{{route('users.index')}}" class="nav-link">Usuarios</a>
+									@can("ventas.create")
+									<a href="{{ url('/') }}" class="nav-link">Nueva venta</a>
 									@endcan
-									@can("roles.index")
-									<a href="{{route('roles.index')}}" class="nav-link">Roles</a>
-									@endcan								
+									@can("clientes.create")
+									<a href="{{ url('/') }}" class="nav-link">Nuevo cliente</a>
+									@endcan
+									<a href="{{ url('/') }}" class="nav-link">Almacén</a>
+													
 								@if (Route::has('login'))
 				                    @auth			                    
 				                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">{{Auth::user()->name}}</a>
@@ -104,17 +116,18 @@
 						</header>
 						<div class="modal fade" id="modal_delete" >
 							<div class="modal-dialog modal-sm">
-								<div class="modal-content">
+								<div class="modal-content navegador">
 									<div class="modal-header ">
 										<div class="modal-title ">
-											<p>Desea eliminar el registro?</p>
+											<p>Seguro que desea eliminar el registro?</p>
 										</div>
 									</div>
 									<div class="modal-body">
 										<div class="row">
-											<div class="col">
-												<button  class="btn btn-outline-primary" data-dismiss="modal" >Cancelar</button>
-												<button id="btn-modal-delete" class="btn btn-outline-primary">
+											<div class="col text-center">
+												<button  class="btn btn-black" data-dismiss="modal" >Cancelar</button>
+													&nbsp;&nbsp;
+												<button id="btn-modal-delete" class="btn btn-black">
 													Eliminar
 												</button>
 											</div>
@@ -128,27 +141,36 @@
 							<div class="col-auto col-xl-2 h-100 d-none d-lg-flex ">
 								<nav class="fm-nav menu nav flex-column">
 								@can("ventas.index")
-									<a href="{{route('ventas.index')}}" class="nav-link text-white">Ventas</a>
+									<a href="{{route('ventas.index')}}" class="nav-link">Ventas</a>
 								@endcan
 								@can("categories.index")
-									<a href="{{route('categories.index')}}" class="nav-link text-white">Categorías</a>
+									<a href="{{route('categories.index')}}" class="nav-link">Categorías</a>
 								@endcan
 								@can("productos.index")
-									<a href="{{route('productos.index')}}" class="nav-link text-white">Productos</a>
+									<a href="{{route('productos.index')}}" class="nav-link">Productos</a>
 								@endcan
 								@can("clientes.index")
-									<a href="{{route('clientes.index')}}" class="nav-link text-white">Clientes</a>
+									<a href="{{route('clientes.index')}}" class="nav-link">Clientes</a>
 								@endcan
 								@can("destinatarios.index")
-									<a href="{{route('destinatarios.index')}}" class="nav-link text-white">Destinatarios</a>
+									<a href="{{route('destinatarios.index')}}" class="nav-link">Destinatarios</a>
 								@endcan
 								@can("vendedores.index")
-									<a href="{{ route('vendedores.index') }}" class="nav-link text-white">Vendedores</a>
+									<a href="{{ route('vendedores.index') }}" class="nav-link">Vendedores</a>
 								@endcan
 								@can("supervisores.index")
-									<a href="{{ route('supervisores.index') }}" class="nav-link text-white" >Supervisores</a>
+									<a href="{{ route('supervisores.index') }}" class="nav-link" >Supervisores</a>
 								@endcan
-								
+								@can("users.index")
+								<li>	
+									<a href="{{route('users.index')}}" class="nav-link">Usuarios</a>
+								</li>
+								@endcan
+								@can("roles.index")
+								<li>
+									<a href="{{route('roles.index')}}" class="nav-link">Roles</a>
+								</li>
+								@endcan				
 								</nav>								
 							</div>
 							@yield("content")
@@ -263,6 +285,18 @@
                    e.preventDefault();
                });
             });
+
+            //cambiar color del desplegable de settings
+            function cambiarColor(id){
+            	let search=id.className.search("btn-black");
+            	if(search!=-1){
+            		id.classList.remove("btn-black");
+            		id.classList.add("btn-grey");
+            	}else{
+            		id.classList.remove("btn-grey");
+            		id.classList.add("btn-black");
+            	}
+            }
 			</script>
 			<script src="{{ asset("js/select2.js") }}"></script>
 			@yield("scripts")

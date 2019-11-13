@@ -73,5 +73,10 @@ class HomeController extends Controller
         $res=strtolower($result);
         return ".".$res."_table";
     }
+
+    public function warehouse(){
+        
+        return view("warehouse");
+    }
     
 }

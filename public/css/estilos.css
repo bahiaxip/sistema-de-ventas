@@ -2,11 +2,12 @@
 	cursor:pointer;
 }
 
-.navegador.layout{
-	/*background:rgba(0,0,0,.7);*/
-	/*background:linear-gradient(to bottom, rgba(238,118,118,.6), rgba(238,118,0,1) 25%, rgba(238,118,0,1) 70%,rgba(238,118,0,.6));*/
+.navegador{
 	background-color:#363636;
 	color:#FFF;
+}
+.navegador.layout{
+	
 }
 .navegador.layout a{
 	color:#FFF ;
@@ -17,11 +18,10 @@
 .menu{
 	background-color:#696969 !important;
 	color:#FFF;
-
-	
 }
+
 .menu a{
-	
+	color:#FFF;	
 }
 .menu a:hover{
 	background-color:#EE7600;
@@ -57,29 +57,38 @@
 
 .barra_lateral
 {
-    width:40%;
+    width:35%;
     background:rgba(0,0,0,.8);
     position:fixed;
     z-index:902;
     top:0;
     left:0;
     height:100vh;
-    padding:0;
+    padding:0 !important;
     margin:0;
     transform:translateX(-100%);
     transition:all .3s  ease;
     overflow:auto;
     font-family: Titillium;
-    font-size:18px;
-    
+    font-size:18px;    
     font-weight: bold;
 }
 .barra_lateral ul{
 	list-style:none;
+	padding-left:5%;
+	padding-right:5%;
+
+
 }
 .barra_lateral.active
 {
     transform: translateX(0%);
+}
+.barra_lateral a{
+	color:#FFF;
+}
+.barra_lateral a:hover{
+	background-color:#EE7600;
 }
 
 .fondo-gris{
