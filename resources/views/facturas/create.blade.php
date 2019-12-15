@@ -26,7 +26,8 @@
         </div>
         @endif
 		{{ Form::open(["route"=> "facturas.store"])}}
-		<!-- booleano para campo IVA -->
+		<!-- booleano para campo IVA para que el form 
+            distinga del create del edit-->
 			@include("facturas.form",["iva"=>true])
 		{{ Form::close()}}
 	</div>

@@ -20,7 +20,7 @@
 				@can("ventas.edit")<th class="text-center">Editar</th>@endcan
 				@can("ventas.destroy")<th class="text-center">Eliminar</th>@endcan
 			</thead>
-			<tbody class="table-sistema" 
+			<tbody class="table-sistema">
 			@if($facturas->count()==0)
 				<tr>
 					<td class="text-center" colspan="5"><strong>No existen resultados</strong></td>

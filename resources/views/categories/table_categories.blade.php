@@ -19,7 +19,7 @@
 			<td>{{ $cat->name }}</td>
 			@can("categories.edit")
 			<td class="text-center">
-			@if(config('datos.design')=="true")
+			@if(config('datos.design')=="ICONS")
 				<a href="{{ route('categories.edit',$cat->id) }}" title="Editar">
 					<i class="far fa-edit fa-lg"></i>
 				</a>
@@ -31,7 +31,7 @@
 			@can("categories.destroy")
 			<td class="text-center">
 				{{ Form::open(["route"=>["categories.destroy",$cat->id],"method"=>"DELETE"]) }}
-				@if(config('datos.design')=="true")
+				@if(config('datos.design')=="ICONS")
 					<i class="fas fa-times-circle fa-lg btn-delete-data" title="Eliminar" onclick="deleteData({{$cat->id}},this,'categories_destroy',event)"></i>
 				@else
 					<button title="Eliminar" class="btn btn-outline-danger btn-sm btn-delete-data" onclick="deleteData({{$cat->id}},this,'categories_destroy',event)">Eliminar</button>

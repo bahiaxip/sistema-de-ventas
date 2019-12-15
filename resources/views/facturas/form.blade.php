@@ -31,7 +31,7 @@
 			{{ Form::label("cantidad","Cantidad") }}
 			{{ Form::number("cantidad",1,["class"=>"form-control"])}}
 		</div>
-		<div class="col-10 col-lg-2 align-self-end">
+		<div class="col-10 pt-3 col-lg-2 pt-lg-0 align-self-end">
 			<!--@{{ Form::submit("Agregar",["class"=>"btn btn-primary","onclick"=>"addProductToList(event)"])}}-->
 			{{ Form::button("Agregar",["class"=>"btn btn-black","onclick"=>"addProductToList()"])}}
 		</div>
@@ -54,7 +54,7 @@
 		<?php
 	}else {
 		?>
-		{{ Form::number("vat",config("datos.IVA"),["class"=>"form-control","readonly"=>"readonly"]) }}
+		{{ Form::number("vat",$vat->data,["class"=>"form-control","readonly"=>"readonly"]) }}
 		<?php
 	}
 	?>
@@ -97,15 +97,15 @@
 
 	$("#categoria").on("change",function(){
 		if($(this).val!=0){
-			var datos=$(this).val();
-			var url="../../loadProduct";
+			var datos=$(this).val();			
+			var url="../../loadProduct";			
 			$.ajax({
 				type:"GET",
 				data: {data: datos},
 				url:url,
 				//dataType:"json",
 				success: function(data){
-					//console.log(data);
+					console.log(url);
 					$("select[name='producto'").html("");
 					$("select[name='producto'").html(data.datos);
 					//console.log(data.options);

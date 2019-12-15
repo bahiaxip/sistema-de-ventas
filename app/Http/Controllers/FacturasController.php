@@ -19,13 +19,16 @@ use App\Http\Requests\FacturaUpdateRequest;
 
 class FacturasController extends Controller
 {
-    protected $t;
-    
+    //anulado construct
+    /*
+    protected $t;    
 
     public function __construct(){
-        //asignamos el iva a 21
-        config(["datos.IVA"=>"21"]);
+                
     }
+    */
+
+
     /**
      * Display a listing of the resource.
      *
@@ -41,7 +44,6 @@ class FacturasController extends Controller
             $facturas=Factura::where("venta_id",$venta_id)->paginate(10);
         }
         
-        
         return view("facturas.index",compact("facturas","venta","total_venta"));
     }
 
@@ -54,6 +56,8 @@ class FacturasController extends Controller
     {
         //select de productos y categorías de productos
         //$productos=Producto::all()->pluck("name","id");
+        $vat=DB::table("data")->where("name","IVA")->first();
+        //dd($vat);
         $productos=Producto::all();
         //$productos->prepend("Seleccione producto");
         $categorias=Category::all()->pluck("name","id");
@@ -64,7 +68,7 @@ class FacturasController extends Controller
 
         }
         
-        return view("facturas.create",compact("venta_id","productos","categorias"));
+        return view("facturas.create",compact("venta_id","productos","categorias","vat"));
     }
 
     /**
@@ -195,7 +199,9 @@ class FacturasController extends Controller
      */
     public function edit(Factura $factura)
     {           
+
         $productos=Producto::all();
+
         //$categorias=Category::all()->pluck("name","id");
         $add_productos=Producto::all()->pluck("name","id");
         $add_productos->prepend("Seleccione producto");
@@ -338,7 +344,7 @@ class FacturasController extends Controller
     //reloadFactura resta el producto multiplicado por su cantidad del neto de la factura
     //sería más correcto realizar la suma del resto de productos en lugar de restar el producto
     //ya que el sistema de redondeo podría hacer variar el resultado
-//anulada
+//anulada la resta y sustituida por la suma
     public function reloadFactura(Request $request){
         if($request->ajax()){
             $cantidad=$request->cantidad;

@@ -174,7 +174,9 @@ class ProductosController extends Controller
         }
     }
 
-    //método respuesta ajax de select filtrar productos por categoría
+    //método respuesta ajax de select filtrar productos por categoría (en factura)
+    //este método sirve para el select de categorías y productos de almacen y de facturas-edit y facturas-create
+    //asociando y actualizando la vista del facturas/select-ajax 
     public function loadProduct(Request $request){
 
         //return $request->all();
@@ -185,11 +187,9 @@ class ProductosController extends Controller
             }else{
                 //$productos=Producto::where("category_id",$product_id)->pluck("name","id")->all(); //necesario el all() si no $productos no está vacío
                 $productos=Producto::where("category_id",$product_id)->get();
-                
-                
-            }
-            
+            }            
             $dato=view("../facturas/select-ajax",compact("productos","total_productos"))->render();
+            
             return response()->json(["datos"=>$dato]);            
         }
     }

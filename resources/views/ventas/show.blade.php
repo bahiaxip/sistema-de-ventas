@@ -14,7 +14,7 @@
 						</span>
 					</div>				
 
-					<div class="col-12 text-center col-md-9 pt-2 text-md-left">	
+					<div class="col-12 text-center col-md-9 pt-1 text-md-left">	
 						<span>
 							{{ $venta->id }}
 						</span>
@@ -26,7 +26,7 @@
 							Cliente:
 						</span>
 					</div>
-					<div class="col-12 text-center col-md-9 pt-2 text-md-left">	
+					<div class="col-12 text-center col-md-9 pt-1 text-md-left">	
 						<span>
 							{{ $venta->cliente->surname }}, {{$venta->cliente->name}}
 						</span>
@@ -38,7 +38,7 @@
 							Destinatario:
 						</span>
 					</div>
-					<div class="col-12 text-center col-md-9 pt-2 text-md-left">	
+					<div class="col-12 text-center col-md-9 pt-1 text-md-left">	
 						<span>
 							{{ $venta->destinatario->surname}}, {{$venta->destinatario->name}}
 						</span>
@@ -50,7 +50,7 @@
 							Vendedor:
 						</span>
 					</div>
-					<div class="col-12 text-center col-md-9 pt-2 text-md-left">	
+					<div class="col-12 text-center col-md-9 pt-1 text-md-left">	
 						<span>
 							{{ $venta->vendedor->surname}}, {{$venta->vendedor->name}}
 						</span>
@@ -62,7 +62,7 @@
 							Neto:
 						</span>
 					</div>
-					<div class="col-12 text-center col-md-9 pt-2 text-md-left">	
+					<div class="col-12 text-center col-md-9 pt-1 text-md-left">	
 						<span>
 							{{number_format($venta->total,0,",",".")}}€
 						</span>
@@ -74,7 +74,7 @@
 							Fecha:
 						</span>
 					</div>
-					<div class="col-12 text-center col-md-9 pt-2 text-md-left">	
+					<div class="col-12 text-center col-md-9 pt-1 text-md-left">	
 						<span>
 							{{ $venta->date }}
 						</span>
@@ -86,28 +86,28 @@
 							Hora:
 						</span>
 					</div>
-					<div class="col-12 text-center col-md-9 pt-2 text-md-left">	
+					<div class="col-12 text-center col-md-9 pt-1 text-md-left">	
 						<span>
 							{{ $venta->time }}
 						</span>
 					</div>
 				</div>
 				<div class="row div-show pt-3">
-					<div class="col-12 text-center col-md-3 text-md-left">
+					<div class="col-12 pt-2 text-center col-md-3 text-md-left">
 						<span class="badge p-2 span-show">
 							Facturas:
 						</span>
 					</div>
-					<div class="col-12 text-center col-md-9 pt-2 text-md-left">	
+					<div class="col-12 pt-0 text-center col-md-9 pt-2 text-md-left">	
 						<span>
 							<?php
 							if($facturas->count()>0){
 								?>
-								<a href="{{route('facturas.index','venta='.$venta->id)}}" >Ver Facturas</a>
+								<a href="{{route('facturas.index','venta='.$venta->id)}}" class="btn btn-black" title="Ver Facturas" >Ver Facturas</a>
 								<?php					
 							}else{
 								?>
-								<a href="{{ route('facturas.create','venta='.$venta->id) }}">Crear Factura</a>
+								<a href="{{ route('facturas.create','venta='.$venta->id) }}" class="btn btn-black" title="Crear Factura">Crear Factura</a>
 								<?php
 							}
 							?>

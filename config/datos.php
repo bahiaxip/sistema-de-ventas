@@ -1,10 +1,6 @@
 <?php
-//asignamos el IVA para la creación y edición de facturas
 
-return [
-	"IVA"=>"",
-	"design"=>"false",
+return[
+
+	"design"=>"BUTTONS"
 ];
-
-
-?>

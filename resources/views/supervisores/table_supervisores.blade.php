@@ -18,7 +18,7 @@
 			<td>{{ $sup->surname }}</td>
 			@can("supervisores.show")
 			<td class="text-center">
-			@if(config('datos.design')=="true")
+			@if(config('datos.design')=="ICONS")
 				<a href="{{ route('supervisores.show',$sup->id) }}" title="Ver">
 					<i class="fab fa-sistrix fa-lg"></i>
 				</a>				
@@ -29,7 +29,7 @@
 			@endcan
 			@can("supervisores.edit")
 			<td class="text-center">
-			@if(config('datos.design')=="true")
+			@if(config('datos.design')=="ICONS")
 				<a href="{{ route('supervisores.edit',$sup->id) }}" title="Editar">							
 					<i class="far fa-edit fa-lg"></i>
 				</a>
@@ -41,7 +41,7 @@
 			@can("supervisores.destroy")
 			<td class="text-center">
 				{{ Form::open(["route"=>["supervisores.destroy",$sup->id],"method"=>"DELETE"]) }}
-				@if(config('datos.design')=="true")
+				@if(config('datos.design')=="ICONS")
 					<i class="fas fa-times-circle fa-lg btn-delete-data" title="Eliminar" onclick="deleteData({{$sup->id}},this,'supervisores_destroy',event)"></i>
 				@else
 					<button title="Eliminar" class="btn btn-outline-danger btn-sm btn-delete-data" onclick="deleteData({{$sup->id}},this,'supervisores_destroy',event)" >Eliminar</button>

@@ -13,7 +13,7 @@
 			{{ Form::label("cantidadAdd","Cantidad") }}
 			{{ Form::number("cantidadAdd",1,["class"=> "form-control"]) }}
 		</div>
-		<div class="col-10 col-lg-2 align-self-end">
+		<div class="col-10 mt-3 col-lg-2  align-self-end" >
 			{{ Form::button("Agregar",["class"=>"btn btn-black","onclick"=>"editAddProductFactura($factura->id,event)"])}}
 		</div>
 	</div>

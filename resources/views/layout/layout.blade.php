@@ -58,16 +58,16 @@
 					</li>
 					@endcan
 
-					@can("users.index")
+					@role("admin")
 					<li>
 						<a href="{{route('users.index')}}" class="nav-link">Usuarios</a>
 					</li>
-					@endcan
-					@can("roles.index")
+					@endrole
+					@role("admin")
 					<li>
 						<a href="{{route('roles.index')}}" class="nav-link">Roles</a>
 					</li>
-					@endcan				
+					@endrole		
 	            </ul>
 	        </div>
 			<div class="container">
@@ -79,21 +79,20 @@
 									<i class="fas fa-bars fa-lg" ></i>
 								</a>
 								<div class="nav justify-content-center" >
-									<a href="{{ url('/') }}" class="nav-link">Inicio</a>
+									<a href="{{ url('/') }}" class="nav-link" title="Inicio">Inicio</a>
 									@can("ventas.create")
-									<a href="{{ url('/') }}" class="nav-link">Nueva venta</a>
+									<a href="{{ route('ventas.create') }}" class="nav-link d-none d-sm-block" title="Crear venta"><i class="fas fa-plus-circle"></i>Venta</a>
 									@endcan
 									@can("clientes.create")
-									<a href="{{ url('/') }}" class="nav-link">Nuevo cliente</a>
+									<a href="{{ route('clientes.create') }}" class="nav-link d-none d-sm-block" title="Crear cliente"><i class="fas fa-plus-circle"></i>Cliente</a>
 									@endcan
-									<a href="{{ url('/') }}" class="nav-link">Almacén</a>
+									<a href="{{ url('/warehouse') }}" class="nav-link" title="Almacén">Almacén</a>
 													
 								@if (Route::has('login'))
 				                    @auth			                    
-				                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">{{Auth::user()->name}}</a>
-
+				                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" title="{{Auth::user()->name}}">{{Auth::user()->name}}</a>
 				                        <ul class="dropdown-menu menu-user submenu-user">
-			                                <li class="nav-link  ">
+			                                <li class="nav-link">
 			                                    <a href="{{ route('logout') }}" 
 			                                        onclick="event.preventDefault();
 			                                                 document.getElementById('logout-form').submit();">
@@ -103,7 +102,6 @@
 			                                        {{ csrf_field() }}
 			                                    </form>
 			                                </li>
-                                
                             			</ul>
 				                    @else
 				                        <a href="{{ route('login') }}" class="nav-link text-white">Login</a>
@@ -138,7 +136,7 @@
 						</div>					
 
 						<div class="row ">
-							<div class="col-auto col-xl-2 h-100 d-none d-lg-flex ">
+							<div class="col-auto col-lg-2 h-100 d-none d-lg-flex ">
 								<nav class="fm-nav menu nav flex-column">
 								@can("ventas.index")
 									<a href="{{route('ventas.index')}}" class="nav-link">Ventas</a>

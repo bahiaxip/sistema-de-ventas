@@ -18,7 +18,7 @@
 					<td>{{ $pro->category->name }}</td>
 					@can("productos.show")			
 					<td class="text-center">
-						@if(config('datos.design')=="true")
+						@if(config('datos.design')=="ICONS")
 							<a href="{{ route('productos.show',$pro->id) }}" title="Ver">
 								<i class="fab fa-sistrix fa-lg"></i>
 							</a>				
@@ -29,7 +29,7 @@
 					@endcan
 					@can("productos.edit")
 					<td class="text-center">
-						@if(config('datos.design')=="true")
+						@if(config('datos.design')=="ICONS")
 							<a href="{{ route('productos.edit',$pro->id) }}" title="Editar">							
 								<i class="far fa-edit fa-lg"></i>
 							</a>
@@ -42,7 +42,7 @@
 					<td class="text-center">						
 						{{ Form::open(["route"=>["productos.destroy",$pro->id],"method"=>"DELETE"]) }}
 
-						@if(config('datos.design')=="true")
+						@if(config('datos.design')=="ICONS")
 							<i class="fas fa-times-circle fa-lg btn-delete-data" title="Eliminar" onclick="deleteData({{$pro->id}},this,'productos_destroy',event)"></i>
 						@else
 							<button title="Eliminar" class="btn btn-outline-danger btn-sm " onclick="deleteData({{$pro->id}},this,'productos_destroy',event)">Eliminar</button>

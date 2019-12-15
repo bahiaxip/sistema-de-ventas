@@ -18,7 +18,7 @@
 					<td>{{ $dest->surname }}</td>
 					@can("clientes.show")
 					<td class="text-center">
-						@if(config('datos.design')=="true")
+						@if(config('datos.design')=="ICONS")
 							<a href="{{ route('destinatarios.show',$dest->id) }}" title="Ver">
 								<i class="fab fa-sistrix fa-lg"></i>
 							</a>
@@ -29,7 +29,7 @@
 					@endcan
 					@can("clientes.edit")
 					<td class="text-center">
-						@if(config('datos.design')=="true")
+						@if(config('datos.design')=="ICONS")
 							<a href="{{ route('destinatarios.edit',$dest->id) }}" title="Editar">							
 								<i class="far fa-edit fa-lg"></i>
 							</a>
@@ -41,7 +41,7 @@
 					@can("clientes.destroy")
 					<td class="text-center">
 						{{ Form::open(["route"=>["destinatarios.destroy",$dest->id],"method"=>"DELETE"]) }}
-						@if(config('datos.design')=="true")
+						@if(config('datos.design')=="ICONS")
 							<i class="fas fa-times-circle fa-lg btn-delete-data" title="Eliminar" onclick="deleteData({{$dest->id}},this,'destinatarios_destroy',event)"></i>
 						@else
 							<button title="Eliminar" class="btn btn-outline-danger btn-sm btn-delete-data" onclick="deleteData({{$dest->id}},this,'destinatarios_destroy',event)" >Eliminar</button>

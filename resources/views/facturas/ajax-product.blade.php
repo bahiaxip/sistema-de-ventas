@@ -1,7 +1,7 @@
 @if($productos_factura->count()!=0)
 <?php $sum=0; ?>
 <table style="" class="table table-hover">
-	<thead style="background:rgba(255,140,0,1);
+	<thead style="background-color:#EE7600;
 	color:#FFF;">
 		<tr >
 			<th >ID</th>

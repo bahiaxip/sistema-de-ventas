@@ -12,7 +12,7 @@
 		<tr>						
 			<td >{{ $user->name }}</td>
 			<td>
-				@if(config('datos.design')=="true")
+				@if(config('datos.design')=="ICONS")
 				<a href="{{ route('users.show',$user->id) }}" title="Ver">
 					<i class="fab fa-sistrix fa-lg"></i>
 				</a>				
@@ -21,7 +21,7 @@
 			@endif
 			</td>
 			<td class="text-center">
-			@if(config('datos.design')=="true")
+			@if(config('datos.design')=="ICONS")
 				<a href="{{ route('users.edit',$user->id) }}" title="Editar">							
 					<i class="far fa-edit fa-lg"></i>
 				</a>
@@ -31,7 +31,7 @@
 			</td>
 			<td>
 			{{ Form::open(["route"=>["users.destroy",$user->id],"method"=>"DELETE"]) }}
-			@if(config('datos.design')=="true")
+			@if(config('datos.design')=="ICONS")
 				<i class="fas fa-times-circle fa-lg btn-delete-data" title="Eliminar" onclick="deleteData({{$user->id}},this,'users_destroy',event)"></i>
 			@else
 				<button class="btn btn-sm btn-outline-danger " onclick="deleteData({{$user->id}},this,'users_destroy',event)">Eliminar</button>

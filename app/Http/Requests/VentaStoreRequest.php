@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 //use Illuminate\Support\Facades\Auth;
 use Auth;
 use Illuminate\Validation\Rule;
+
 class VentaStoreRequest extends FormRequest
 {
     /**

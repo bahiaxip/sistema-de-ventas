@@ -15,7 +15,7 @@ use App\Exports\FacturasExport;
 
 Route::get('/', function () {
     return view('index');
-});
+})->name("/");
 //Exportar factura a Excel
 Route::get("exportar/{id}","FacturasController@export")->name("exportar");
 //pruebas con Excel
@@ -33,10 +33,14 @@ Route::post("exportarEmail","FacturasController@exportEmail")->name("exportarEma
 
 		//Inicio
 
-Route::get("settings",function(){
-	return view("settings");
-})->name("settings");
+Route::get("settings","HomeController@settings")->name("settings");
+Route::put("settings","HomeController@settingsUpdate")->name("settings.update");
+//almacén
 Route::get("warehouse","HomeController@warehouse")->name("warehouse");
+Route::post("select_product_warehouse","HomeController@add_warehouse")->name("select_product_warehouse");
+Route::post("add_stock","HomeController@add_stock")->name("add_stock");
+
+
 
 Route::get("/loadProduct","ProductosController@loadProduct");
 Route::post("addProduct","ProductosController@addProduct")->name("addProduct");
