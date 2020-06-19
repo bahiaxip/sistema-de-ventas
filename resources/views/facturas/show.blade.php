@@ -134,7 +134,7 @@
 						@if($factura->venta->destinatario->email==$factura->venta->cliente->email)
 							{{ Form::select("email",[$factura->venta->destinatario->email],null,["class"=>"form-control select2","id"=>"selectEmail"])}}
 						@else
-							{{ Form::select("email",[$factura->venta->destinatario->email,$factura->venta->cliente->email],null,["class"=>"form-control select2"])}}
+							{{ Form::select("email",[$factura->venta->destinatario->email,$factura->venta->cliente->email],null,["class"=>"form-control select2","id"=>"selectEmail"])}}
 						@endif
 						{{Form::hidden("hiddenEmail",null,["id"=>"hiddenEmail"])}}
 						{{Form::hidden("id_factura",$factura->id)}}
