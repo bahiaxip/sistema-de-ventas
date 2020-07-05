@@ -14,7 +14,6 @@
 		<div class="ventas_table">
 			@include("ventas.table_ventas")
 		</div>
-		
 	</div>
 
 @endsection

@@ -15,9 +15,11 @@ class CreateFacturasTable extends Migration
     {
         Schema::create('facturas', function (Blueprint $table) {
             $table->increments('id');            
-            $table->integer("net");
+            //$table->integer("net");
+            $table->decimal("net");
             $table->integer("vat");
-            $table->integer("total");
+            //$table->integer("total");
+            $table->decimal("total");
             $table->enum("state",["DUE","PAYED"]);
             $table->string("order_buy")->nullable();
             $table->string("office_guide")->nullable();

@@ -21,10 +21,16 @@
                 <!--@foreach($errors->get("net") as $error)
                 <li>{{ $error }}</li>                                        
                 @endforeach-->
-
             </ul>
         </div>
         @endif
+        
+        <div class="container info-factura" style="display:none">
+            <div class="alert alert-danger text-center info-factura-body">
+                
+            </div>
+        </div>        
+        
 		{{ Form::open(["route"=> "facturas.store"])}}
 		<!-- booleano para campo IVA para que el form 
             distinga del create del edit-->

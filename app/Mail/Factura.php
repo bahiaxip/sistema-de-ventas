@@ -31,8 +31,7 @@ class Factura extends Mailable
      * @return $this
      */
     public function build()
-    {
-        //return $this->view('view.name');
+    {        
         return $this->view('facturas.email-factura')
                     ->from("sistema_ventas@gmail.com")
                     ->subject("Nuevo mensaje de Sistema de ventas a ".$this->destino);

@@ -18,7 +18,5 @@
 		@include("users.form")
 		{{ Form::close() }}
 	</div>
-	
-
 
 @endsection

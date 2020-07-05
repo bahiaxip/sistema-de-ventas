@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
 	<html lang="es">
+	{{-- alerta de eliminar cliente,destinatario, vendedor, venta, producto se elminan todos los registros relacionados con ellos y en ventas informar que no se devuelven los stocks y k para ello, hacerlo factura por factura y en facturas checkbox con marcado de devolver el stock por defecto --}}
 		<head>
 			<meta name="viewport" content="width=device-width,initial-scale=1.0">
 			<meta charset="UTF-8">
@@ -111,7 +112,7 @@
 		            			@endif		            		
 								</div>
 							</nav>
-						</header>
+						</header>						
 						<div class="modal fade" id="modal_delete" >
 							<div class="modal-dialog modal-sm">
 								<div class="modal-content navegador">
@@ -119,16 +120,38 @@
 										<div class="modal-title ">
 											<p>Seguro que desea eliminar el registro?</p>
 										</div>
+										
 									</div>
+									<div class="row ml-4 checkbox-stock-hidden">
+											<label>{{Form::checkbox("checkbox","false",false,["id"=>"checkbox-delete-register"])}} &nbsp;&nbsp;No devolver el stock</label>
+										</div>
 									<div class="modal-body">
+
 										<div class="row">
 											<div class="col text-center">
-												<button  class="btn btn-black" data-dismiss="modal" >Cancelar</button>
+												<button id="btn-modal-deletecancel"  class="btn btn-black" data-dismiss="modal" >Cancelar</button>
 													&nbsp;&nbsp;
 												<button id="btn-modal-delete" class="btn btn-black">
 													Eliminar
 												</button>
 											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						{{-- modal scanner --}}
+						<div class="modal fade" id="modal-scanner">
+							<div class="modal-dialog modal-sm">
+								<div class="modal-content">
+									<div class="modal-header">
+										<div class="modal-title">
+											Escanear producto
+										</div>				
+									</div>
+									<div class="modal-body">
+										<div class="row">
+											{{ Form::text("elquesea",null,["class"=>"form-control","id"=>"input-scanner"]) }}
 										</div>
 									</div>
 								</div>
@@ -178,76 +201,74 @@
 				</div>				
 			</div>
 			<script>
-
-				//evento botón eliminar registro que muestra ventana confirmación anulado por cambio a ajax
-				/*
-				$(".btn-delete-data").on("click",function(e) {
-					e.preventDefault();
-					var btn=$(this);
-					$("#modal_delete").modal("show");
-					//modo sin ajax, versión ajax en mundaxip
-					$("#btn-modal-delete").click(function(e){
-						btn.parents("tr").hide();return;
-						e.preventDefault();
-						$.ajax({
-							type:"POST",
-							
-						})
-						//btn.parents("form").submit();	
-					})
-				});
-				*/
-
-				//eliminar registros excepto roles
-
+				
 				//necesaria variable btn y _id para que no se repita 
 				var btn="";
 				let _id="";
+				//interruptor key_delete para comprobar si es el segundo texto de aviso
+				//del modal(de precaución de borrado del registro)
+				let key_delete="false";		 
 			function deleteData(id,ide,ruta,e){
-				e.preventDefault();
 				
+				e.preventDefault();
+				//ocultamos checkbox
+				$(".checkbox-stock-hidden").hide();
+				//enviar segundo mensaje de aviso antes de eliminar registro
+				$("#btn-modal-delete").parents(".navegador").find("p").html("Seguro que desea eliminar el registro?");
+				//let mssg=sendMsgDelete(ruta);
+				//console.log("this: ",$(this));
 				$("#modal_delete").modal("show");
 					btn=ide;
 					_id=id;
-
-					console.log("ide de sol: ",ide);
+					//console.log("ide de sol: ",ide);
+				//mostrar diálogo
 				$("#btn-modal-delete").on("click",function(e){
 					//para que no se repita la petición					
-					e.stopImmediatePropagation();					
-					console.log("btn: ",btn);
-					console.log("ide:  ",ide);
-					let parent=btn.parentElement.parentElement.parentElement;
-
-					//let url="{{route('productos.destroy')}}";
-
-					//añadimos productos.destroy como válido 
-					// y reemplazamos por el parámetro ruta
-					let url="{{ route('productos.destroy') }}";
-					url=url.replace(/productos.destroy/g,ruta);
-					
-					//ocultamos y eliminamos
-					console.log("parent: ",parent);//return;
-					//console.log(btn);
-					parent.style.display="none";
-					parent.parentElement.removeChild(parent);
-
-					//ocultamos modal
-					$("#modal_delete").modal("hide");
-					
-					$.ajax({
-						type:"POST",
-						url:url,
-						data:{id:_id,_token:"{{csrf_token()}}" },
-						success:function(data){
-							$(data.div).html("");
-							$(data.div).html(data.dato);
-							console.log(data);						
-						},
-						error:function(){
-							console.log("ErRor");
-						}
-					});
+					e.stopImmediatePropagation();
+					let mssg=sendMsgDelete(ruta);					
+					if(key_delete=="false"){
+						//comprobar si la ruta es facturas_destroy y añadir el checkbox
+						$(this).parents(".navegador").find("p").html(mssg);		
+						key_delete="true";						
+					}else{
+						let parent=btn.parentElement.parentElement.parentElement;
+						//añadimos productos.destroy como válido 
+						// y reemplazamos por el parámetro ruta
+						let url="{{ route('productos.destroy') }}";
+						url=url.replace(/productos.destroy/g,ruta);	
+						//ocultamos y eliminamos						
+						parent.style.display="none";
+						parent.parentElement.removeChild(parent);
+						//ocultamos modal
+						$("#modal_delete").modal("hide");
+						key_delete="false";
+						//check solo se usa en la eliminación de facturas para
+						//comprobar si el checkbox (de devolución de stock) está marcado
+						let check="false";
+						if(document.querySelector("#checkbox-delete-register").checked)
+							check="true";
+						$.ajax({
+							type:"POST",
+							url:url,
+							data:{id:_id,checkBox:check,_token:"{{csrf_token()}}" },
+							success:function(data){
+								console.log(data);return;
+								$(data.div).html("");
+								$(data.div).html(data.dato);
+								console.log(data);						
+							},
+							error:function(){
+								console.log("ErRor");
+							}
+						});
+					}				
 				});
+				//botón Cancelar de eliminar registro cambia el interruptor
+				//key_delete, para así forzar siempre el segundo diálogo
+				$("#btn-modal-deletecancel").on("click",function(e){
+					key_delete="false";
+				});
+
 			}
 			function deleteDataRole(ide,e){
 				e.preventDefault();
@@ -257,22 +278,17 @@
 					btn.parentElement.submit();
 				});
 				return;
-
 			}
-
-			
 
 			//menu lateral para pantallas más pequeñas
             $(function()
             {
                var boton=$("#botonmenu");
-               var fondo_enlace=$("#fondo_menu");
-               
+               var fondo_enlace=$("#fondo_menu");               
                boton.on("click",function(e)
                {
                    fondo_enlace.toggleClass("active");
                    $("#latleft_oculto").toggleClass("active");
-                   
                    e.preventDefault();
                })
                
@@ -295,12 +311,86 @@
             		id.classList.add("btn-black");
             	}
             }
+            //segundo mensaje de confirmación de eliminación de registro
+            //que varía según el tipo de registro a eliminar
+            const sendMsgDelete= (ruta) => {
+            	let subruta;
+            	let msg;
+				switch (ruta){										
+					case "clientes_destroy":
+					case "destinatarios_destroy":					
+						subruta=ruta.replace("s_destroy","");
+						subruta="ese "+subruta;
+						msg="msg1";
+						break;
+					case "supervisores_destroy":
+					case "vendedores_destroy":
+						subruta=ruta.replace("es_destroy","");
+						subruta="ese "+subruta;
+						msg="msg1";
+						break;
+					case "ventas_destroy":
+						subruta=ruta.replace("s_destroy","");
+						subruta="esa "+subruta;
+						msg="msg2";
+						break;
+					case "facturas_destroy":
+						subruta=ruta.replace("s_destroy","");
+						subruta="esa "+subruta;
+						msg="msg3";
+						//mostramos checkbox						
+						$(".checkbox-stock-hidden").show();
+						break;
+					//Se desaconseja la eliminación de productos y categorías ya que 
+					//crea un desajuste en el importe al eliminar el producto, aunque //se soluciona actualizando la factura guardando la factura desde 
+					//la edición
+					case "productos_destroy":
+					subruta=ruta.replace("s_destroy","");
+						subruta="ese "+subruta;
+						msg="msg4";
+						break;
+					case "categories_destroy":					
+						subruta="esa  categoría";
+						msg="msg4";
+						break;
+					/*
+					case "users_destroy":
+						subruta="ese "+subruta;
+						msg="msg5";
+						*/
+					default:
+						subruta="ese usuario";
+						msg="default";
+						break;
+				}
+				switch(msg){
+					//msg1: vendedor,destinatario,cliente,supervisor
+					case "msg1":
+						msg="Se eliminarán todas las ventas y facturas del sistema, relacionadas con "+ subruta+". Seguro que desea continuar?";
+						break;
+					//msg2: ventas
+					case "msg2":					
+						msg="Si desea devolver el stock de los productos es necesario eliminar antes las facturas. Seguro que desea continuar?";
+						break;
+					//msg3: facturas
+					case "msg3":
+						msg="Seguro que desea eliminar la factura?";
+						break;
+					//msg4: categorías, productos
+					case "msg4":
+						msg="Se desaconseja totalmente la eliminación de categorías y productos, ya que, elimina los productos de las facturas, además origina un desajuste en el importe de las mismas. Seguro que desea continuar?";						
+						break;
+					case "msg5":
+						msg=""
+						break;
+					default:
+						msg="El usuario y los roles asignados serán eliminados. Seguro que desea continuar?";
+						break;
+				}
+				return msg;
+            }
 			</script>
 			<script src="{{ asset("js/select2.js") }}"></script>
 			@yield("scripts")
-
-
 		</body>
-		
-		
 	</html>

@@ -1,3 +1,4 @@
+{{-- comentarios --}}
 {{-- <div class="card seccion_productos">
 	@include("facturas.ajax-product")
 </div>--}}
@@ -6,24 +7,28 @@
 		<h5>Productos</h5>
 	</div>
 </div>
+{{-- si existe $productos_factura es la sección de edición(edit) --}}
 @if(isset($productos_factura))
-<div class="row seccion_factura">
 
+<div class="row seccion_factura">
 	@include("facturas.ajax-edit")
 </div>
+
 @endif
+{{-- si existe $venta_id es la sección de creación(create) --}}
 @if(isset($venta_id))
+
 	<div class="form-group row">
 		<div class="col-10 col-lg-3">
 			{{ Form::label("categoria","Categoría ") }}
 			{{ Form::select("categoria",$categorias,null,["class"=>"form-control"]) }}
 		</div>
-		<div class="col-10 col-lg-5"> 
+		<div class="col-10 col-lg-4"> 
 			{{ Form::label("producto","Productos") }}
 			<select name="producto" id="producto" class="form-control">
 				<option value="0">Seleccione producto</option>
 				@foreach($productos as $pro)
-					<option value="{{$pro->id}}" data-price="{{$pro->price}}">{{$pro->name}}</option>
+					<option value="{{$pro->id}}" data-price="{{$pro->price}}" data-code="{{$pro->code}}">{{$pro->name}}</option>
 				@endforeach
 			</select>
 		</div>
@@ -31,15 +36,19 @@
 			{{ Form::label("cantidad","Cantidad") }}
 			{{ Form::number("cantidad",1,["class"=>"form-control"])}}
 		</div>
-		<div class="col-10 pt-3 col-lg-2 pt-lg-0 align-self-end">
+		<div class="col-5 pt-3 col-lg-1 pt-lg-0 align-self-end">
 			<!--@{{ Form::submit("Agregar",["class"=>"btn btn-primary","onclick"=>"addProductToList(event)"])}}-->
 			{{ Form::button("Agregar",["class"=>"btn btn-black","onclick"=>"addProductToList()"])}}
 		</div>
-		
+		&nbsp;&nbsp;
+		<div class="col-5 mt-3 col-lg-1 pt-lg-0  align-self-end">
+			{{ Form::button("Escaner",["class"=>"btn btn-black","id"=>"btn-modal-scanner","data-toggle"=>"modal","data-target"=>"#modal-scanner"])}}				
+		</div>
 	</div>
 	@include("facturas.ajax-product-create")
 
 @endif
+
 <div class="form-group">
 	{{ Form::label("net","Importe Neto") }}
 	{{ Form::number("net",null,["class"=>"form-control","readonly"=>"readonly"]) }}
@@ -83,673 +92,541 @@
 	@if(isset($venta_id))
 		{{ Form::hidden("venta_id",$venta_id) }}
 	@endif
-
-{{ Form::submit("Guardar",["class"=>"btn btn-black"]) }}
+{{-- Diferenciar si el onclick es para create o para edit, para edit no comprobar lista con testStock() --}}
+{{ Form::button("Guardar",["class"=>"btn btn-black","onclick"=>"testStock(this,event)"]) }}
 
 	@section("scripts")
-	<script>
-		//listSelected es un array de todos los id selected de productos, es decir,
-		//todos los productos de la factura seleccionada que trae la db.
+	<script>		
 		let productsSelected=listSelected();
-		//bloque para edit
-@if(isset($factura))
-		
 
+//BLOQUE PARA EDIT
+			//Recuerde: Śe encuentra en la sección de edición: las opciones agregar y eliminar actualizan la factura automáticamente.
+@if(isset($factura))
+	//variable que almacena la lista de productos al cargar la página
+	var tabla;	
+	$(document).ready(function(){
+		var datos=0;
+		var url="../../loadProduct";
+		asignId(datos,url);
+		tabla=listaCantidad();		
+		console.log(tabla);
+	});
+	
+	function testStock(element,event){
+		//edición de factura
+		//en caso de haber eliminado un producto o categoría (aunque está desaconsejado)
+		//se suma el importe total de todos los productos y se actualiza el neto y el total		
+		let listTr=document.querySelector(".list_edit_products").children;
+		arrayTr=[].slice.call(listTr);
+		//lista de importes de cada producto de la lista
+		lista=arrayTr.map( function(item) {
+			return item.children[4].children[0].value;
+		})
+		//suma de todos los totales de la lista convertido a entero
+		let net=parseFloat(lista.reduce((a,b)=>a+b));
+		//IVA convertido a entero
+		let vat=parseInt(document.querySelector("#vat").value);	
+		//redondeo de operación matemática con Math.round
+		//(100+iva)/100 retorna el resultado con IVA aplicado (aplicando primero la suma)
+		let totalSum=(net*(100+vat)/100);		
+		//asignamos los valores a los campos
+		document.querySelector("#net").value=net;
+		document.querySelector("#total").value=totalSum.toFixed(2);
+		//enviar formulario
+		element.parentNode.submit();
+	}
+	
 	$("#categoria").on("change",function(){
 		if($(this).val!=0){
-			var datos=$(this).val();			
-			var url="../../loadProduct";			
-			$.ajax({
-				type:"GET",
-				data: {data: datos},
-				url:url,
-				//dataType:"json",
-				success: function(data){
-					console.log(url);
-					$("select[name='producto'").html("");
-					$("select[name='producto'").html(data.datos);
-					//console.log(data.options);
-				},
-				error: function(){
-					console.log("Error");
-				}
-
-			})
+			var datos=$(this).val();		
+			var url="../../loadProduct";
+			asignId(datos,url);
 		}
 	});
-
-
-
-	
 	
 	let	editedProducts=[],
 		sumaTotal;
 
-	
-	//método evento de cambio producto en facturas.edit-facturas.ajax-edit-table
-	function editSelectProductos(id){
-		
-		console.log(productsSelected);
-		//convertimos el elemento que viene parámetro a identificador de 
-		//tipo JQuery
-		let datos=$(id);
-
-		//almacenamos el valor de ID Producto (anterior)
-		let proId=datos.parent().prev().find("input:first").val();
-		//almacenamos el ID del nuevo producto (nuevo)
-		let newProId=datos.val();
-		//productsSelected es el resultado del método listSelected()
-		//filtramos por si ya existe ese nuevo producto en la lista productsSelected
-		let test=productsSelected.filter(res=>res==newProId);
-		//si test trae algún resultado es que ya existe ese producto en la lista
-		if(test.length > 0){
-			alert("ya existe ese producto en la lista");
-			//mediante el ID Producto actualizamos y volvemos al valor de productos que anterior y detenemos
-			datos.val(proId);
-			return;
-		}else{
-			//si no trae resultado modificamos los datos del registro y añadimos los 
-			//los datos del registro para después poder guardarlos en la db
-			
-			//modficamos el id
-			let id=datos.val();
-			datos.parent().prev().children().val(id);
-//no necesario			//almacenamos el nombre 
-			//let newProduct=datos.children("option:selected").html();
-
-			//modificamos el precio 
-			let price=datos.children("option:selected").attr("data-price");
-			datos.parent().next().children("input").val(price);
-			//reseteamos la cantidad a 1
-			let inputCantidad=datos.parent().nextAll().slice(1,2).find("input");
-			inputCantidad.val(1);
-			//modificamos el total del producto
-			//no es necesario añadir la cantidad puesto que reseteamos a 1, por //tanto, la multiplicación * 1 es la misma, aun así lo añadimos
-			let total=parseInt(price)*parseInt(inputCantidad.val());
-			datos.parent().nextAll().slice(2,3).find("input").val(total);
-			//creamos el objeto y asignamos los datos necesarios para 
-			//actualizar todos los productos de la factura en Detalle_factura
-			//que han sido modificados. Si se modifica el mismo producto varias veces, actualizará la db las mismas veces(esto se podría optimizar).
-			let Dato={};
-			Dato.id=proId;
-			Dato.newId=newProId;
-			Dato.amount=inputCantidad.val();			
-			//actualizamos el array editedProducts que después se enviará
-			//al dar al botón guardar
-			editedProducts.push(Dato);
-			$("#datos").val(JSON.stringify(editedProducts));
-			loadNet(".list_edit_products");
-			loadTotal(".list_edit_products");
-			//actualizamos productsSelected que devuelve todos los productos selected
-			productsSelected=listSelected();
-			console.log(productsSelected);
-			
-		}
-			
-	}
-	//añadir productos en facturas.edit
+	//añadir productos en facturas.edit	
 	function editAddProductFactura(id,e){
-		
-		e.preventDefault();
-		//console.log(id);return;
-		var url="../../addProduct";
+		//validamos los campos de cantidad y producto
 		let cantidad=document.querySelector("#cantidadAdd");
 		let product=document.querySelector("#producto");
 		if(!validacionProducto(product,cantidad))
-				return;
-		var idProducto=$("#producto").val();
-		var idFactura=id;
-		let cantidadVal=cantidad.value;
-		
-		//console.log(cantidad);return;
-		//console.log("llega");return;
-		//console.log("sum es: "+$(".suma").html());return;
-		//console.log(idProducto);return;
-		$.ajax({
+					return;		
+		//incluimos la opción de no descontar el stock mediante un modal
+		$("#modal-stock-edit").modal("show");
+		//si pulsamos Aceptar continuamos si no detenemos
+		$("#btn-modal-stock-edit").on("click",function(e){
+			e.preventDefault();			
+			//comprobar stock		
+			var url="../../addProduct";			
+			//ocultamos el div de info-factura (create.blade y edit.blade)				
+			document.querySelector(".info-factura").style.display="none";
+			var idProducto=$("#producto").val();
+			var idFactura=id;
+			let cantidadVal=cantidad.value;
+			let check;
+			if(document.querySelector("#checkbox-stock-edit").checked){
+				check="true";
+			}else{
+				check="false";
+			}			
+			//se añade el producto y se actualiza la lista
+			$.ajax({
+				type:"POST",
+				url:url,
+				data:{producto:idProducto,factura:idFactura,cantidad:cantidadVal,checkBox:check,_token:"{{ csrf_token() }}"},
+				success: function(data){
+					$("#modal-stock-edit").modal("hide");
+					if(data=="!STOCK"){						
+						sendMessage("El producto no dispone de suficiente stock disponible");
+						return;
+					}
+					$("#categoria").val(0);
+					$("#producto").val(0);
+					$("#cantidadAdd").val(1);
+					$(".list_edit_products").html("");
+					$(".list_edit_products").html(data.dato);
+					$("#net").val(data.suma);
+					let total=data.suma*((100+parseInt($("#vat").val()))/100);
+					$("#total").val(Math.round(total));
+					productsSelected=listSelected();
+					//actualizamos la variable global tabla
+					tabla=listaCantidad();				
+				},
+				error:function(){
+					console.log("ErRor");
+				}
+			});
+		})
+	}
+
+	//evento del input cantidad de un producto	
+	$(".seccion_factura").on("input",".cantidad",function(){
+		let form=this;		
+		let inputCantidad=$(this).val();
+		let inputTouch=$(this);
+		if($(this).val()<=0){
+			alert("la cantidad mínima es 1");
+			//obtenemos el anterior resultado con los datos de price y total
+			//del mismo producto
+			let parentsTd=$(this).parents("td");
+			let price=parseInt(parentsTd.prev().find("input").val());
+			let totalProduct=parseInt(parentsTd.next().find("input").val());
+			let prevAmount=totalProduct/price;
+			//asignamos el valor al campo cantidad				
+			$(this).val(prevAmount);
+			return;
+		}
+		//realizamos la comprobación de stock y actualizamos la db.
+		//obtenemos el valor del ID Producto para el método cantidadDeProducto (al final)		
+		let id=parseInt($(this).parents("tr").find("input").first().val());
+		let name=$(this).parents("td").prev().prev().first().find("option:selected").html();		
+		//valor de precio asociado al producto seleccionado
+		let precio=parseInt($(this).parent().prev().find("input").val());		
+		//valor de cantidad
+		let cantidad = parseInt($(this).val());
+		//total del producto			
+		let total=precio*cantidad;
+		let cantidadInicial;		
+		tabla.forEach((element) => {
+			if(element.id==id){
+				cantidadInicial=element.cantidad;
+			}
+		})		
+		//petición AJAX de comprobación de stock
+		var keyStock="false";
+		var promise=$.ajax({
 			type:"POST",
-			url:url,
-			data:{producto:idProducto,factura:idFactura,cantidad:cantidadVal,_token:"{{ csrf_token() }}"},
-			success: function(data){
-				//console.log(data);
-				$("#categoria").val(0);
-				$("#producto").val(0);
-				$("#cantidadAdd").val(1);
-				$(".list_edit_products").html("");
-				$(".list_edit_products").html(data.dato);
-				$("#net").val(data.suma);
-				let total=data.suma*((100+parseInt($("#vat").val()))/100);
-				$("#total").val(Math.round(total));
-				productsSelected=listSelected();
-				//console.log(productsSelected);				
+			url:"../../test_stock_edit",
+			data:{id:id,cantidad_final:cantidad,cantidad_inicial:cantidadInicial,_token:"{{csrf_token()}}"},
+			success:function(data){
+				if(data=="true"){
+					//sendMsg("El producto se ha actualizado satisfactoriamente");
+				}
+				else if(data=="false"){
+					sendMsg("El producto no dispone de suficiente stock disponible");
+					
+					let tr=[].slice.call(document.querySelector(".list_edit_products").children);
+					tr.forEach(element => {
+						if(element.children[0].children[0].value==id){
+							element.children[3].children[0].value=cantidadInicial;
+						}
+					})					
+					keyStock="true";					
+				}else{
+					sendMsg("Ha ocurrido un error en la petición ajax");
+				}					
+				tabla=listaCantidad();
 			},
 			error:function(){
-				console.log("ErRor");
+				console.log("Error en la petición AJAX");
+			}
+		});		
+		promise.then(function(){		
+			if(keyStock!="true"){
+				//actualizamos el total del producto multiplicado por la cantidad
+				inputTouch.parent().next().find("input").val(total);			
+				//almacenamos neto con el método sumaFinal()
+				let neto=sumaFinal();
+				//actualizamos el neto
+				$("#net").val(neto);
+				//convertimos iva a entero
+				let iva=parseInt($("#vat").val());
+				//total con iva y redondeado
+				let totalSum=Math.round(neto*((100+iva)/100));
+				$("#total").val(totalSum);
+				let state= $("#state").val();
+				let order_buy=$("#order_buy").val();
+				let office_guide=$("#office_guide").val();
+				let id_factura={{$factura->id}};
+				let url2 = "../../update_edit";
+				let data2 = {idFactura:id_factura,id:id,cantidad:cantidad,neto:neto,iva:iva,totalSum:totalSum,state:state,orderBuy:order_buy,officeGuide:office_guide,_token:"{{csrf_token()}}"};
+				var promise2=$.ajax({				
+					type:"POST",
+					url:url2,
+					data:data2,
+					success:function(data){
+						//console.log(data);
+					},
+					error:function(){
+						console.log("Error en la petición AJAX");			
+					}
+				})				
+				promise2;
+			}
+		});
+	});
+
+	//evento del input iva
+	$("input[name=vat]").on("input",function(){
+		//almacenamos neto,iva y total con método loadTotal()
+		let neto=parseInt($("#net").val());
+		let iva=parseInt($("#vat").val());
+		loadTotal(".list_edit_products");		
+	});
+	
+	$("input[type=submit]").on("click",function(e){
+		e.preventDefault();
+		$("form").submit();
+
+	});
+	//sumaFinal es la suma de todos los input total de los productos
+	function sumaFinal(){
+		let total=[];
+		//array de los input total de cada producto
+		total=[].slice.call(document.querySelectorAll(".total"));
+		//array de valores de todos input total
+		let newTotal=total.map(function(item){		
+			return item.value;
+		});		
+		let suma=newTotal.map(Number);		
+		return suma.reduce((a,b)=>a+b);	
+	}
+	//Eliminar productos (de uno en uno) en edición de factura mediante ajax
+	//Añadir si se devuelve o no el stock del producto eliminado
+	function deleteProd(el,e){
+		e.preventDefault();
+		//mostramos modal
+		$("#modal_delete").modal("show");
+		//evento btn aceptar del modal
+		$("#btn-modal-delete").one("click",function(e){
+			e.preventDefault();
+			//ocultamos modal
+			$("#modal_delete").modal("hide");
+			//ocultamos fila y eliminamos tr
+			let parentTr=el.parentNode.parentNode;
+
+			parentTr.style.display="none";			
+			parentTr.parentNode.removeChild(parentTr);
+			//console.log("parentTr");return;
+			//asignamos data id en el primer td el valor total del producto			
+			let producto_id=el.parentNode.parentNode.firstElementChild.firstElementChild.getAttribute("data-id");
+			//almacenamos el id de la factura
+			let factura_id={{$factura->id}};
+			//petición ajax
+			//
+			let check="false";
+			if(document.querySelector("#checkbox-delete-register").checked)
+				check="true";
+			
+			var promise = $.ajax({
+				type:"POST",
+				data:{producto:producto_id,factura:factura_id,checkBox:check,_token:"{{csrf_token()}}"},
+				url:"{{route('destroyProdFactura')}}"
+			})
+			.done(function(data){				
+				updateNetTotal(data.net,data.total);
+				productsSelected=listSelected();
+				//actualizamos tabla (variable global)
+				tabla=listaCantidad();
+			});
+			//actualizar campo neto y total de la factura
+			const updateNetTotal= (net,total)=> {
+				document.querySelector("#net").value=net;
+				document.querySelector("#total").value=total;
 			}
 		});
 	}
 
-
-
-	
-
-
-
-		//evento del input cantidad de un producto	
-		$(".seccion_factura").on("input",".cantidad",function(){
-			//si en alguno de los productos de la tabla se indica una cantidad
-			//de 0 o menor a 0 se establece la última opción válida.
-			if($(this).val()<=0){
-				alert("la cantidad mínima es 1");
-
-				//obtenemos el anterior resultado con los datos de price y total
-				let parentsTd=$(this).parents("td");
-				let price=parseInt(parentsTd.prev().find("input").val());
-				let totalProduct=parseInt(parentsTd.next().find("input").val());
-				let prevAmount=totalProduct/price;
-				//asignamos el valor al campo cantidad				
-				$(this).val(prevAmount);
-				return;
-			}
-
-			//obtenemos el valor del ID Producto para el método cantidadDeProducto (al final)			
-			let id=parseInt($(this).parents("tr").find("input").first().val());
-//no necesario			//almacenamos el nombre
-			let name=$(this).parents("td").prev().prev().first().find("option:selected").html();
-			
-			//valor de precio asociado al producto seleccionado
-			let precio=parseInt($(this).parent().prev().find("input").val());
-			
-			//valor de cantidad
-			let cantidad = parseInt($(this).val());
-			//total del producto			
-			let total=precio*cantidad;
-
-			//actualizamos el total del producto multiplicado por la cantidad
-			$(this).parent().next().find("input").val(total);
-			//almacenamos neto con el método sumaFinal()
-			let neto=sumaFinal();
-			//actualizamos el neto
-			$("#net").val(neto);
-			//convertimos iva a entero
-			let iva=parseInt($("#vat").val());
-			//total con iva y redondeado
-			let totalSum=Math.round(neto*((100+iva)/100));
-			$("#total").val(totalSum);
-
-		//añadimos los datos mediante un objeto que pasamos al input hidden datos
-
-			//validamos si añadimos un elemento al array de objetos editedProducts
-			//o actualizamos el último elemento del array test
-
-			//test es un array filtrado del array editedProducts del elemento o los elementos del mismo producto del que estamos modificando la cantidad si existen
-			let test=editedProducts.filter((item)=>{
-				return item.newId==id;
-			});
-			//si existe test es que el producto ya se encuentra en el array y
-			//actualizamos directamente el array editedProducts
-			if(test.length > 0){
-				//obtenemos el último elemento del array test y actualizamos
-				//su cantidad
-				let lastTest=test.pop();
-				lastTest.amount=cantidad;				
-			}else{
-				//si no existe se añade un nuevo Dato al array editedProducts
-				let Dato={};
-				Dato.id=id;
-				Dato.newId=id;				
-				Dato.amount=cantidad;
-				editedProducts.push(Dato);
-			}
-			//insertamos datos en input hidden
-			$("#datos").val(JSON.stringify(editedProducts));
-		});
-
-		//evento del input iva
-		$("input[name=vat]").on("input",function(){
-
-			//almacenamos neto,iva y total con método loadTotal()
-			let neto=parseInt($("#net").val());
-			let iva=parseInt($("#vat").val());
-			loadTotal(".list_edit_products");
-			//let totalSum =loadTotal(neto,iva);
-			
-			//$("#total").val(totalSum);
-		});
-		
-
-		
-		$("input[type=submit]").on("click",function(e){
-			e.preventDefault();
-			$("form").submit();
-
-		});
-		
-
-		//lista es un array de todos los id selected de productos, es decir,
-		//todos los productos de la factura seleccionada que trae la db.
-		let lista=listSelected();
-		//let sumaTotal;
-		//almacena en un array los value de los productos que se encuentran 
-		//seleccionados  para poder comprobar si ya existe en la lista la 
-		//nueva selección y evitar campos duplicados
-		
-		
-		
-		//sumaFinal es la suma de todos los input total de los productos
-		function sumaFinal(){
-			let total=[];
-			//array de los input total de cada producto
-			total=[].slice.call(document.querySelectorAll(".total"));
-			//array de valores de todos input total
-			let newTotal=total.map(function(item){		
-				return item.value;
-			});
-			
-			//convertimos el array de string a números
-			let suma=newTotal.map(Number);	
-			//realizamos la suma con el método reduce (abreviada en tipo flecha) //que permite realizar operaciones con los parámetros
-			return suma.reduce((a,b)=>a+b);	
-		}
-
-
-		
-
-		//editSelectProductos actualiza la db y recarga la tabla con la nueva //opción seleccionada, si se ha editado la cantidad de algún producto
-		//y no se ha guardado no se tendrá en cuenta y volverán a tener la cantidad
-		//que tenían
-		function editSelectProductosBack(id){
-			let editedProducts=[];
-			//volvemos el array data (donde se almacenan los cambios de cantidad) a //vacío
-			data=[];
-			//var url="../../editProduct";
-			//convertimos el elemento que viene parámetro a identificador de //tipo JQuery
-			let datos=$(id);					
-			//almacenamos el valor de ID Producto
-			var pro_id=datos.parent().prev().find("input:first").val();
-			//almacenamos el valor del nuevo producto
-			let producto_id=datos.val();
-		//lista contiene el método listSelected()
-			//filtramos por si ya existe ese nuevo producto en la lista
-			let test=lista.filter(res=>res==producto_id);
-			if(test.length > 0){
-				alert("ya existe ese producto en la lista");				
-				//mediante el ID Producto actualizamos y volvemos al valor de productos que estaba y detenemos
-				datos.val(pro_id);
-				return;
-			}else{
-				console.log();
-				//modficamos el id
-				let id=datos.val();
-				datos.parent().prev().children().val(id);
-				//modificamos el precio 
-				let price=datos.children("option:selected").attr("data-price");
-				datos.parent().next().children("input").val(price);
-				//reseteamos la cantidad a 1
-				let inputCantidad=datos.parent().nextAll().slice(1,2).find("input");
-				inputCantidad.val(1);
-				//modificamos el total del producto
-				//no es necesario añadir la cantidad puesto que reseteamos a 1, por //tanto, la multiplicación * 1 es la misma, aun así lo añadimos
-				let total=parseInt(price)*parseInt(inputCantidad.val());
-				datos.parent().nextAll().slice(2,3).find("input").val(total);				
-			}			
-			let list=$(".list_edit_products ");
-			let listaw=list.map((item)=>{
-				return item;
-			})
-
-			console.log(listaw);
-		}
-
-		function deleteProd(el,e){
-
-			e.preventDefault();
-			//mostramos modal
-			$("#modal_delete").modal("show");
-			//evento btn aceptar del modal
-			$("#btn-modal-delete").one("click",function(e){
-				e.preventDefault();
-				//ocultamos modal
-				$("#modal_delete").modal("hide");
-				//ocultamos fila y eliminamos
-				let parentTr=el.parentNode.parentNode				
-				parentTr.style.display="none";
-				//es necesario eliminar para el array productsSelected
-				parentTr.parentNode.removeChild(parentTr);
-				//almacenamos cantidad para la segunda petición AJAX
-				//let cantidad;
-				//se ha asignado un atributo data-id al primer td 
-				//por si cambia el value al modificar el select y se 
-				//quiere eliminar, elimine el que está almacenado y no
-				//los que se hayan cambiado sin guardar. 
-				let producto_id=el.parentNode.parentNode.firstElementChild.firstElementChild.getAttribute("data-id");
-				
-				//console.log(producto_id);
-
-				let factura_id={{$factura->id}};
-
-				//console.log(factura_id);return;
-				var promise = $.ajax({
-					type:"POST",
-					data:{producto:producto_id,factura:factura_id,_token:"{{csrf_token()}}"},
-					url:"{{route('destroyProdFactura')}}"
-				})
-				.done(function(data){
-					$("#net").val(data.net);
-					$("#total").val(data.total);
-					productsSelected=listSelected();
-					console.log(productsSelected);
-					//actualizar factura y venta
-				});
-				//anulado
-
-				//promise.then(function(){
-				//	productsSelected=listSelected();
-				//	console.log(productsSelected);
-				//})
-				//anulamos promesa.then no necesaria, suficiente con 1 petición,
-				//en lugar de 2 peticiones (la primera para mostrar los datos
-				//de los productos y la segunda para almacenar la suma en la db,
-				//he optado por realizar la operación de suma e iva en php aunque //existe riesgo de que puedan variar de las de JS con el redondeo)
-
-			});
-		}
-		
-		//sustituir por onclick debido al include ajax-edit-table
-		/*
-		$(".delete_prod").on("click",function(e){
-
-			let btn=$(this);
-			
-			$("#modal_delete").modal("show");
-			//método one para que se vaya duplicando la llamada
-			$("#btn-modal-delete").one("click",function(e){
-				e.preventDefault();
-				$("#modal_delete").modal("hide");
-				//ocultamos fila		
-				btn.parents("tr").hide();
-				let cantidad;
-				let producto_id=btn.parents("tr").find("input").first().val();
-				console.log("producto_id: ",producto_id);
-				let factura_id={{$factura->id}};
-				var promise = $.ajax({
-					type:"POST",
-					data:{producto:producto_id,factura:factura_id,_token:"{{csrf_token()}}"},
-					url:"{{route('destroyProdFactura')}}"
-				})	
-				.done(function(data){
-					cantidad=data;
-					console.log(data);
-					
-				});
-				
-				promise.then(function(){
-
-					$.ajax({
-						type:"POST",
-						data:{producto:producto_id,factura:factura_id,cantidad:cantidad,_token:"{{ csrf_token() }}"},
-						url:"{{ route('reloadFactura') }}"
-					})
-					.done(function(data){
-						//console.log(data);
-						//actualizamos campos net y total de la vista
-						$("#net").val(data.net);
-						$("#total").val(data.total);						
-					})
-				});
-				
-				
-				//después de eliminar un producto es necesario actualizar la factura
-			});
-		});
-		*/
 @endif
-//bloque para create
+
+//BLOQUE PARA CREATE
+
 @if(isset($venta_id))
-		//evento categorías de productos
-		$("#categoria").on("change",function(){
-			//if($(this).val()!=0){
-				//petición ajax que clasifica el select productos mediante categorías
-				var datos=$(this).val();
-				var url="../loadProduct";
-
-				$.ajax({
-					type:"GET",
-					data: {data: datos},
-					url:url,
-					//dataType:"json",
-					success: function(data){
-						//console.log(data);
-						$("select[name='producto'").html("");
-						$("select[name='producto'").html(data.datos);
-						//console.log(data.options);
-					},
-					error: function(){
-						console.log("Error");
-					}
-			
-				})
-			/*
-			}
-			else{
-				console.log($(this).val());
-				//alert("hola");return;
-				
-			}
-			*/
-		});
-		//evento en el select productos
-		//cada vez que seleccionamos un nuevo producto cantidad se resetea a 1.
-		$("#producto").on("change",function(){
-			//resetCantidad()
-		});
-
-//crea objetos y después añade los datos en la tabla
-		let listProducts=[];			
-		let datos=[];
-		function addProductToList(e){
-			//producto nuevo a insertar
-			let product=document.querySelector("#producto");
-			//cantidad nueva a insertar
-			let cantidad=document.querySelector("#cantidad");
-			//tbody de la tabla
-			let list_products=document.querySelector(".list_products");
-
-			//ejemplo de validación con expresiones regulares (anulado)			
-			//expresión
-			//let chars=new RegExp('^[A-Z]+$','i');
-			//^indica que el patrón debe iniciar dentro de los corchetes
-			//[A-Z] indica los caracteres permitidos
-			// + indica que los caracteres en los corchetes se puede repetir
-			// $ indica que el patrón finaliza con los caracteres de los corchetes
-			// i indica que es (case-insensitive), no diferencia minúsculas y
-			//mayúsculas
-			//validar con expresiones regulares
-			/*
-			if(!chars.test(producto.value)){
-				alert("no es una palabra permitida");
-			}
-			*/
-
-			//validación de producto y cantidad	
-			if(!validacionProducto(product,cantidad))
-				return;
-			
-			
-			
-			//creamos un array que filtra si existe algún producto repetido en el //array de objetos y si existe devuelve el objeto
-			let productRepe=datos.filter(item=>item.id==product.value);
-
-			//si productRepe trae resultado se modifica la cantidad del objeto y del //registro de la tabla
-			if(productRepe.length > 0){
-				//modificamos el objeto sumando la propiedad cantidad que ya tiene //más la nueva cantidad
-				productRepe[0].amount=productRepe[0].amount+parseInt(cantidad.value);
-				//convertimos a array la colección de hijos(tr) de la tabla //list_products				
-				let list=[].slice.call(list_products.children);				
-				//filtramos todos los tr del array convertido y el que coincida el
-				//primer td (que corresponde con el id del producto) con el id del 
-				//nuevo producto agregado
-				let lista=list.filter((item)=>{					
-					return item.children[0].firstElementChild.value==product.value;
-				});				
-				//convertimos a array la colección de td del elemento tr que coincide
-				lista=[].slice.call(lista[0].children);				
-				//actualizamos el valor cantidad del td sumando la cantidad del //nuevo producto 				
-				lista[3].firstElementChild.value=parseInt(lista[3].firstElementChild.value)+parseInt(cantidad.value);
-				// actualizamos el total del producto
-				//lista[4].innerHTML=parseInt(lista[2].innerHTML)*parseInt(lista[3].innerHTML);
-				lista[4].firstElementChild.value=parseInt(lista[2].firstElementChild.value)*productRepe[0].amount;
-
-//repasar si es necesario el precio el nombre y el total				
-			//si no se crea el nuevo elemento y se añade 
-			}else{
-				//creamos objeto con los datos del form de productos
-				let Dato={},
-				//elemento option que se encuentra seleccionado
-				productIndex=product.options[product.selectedIndex];
-				
-				Dato.id=parseInt(product.value);
-				Dato.name=productIndex.text;
-				Dato.price=parseInt(productIndex.getAttribute("data-price"));
-				Dato.amount=parseInt(cantidad.value);
-				Dato.total=Dato.price*Dato.amount;
-
-				//añadimos el objeto al array datos
-				datos.push(Dato);
-				//podemos pasarlo a blanco y pasar el array o añadirlo uno a uno.
-				/*
-				//opción 1: vaciarlo y pasar array
-							//vaciamos la tabla
-							list_products.innerHTML="";
-							//convertimos a array la colección hijos de listProducts
-							datos.map((item)=>{
-								//creamos y añadimos el nuevo registro de producto a la tabla
-							let td=document.createElement("td");
-							td.innerHTML=item.id
-							let td2=document.createElement("td");			
-							td2.innerHTML=item.name;
-							let td3=document.createElement("td");
-							td3.innerHTML=item.price;
-							let td4=document.createElement("td");
-							td4.innerHTML=item.amount;
-							let td5=document.createElement("td");
-							td5.innerHTML="hola";
-							let tr=document.createElement("tr");
-							tr.append(td,td2,td3,td4,td5);
-							//añadimos al elemento listProducts un elemento tr que contiene 5 //elementos td donde cada td contiene sus datos correspondientes
-							list_products.append(tr);
-							//reseteamos cantidad a 1			
-							//resetCantidad();
-							//cargamos el valor de importe neto
-							//loadNet();
-							//cargamos el valor de importe total
-							//loadTotal();
-
-							});
-							*/
-				//opción 2: añadir uno a uno
-				let td=document.createElement("td");				
-				//con JQuery
-				$("<input/>").attr({type:"number",name:"id",class:"form-control",readonly:"readonly",value:Dato.id}).appendTo(td);				
-				//con Javascript
-				/*
-				let input=document.createElement("input");
-				input.type="number";
-				input.className="form-control";
-				input.value=Dato.id;				
-				td.append(input);
-				*/				
-				let td2=document.createElement("td");
-				$("<input/>").attr({type:"text",name:"name",class:"form-control",readonly:"readonly",value:Dato.name}).appendTo(td2);
-				let td3=document.createElement("td");
-				$("<input/>").attr({type:"text",name:"price",class:"form-control",readonly:"readonly",value:Dato.price}).appendTo(td3);
-				let td4=document.createElement("td");
-				$("<input/>").attr({type:"text",name:"amount",class:"form-control",readonly:"readonly",value:Dato.amount}).appendTo(td4);
-				let td5=document.createElement("td");
-				$("<input/>").attr({type:"text",name:"total",class:"form-control",readonly:"readonly",value:Dato.total}).appendTo(td5);		
-				let tr=document.createElement("tr");
-				tr.append(td,td2,td3,td4,td5);
-				list_products.append(tr);
-			}			
-			//reseteamos el formulario de productos
-			document.querySelector("#categoria").value=0;
-			product.value=0;
-			resetCantidad();
-			//actualizamos neto y total
-			loadNet(".list_products");			
-			loadTotal(".list_products");
-			//añadimos el objeto al input
-			//document.querySelector("#collection_products").value=JSON.stringify(datos);
-			document.querySelector("#datos").value=JSON.stringify(datos);
+	const testStock=(element,e) => {
+		e.preventDefault();//prescindible		
+		let productos=document.querySelector(".list_products").children;		
+		if (productos.length == 0){
+			sendMessage("No se ha seleccionado ningún producto");
 		}
+		var lista=[].slice.call(productos);		
+		if(lista.length == 0)
+			return;
+		var data=[];
+		lista.map((tr) => {			
+			data.push({
+				id:tr.childNodes[0].childNodes[0].value,
+				amount:tr.childNodes[3].childNodes[0].value
+			});
+		});		
+		$.ajax({
+			type:"POST",
+			data:{data:data,_token:"{{csrf_token()}}"},
+			url:"../test_stock",
+			success: function(data){				
+				if(data["data"]=="true"){					
+					element.parentNode.submit();					
+				}
+				else if(data["data"]=="false"){
+					if(data["name"].length == 1){
+						sendMessage("El producto "+data["name"]+" no tiene suficiente stock disponible");
+					}else{
+						sendMessage("Los productos "+data["name"]+" no tienen suficiente stock disponible");
+					}					
+					
+					return;					
+				}else{					
+					sendMessage("Se ha producido un error, o el producto añadido no existe");					
+					return;
+				}				
+			},
+			error:function(){
+				sendMessage("Error de datos al crear la factura");
+				console.log("Error petición Ajax: testStock()")
+			}	
+		})		
+	}
 
+	//evento categoría que actualiza el select de productos que se encuentra a justo al lado.
+	$("#categoria").on("change",function(){		
+			var datos=$(this).val();
+			var url="../loadProduct";
+			asignId(datos,url);
+			console.log("llega");			
+	});
+
+	let listProducts=[];			
+	let datos=[];
+	//addProductToList añade productos a la nueva factura
+	function addProductToList(e){		
+		//producto nuevo a insertar
+		let product=document.querySelector("#producto");
+		//cantidad nueva a insertar
+		let cantidad=document.querySelector("#cantidad");
+		//lista de productos
+		let list_products=document.querySelector(".list_products");		
+		//validación de producto y cantidad	
+		if(!validacionProducto(product,cantidad))
+			return;
+		//se oculta mensaje por si validacionProducto hubiera dado un resultado 
+		//negativo anteriormente
+		document.querySelector(".info-factura").style.display="none";
+		//productRepe obtiene resultado si el producto ya se encuentra en la lista
+		addListProd(product,cantidad,list_products);
+	}
+	//buildProduct crea un objeto con el id,nombre,precio,cantidad y precio total
+	const buildProduct = (product) => {
+		let Product={};
+		let productIndex=product.options[product.selectedIndex];
+		Product.id=parseInt(product.value);
+		Product.name=productIndex.text;
+		Product.price=parseFloat(productIndex.getAttribute("data-price"));
+		console.log("productIndex: ",Product.price);
+		Product.amount=parseInt(cantidad.value);
+		Product.total=Product.price*Product.amount;
+		return Product;
+	}
+	//buildRow crea un elemento tr con 5 elementos td con el objeto pasado
+	const buildRow = (dato) =>{
+		let tr=document.createElement("tr"),
+			td=document.createElement("td"),
+			td2=document.createElement("td"),
+			td3=document.createElement("td"),
+			td4=document.createElement("td"),
+			td5=document.createElement("td");
+			$("<input/>").attr({type:"number",name:"id",class:"form-control",readonly:"readonly",value:dato.id}).appendTo(td);			
+			$("<input/>").attr({type:"text",name:"name",class:"form-control",readonly:"readonly",value:dato.name}).appendTo(td2);			
+			$("<input/>").attr({type:"text",name:"price",class:"form-control",readonly:"readonly",value:dato.price}).appendTo(td3);			
+			$("<input/>").attr({type:"text",name:"amount",class:"form-control",readonly:"readonly",value:dato.amount}).appendTo(td4);			
+			$("<input/>").attr({type:"text",name:"total",class:"form-control",readonly:"readonly",value:dato.total}).appendTo(td5);			
+			tr.append(td,td2,td3,td4,td5);
+			return tr;
+	} 
+
+	const addListProd= (product,amount,listProducts) => {
+		let productMatch=[];
+		productMatch=datos.filter(item => item.id==product.value);
+		//si productMatch contiene algun elemento, quiere decir que 
+		//el producto ya se encuentra en la lista de productos
+		if(productMatch.length>0){
+			productMatch[0].amount=productMatch[0].amount+parseInt(cantidad.value);
+			//list es un array de los elementos tr de la lista (de productos)
+			let listTr=[].slice.call(listProducts.children);
+			//lista es un array que filtra el elemento tr que contiene el mismo id
+			//que el producto a agregar 
+			let listaTr=listTr.filter((item)=>{					
+				return item.children[0].firstElementChild.value==product.value;
+			});
+			//lista lo convertimos a un array con los td del elemento de la lista
+			//que coincide con el que se quiere agregar
+			listaTd=[].slice.call(listaTr[0].children);
+			listaTd[3].firstElementChild.value=parseInt(listaTd[3].firstElementChild.value)+parseInt(amount.value);
+			listaTd[4].firstElementChild.value=parseFloat(listaTd[2].firstElementChild.value)*listaTd[3].firstElementChild.value;			
+		}else{			
+			let Dato=buildProduct(product);
+			console.log(Dato);		
+			datos.push(Dato);			
+			listProducts.append(buildRow(Dato));
+		}
+		//reseteamos el formulario de productos
+		document.querySelector("#categoria").value=0;
+		product.value=0;
+		cantidad.value=1;
+		//actualizamos neto y total		
+		let sum=suma(".list_products");		
+		document.querySelector("#net").value=sum;			
+		loadTotal(".list_products");
+		//añadimos el objeto al input	
+		document.querySelector("#datos").value=JSON.stringify(datos);
+	}
+
+	//ventana modal-scanner en creación de factura
+	$("#modal-scanner").on("shown.bs.modal",function(){	
+	let scan=$("#input-scanner");
+	$("#input-scanner").trigger("focus");
+	$("#input-scanner").one("change",function(ev){
+		$("#modal-scanner").modal("hide");
+		//console.log($("#input-scanner").val());
+		if(scan.val()!=""){
+			//no se realiza consulta con ajax, es solo javascript
+			let product=document.querySelector("#producto");			
+			//creamos array para obtener el value
+			options=[].slice.call(product.options);
+			let search=options.filter( item => {
+				return item.getAttribute("data-code")==scan.val();
+			})
+			if(search.length>0){
+				product.value=search[0].value;
+			}else{
+				product.value=0;
+				console.log("no existe ese producto");
+			}
+			$("#input-scanner").val("");
+		}else{
+			console.log("No se ha introducido ningún código");
+		}		
+	})
+})
 
 @endif
 
 //MÉTODOS COMPATIBLES CON LAS 2 VISTAS
-
-	//método que aplica el iva al precio indicado
-	/*
-	function loadTotal(netVal,ivaVal){
-		let sumTotal=Math.round(netVal*((100+ivaVal)/100));
-		return sumTotal;
+	const asignId = (datos,url) =>{
+		$.ajax({
+			type:"GET",
+			data: {data: datos},
+			url:url,					
+			success: function(data){					
+				$("select[name='producto'").html("");
+				$("select[name='producto'").html(data.datos);					
+			},
+			error: function(){
+				console.log("Error");
+			}
+		})
+	}	
+	//método sendMessage utilizado en la sección create	
+	const sendMessage = (message) => {
+		let divInfoBody = document.querySelector(".info-factura-body");
+		let divInfo = document.querySelector(".info-factura");
+		divInfoBody.innerHTML=message;
+		divInfo.style.display="block";
+		window.scroll({
+			top:0
+		})
 	}
-	*/
-
-	//resetea a 1 el campo cantidad de agregar producto
-	function resetCantidad(){
-		document.querySelector("#cantidad").value=1;
-	}
-		
+	//método que envía mensaje utilizado en la sección edit
+	const sendMsg= (message) => {
+		let divInfo= document.querySelector(".info-factura"),
+			divInfoBody=document.querySelector(".info-factura-body");
+		divInfoBody.innerHTML=message;
+		divInfo.style.display="block";
+		window.scroll({
+			top:0
+		})
+	}		
 	//realiza la suma del total de todos los productos de la tabla
 	function suma(div){
-
-		let list_products=document.querySelector(div);
+		let list_products=document.querySelector(div);		
 		//convertimos a array los hijos (tr) de la tabla list_products
 		let tr=[].slice.call(list_products.children);
 		//obtenemos todos los total de todos los productos
 		let totalProducts=tr.map((item)=>{			
-			return parseInt(item.children[4].firstElementChild.value);
+			return parseFloat(item.children[4].firstElementChild.value);
 		});
 		//realizamos la suma a los elementos del array
 		let suma=totalProducts.reduce((a,b)=>(a+b));
-		return suma;
+		return suma.toFixed(2);
 	}
 		
-	//actualiza el campo importe neto
-	function loadNet(div){
-		let sum=suma(div);
-		document.querySelector("#net").value=sum;
-	}
-		
-	//actualiza el campo importe total
-	 
+	//actualiza el campo importe total	 
 	function loadTotal(div){
 		let sum=suma(div);
+		console.log(sum);
 		let vat=parseInt(document.querySelector("#vat").value);
-		document.querySelector("#total").value=Math.round(sum*((100+vat)/100));
+		//document.querySelector("#total").value=Math.round(sum*((100+vat)/100));
+		let resultTotal=sum*((100+vat)/100);
+		console.log(resultTotal.toFixed(2));
+		document.querySelector("#total").value=resultTotal.toFixed(2);
 	}
 
-	//validación de producto y cantidad
+	//validación del select producto y campo cantidad al agregar un nuevo producto, ya sea en la creación o en la edición
 	function validacionProducto(product,cantidad){
 		if(!product||product.value==null||product.value==0){
-			alert("debe seleccionar un producto");
+			//alert("debe seleccionar un producto");
+			sendMsg("debe seleccionar un producto");
 			return;
 		}
 		else if(cantidad.value <= 0){
-			alert("la cantidad no puede ser menor a 1");
+			//alert("la cantidad no puede ser menor a 1");
+			sendMsg("la cantidad no puede ser menor a 1");
 			return;
 		}
 		else{
-		return true;	
+			return true;	
 		}
 	}
-
+	//método listSelected recorre los registros de productos del select y devuelve 
+	//un array de los id de dichos productos.
+	//(al haber desactivado el campo select con el atributo disabled se podría 
+	//haber sustituido el select por un input con el atibuto read-only pero lo 
+	//mantenemos así para no rehacer todo de nuevo.)
 	function listSelected(){
-
 			var prod=[];
 			//NodeList del select productos
 			let products=document.querySelectorAll(".productos");
-
 			//convertimos el NodeList a array
 			let lista=[].slice.call(products);
 			
@@ -764,8 +641,19 @@
 			}
 			return prod;
 		}
-		
+		//método que devuelve un array de objetos de los id de los productos
+		//de la factura y sus cantidades.{id:id-producto,cantidad:cantidad-producto}
+	let listaCantidad = () => {
+		let tablaEdit = document.querySelectorAll(".tabla-edit");
+		//return tablaEdit[0];
+		let lista = [].slice.call(tablaEdit);		
+		let m=[{}];
+		let productId = lista.map((tr) => {			
+			let tr0= tr.children[0];
+			let tr3 = tr.children[3];			
+			return {id:tr0.firstElementChild.value,cantidad:tr3.firstElementChild.value};
+		})
+		return productId;
+	}	
 	</script>
 	@endsection
-
-

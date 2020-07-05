@@ -1,21 +1,20 @@
 @php $sum=0; @endphp
 @foreach($productos_factura as $pro)
-<tr >
-	
+<tr class="tabla-edit">
 	<td>
 		{{ Form::number("pro_id",$pro->id_producto,["class"=>"pro_id form-control","readonly"=>true,"data-id"=>$pro->id_producto]) }}
 	</td>
 	<td>
-		<select name="productos" id="productos" class="productos form-control" onchange="editSelectProductos(this)">						
-			
+		<!--desactivamos select con onchange (muy conflictivo para el recuento de stock)
+		<select name="productos" id="productos" class="productos form-control" onchange="editSelectProductos(this)">-->
+		<select name="productos" id="productos" class="productos form-control" disabled>
 			@foreach($productos as $p)
 				@if($p->id==$pro->id_producto)
 				<option value="{{$p->id}}" selected="selected" data-price="{{$p->price}}">{{$p->name}}</option>
 				@else
 				<option value="{{$p->id}}" data-price="{{$p->price}}">{{$p->name}}</option>
-				@endif				
+				@endif		
 			@endforeach
-
 		</select>
 	</td>				
 	<td>
@@ -41,4 +40,3 @@
 @php
 	session()->put(["suma"=>$sum]);
 @endphp
-

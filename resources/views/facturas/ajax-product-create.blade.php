@@ -8,7 +8,6 @@
 			<th>Total Producto</th>
 		</tr>
 	</thead>
-
 	<tbody class="list_products">
 	</tbody>
 </table>

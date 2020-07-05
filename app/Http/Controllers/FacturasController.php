@@ -16,137 +16,48 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\Factura as emailFactura;
 use App\Http\Requests\FacturaStoreRequest;
 use App\Http\Requests\FacturaUpdateRequest;
+use App\Http\Controllers\HomeController as home;
 
 class FacturasController extends Controller
-{
-    //anulado construct
-    /*
-    protected $t;    
-
-    public function __construct(){
-                
-    }
-    */
-
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+{ 
     public function index(Request $request)
-    {   
-        
+    {        
         //implementar acordeón
         if($request->venta){
             $venta_id=$request->venta;
             $venta=Venta::where("id",$venta_id)->first();
             $facturas=Factura::where("venta_id",$venta_id)->paginate(10);
-        }
-        
-        return view("facturas.index",compact("facturas","venta","total_venta"));
+        }        
+        //return view("facturas.index",compact("facturas","venta","total_venta"));
+        return view("facturas.index",compact("facturas","venta"));
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    
     public function create(Request $request)
-    {
-        //select de productos y categorías de productos
-        //$productos=Producto::all()->pluck("name","id");
-        $vat=DB::table("data")->where("name","IVA")->first();
-        //dd($vat);
+    {    
+        $vat=DB::table("data")->where("name","IVA")->first();     
         $productos=Producto::all();
         //$productos->prepend("Seleccione producto");
         $categorias=Category::all()->pluck("name","id");
-        $categorias->prepend("Seleccione categoría");
-        //dd($productos);
+        $categorias->prepend("Seleccione categoría");        
         if($request->get("venta")){
             $venta_id=$request->get("venta");
-
-        }
-        
+        }        
         return view("facturas.create",compact("venta_id","productos","categorias","vat"));
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    
     public function store(FacturaStoreRequest $request)
-    {
-        //dd($request->all());
-        //$factura=new Factura($request->all());        
-        //$total=$factura->total;
-        //$iva=$factura->vat;
-        //$neto=$total/((100+$iva)/100);
-        //$factura->net=$neto;
-        //$factura->save();        
+    {     
         $factura=Factura::create($request->all());
-
-            //$callb ES UN CALLBACK DE LA FUNCIÓN array_map (más abajo)
-        //array_map (solo 1 parámetro) con $value
+        //$callb ES UN CALLBACK DE LA FUNCIÓN array_map (más abajo)        
         $callb=function($value){
             return get_object_vars($value);
         };
-        
-        //array_map(2 parámetros) con $key,$value
-        /*
-        $callb=function($key,$value){
-            //return $value;
-            return get_object_vars($value);
-        };
-        */
         if($request->datos != null){
             //decodificamos array de objetos
-
-            //$a=json_decode(json_encode($request->collection_products),true);
-            $a=json_decode($request->datos);
-            //dd($a);
-            //$a trae un array de objetos
-            //print_r($a);exit;
-
-
-                //PARA CONVERTIR UN ARRAY DE OBJETOS A ARRAY DE ARRAYS
-                //ES POSIBLE CON UN FOR O CON LA FUNCIÓN array_map()
-                //PERO ES NECESARIO EN LOS 2 CASOS EL MÉTODO get_object_vars()
-            //opción con for de conversión de array de objetos a array de arrays
-                /*
-                $main=[];
-                for($i=0;$i<sizeof($a);$i++){
-                    $main[$i]=get_object_vars($a[$i]);    
-                }
-                //print_r($main);exit;
-                */
-            //opción con array_map de conversión de array de objetos a array de arrays
-                //EN ESTE CASO EL array_map() ES POSIBLE CON 1 Y CON 2 PARÁMETROS
-            //callback($callb) con 2 parámetros $key,$value                
-                //$res=array_map($callb,array_keys($a),$a);
-                
+            $a=json_decode($request->datos);            
             //callback($callb) solo con 1 parámetro $value
                 $res=array_map($callb,(array) $a);
-
-                //print_r($res);exit;
-                //con foreach podemos pasar de un array de arrays a una sucesión de arrays, es decir, si realizamos un print_r($res):
-//Array([0]=>Array([key]=>[value] [key]=>[value] ...) [1]=> Array([key]=>[value] [key]=>[value]..)
-                //pero si lo pasamos por un foreach tal como viene las siguientes //líneas de debajo convertimos el array de arrays a una sucesión de //arrays, el resultado con foreach:
-//Array([key]=>[value] [key]=>[value]...) Array([key]=>[value] [key]=>[value]...)
-                /*
-                foreach($res as $key=>$value){
-                    print_r($value);
-                }
-                exit;
-                */
-
-                //también podemos obtener resultados directos pasando la propiedad
-                //directamente:
-                    //echo $res[0]["name"];exit;
-                //o con foreach:
-                    
+                //con foreach:                    
                 foreach($res as $key=>$value){
                     $detalle_factura=new Detalle_factura();
                     $detalle_factura->id_producto=$value["id"];
@@ -159,17 +70,11 @@ class FacturasController extends Controller
                 $venta=Venta::where("id",$factura->venta_id)->first();        
                 $venta->total=$total_venta;
                 $venta->save();
-
         }
-        return redirect()->route("facturas.index","venta=".$request->venta_id);
+        return redirect()->route("facturas.index","venta=".$request->venta_id)
+            ->with("info","La factura se ha creado satisfactoriamente");
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function show(Factura $factura)
     {
         //select de productos y categorías de productos
@@ -178,31 +83,15 @@ class FacturasController extends Controller
         $categorias=Category::all()->pluck("name","id");
         $categorias->prepend("Seleccione categoría");
         if(!session()->has("suma"))
-            session("suma");
-
-        //dd($productos);
-        //$array=new array("Seleccione categoría","0");
-        //$productos=array_merge($array,$productos);
-        
-        //productos de factura
-        //$productos_factura=DB::table("detalle_factura")->where("id_factura",$factura->id)->get();
+            session("suma");        
+        //productos de factura        
         $productos_factura=Detalle_factura::where("id_factura",$factura->id)->get();
-        //dd($productos_factura);
         return view("facturas.show",compact("factura","productos","categorias","productos_factura"));
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function edit(Factura $factura)
-    {           
-
+    {
         $productos=Producto::all();
-
-        //$categorias=Category::all()->pluck("name","id");
         $add_productos=Producto::all()->pluck("name","id");
         $add_productos->prepend("Seleccione producto");
         $categorias=Category::all()->pluck("name","id");
@@ -210,30 +99,16 @@ class FacturasController extends Controller
         //mediante session("suma") obtenemos el neto, la suma de todos los productos
         //multiplicado por sus cantidades. en el ajax-edit-table se realiza la suma
         if(!session()->has("suma"))
-            session("suma");
-        //print_r(session("suma"));exit;
-        //dd($productos);
-        //dd($productos);
-        //$productos=Detalle_factura::where("id_factura",$factura->id)->pluck("name","id");
-        $productos_factura=Detalle_factura::where("id_factura",$factura->id)->orderBy("id","desc")->get();
-        //dd($productos_factura);  
+            session("suma");        
+        $productos_factura=Detalle_factura::where("id_factura",$factura->id)->orderBy("id","desc")->get();        
         return view("facturas.edit",compact("factura","productos_factura","productos","add_productos","categorias"));
     }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function update(FacturaUpdateRequest $request, Factura $factura)
-    {   
-        
+    {  
         //revisar y rehacer el update
         if($request->datos){
             $datos=json_decode($request->datos);
-            //print_r($datos);exit;
             //comprobar con array_map
             for($i=0;$i<sizeof($datos);$i++){
                 $id=$datos[$i]->id;
@@ -263,24 +138,43 @@ class FacturasController extends Controller
         $venta->save();       
         return back();
     }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Factura $factura)
-    {
-        $factura->delete();
-        //actualizamos importe total de venta
-        $total_venta=self::load_venta($factura->venta_id);
-        $venta=Venta::where("id",$factura->venta_id)->first();        
-        $venta->total=$total_venta;
-        $venta->save();
-        return back();
-    }
     
+    //al elminar la factura se vuelven a añadir los productos al stock
+    public function destroy(Request $request){
+        if($request->ajax()){
+            $div=home::ruta();
+            //obtenemos todos los productos de la factura
+            //$det_factura=Detalle_factura::where("id_factura",$request->id)->get()->toArray();
+            $det_factura=Detalle_factura::where("id_factura",$request->id)->get();
+            //si no se ha marcado el checkbox(valor false) se descuenta el stock
+            //de todos los productos de la factura
+            if($request->checkBox=="false"){                
+                $list=[];
+                foreach($det_factura as $key=>$value){
+                    $list[$key]=$value;
+                }                
+                collect($list)->map(function($list){
+                    $producto=Producto::where("id",$list["id_producto"])->first();
+                    $producto->update(["stock"=>$producto->stock+$list["cantidad"]]);
+                });
+            }
+            //se elimina la factura
+
+            $factura=Factura::where("id",$request->id)->first();
+            $venta_id=$factura->venta_id;
+            $venta=Venta::where("id",$venta_id)->first();
+            
+            $factura->delete();
+            
+            $facturas=Factura::where("venta_id",$venta_id)->paginate(10);
+            //return $venta;
+
+            $dato=view("facturas.table_facturas",compact("facturas","venta"))->render();
+
+            return response()->json(["dato"=>$dato,"div"=>$div]);
+        }
+    }
+    //Eliminar producto en edición de factura
     public function destroyProdFactura(Request $request){
         if($request->ajax()){
             $producto_id=$request->producto;
@@ -288,40 +182,35 @@ class FacturasController extends Controller
             $factura=Detalle_factura::where("id_factura",$factura_id)
                 ->where("id_producto",$producto_id)->first();
             //almacenamos la cantidad en variable antes del método delete.
-            //Si no se almacena en la variable antes, la colección $factura
-            //ya contendría el elemento
-            //$f=$factura->cantidad;
-            $factura->delete();
-            //return $f;
+            $cantidad=$factura->cantidad;
+            //si no se ha marcado el checkbox(false) reponemos el stock del producto
+            if($request->checkBox=="false"){
+                $producto=Producto::where("id",$producto_id)->first();
+                $producto->update(["stock"=>$producto->stock + $cantidad]);    
+            }
+            
+            //eliminamos el producto de la factura alojado en la tabla detalle_factura
+            $factura->delete();            
             $products_factura=Detalle_factura::where("id_factura",$factura_id)->get();
-
             //callback de método reduce
             $suma=function($result,$item){
                 $result+=$item;
                 return $result;
             };
-                //array para almacenar todos los totales de cada producto
-                //el total equivale al precio del producto multiplicado por
-                //la cantidad que contenga ese producto
+            //array para almacenar todos los totales de cada producto
+            //el total equivale al precio del producto multiplicado por
+            //la cantidad que contenga ese producto
             $dato=[];
-
-            
             //extraemos el total(multiplicado por su cantidad) de cada producto
             //y lo añadimos a un array para después realizar la suma mediante el
             //método reduce y su callback $suma
             for($i=0;$i<sizeof($products_factura);$i++){
                 $p=$products_factura[$i]->productos->price;
                 $c=$products_factura[$i]->cantidad;
-                $total_product=$p*$c;
-
-                //$dato=array_merge($dato,$products_factura[$i]->cantidad);
-                
-                //con array_merge se unen array1 y array2                 
-                //$dato=array_merge($dato,$v);
+                $total_product=$p*$c;                
                 //con array_push se añade elemento a un array, no se puede igualar
                 //a una variable                
                 array_push($dato,$total_product);
-                
             }
             //con array_reduce sumamos todos los elementos del array
             $net=array_reduce($dato,$suma);
@@ -331,96 +220,34 @@ class FacturasController extends Controller
             $total=round($net*((100+$factura->vat)/100));
             $factura->total=$total;
             $factura->save();
-
             //actualizamos importe total de venta
             $total_venta=self::load_venta($factura->venta_id);
             $venta=Venta::where("id",$factura->venta_id)->first();        
             $venta->total=$total_venta;
             $venta->save();
-
             return response()->json(["net"=>$net,"total"=>$total]);
         }
     }
-    //reloadFactura resta el producto multiplicado por su cantidad del neto de la factura
-    //sería más correcto realizar la suma del resto de productos en lugar de restar el producto
-    //ya que el sistema de redondeo podría hacer variar el resultado
-//anulada la resta y sustituida por la suma
-    public function reloadFactura(Request $request){
+    
+    //test_stock_edit comprueba si la cantidad nueva es mayor o menor a la que ya //existe y si es mayor se comprueba si existe suficiente y se descuenta, y si 
+    //es menor se aumenta en la db.
+    public function test_stock_edit(Request $request){
         if($request->ajax()){
-            $cantidad=$request->cantidad;
-            $factura_id=$request->factura;
-            $product_id=$request->producto;
-            /*
-                                    //obtenemos precio del producto
-                                    $product=Producto::where("id",$product_id)->first();
-                                    $price_product=$product->price;
-                                    //obtenemos la factura del producto
-                                    $factura=Factura::where("id",$factura_id)->first();
-
-                                    //actualizamos el neto y el total de la factura
-                                    //aplicamos resta
-                                    $factura->net=$factura->net-$cantidad*$price_product;
-                                    //aplicamos el iva y redondeamos resultado
-                                    $factura->total=round($factura->net*((100+$factura->vat)/100));
-                                    $factura->save();
-                                    //devolvemos el precio para asinarselo a la vista            
-                                    $dato=["net"=>$factura->net,"total"=>$factura->total];
-                                    return response()->json($dato);
-            */
-            
-            //probamos suma en lugar de resta
-            $products_factura=Detalle_factura::where("id_factura",$factura_id)->get();
-
-        //prueba de array_map sobre consulta laravel
-
-            //$products_factura=Detalle_factura::where("id_factura",$factura_id)->get()->toArray();
-            /*
-            $call=function($item){
-                //$cantidad=$item["cantidad"];
-                //buscar en productos el precio y multimplicar por cantidad para saber el precio
-                return $item;    
-            };
-            $datos=array_map($call,(array) $products_factura);
-            */
-
-            //método suma para obtener la suma de todos los elementos del array
-            //con array_reduce
-            $suma=function($result,$item){
-                $result+=$item;
-                return $result;
-            };
-
-            $dato=[];
-
-            //en este caso prescindimos de array_map ya que para array_map es 
-            //necesario convertir la colección Laravel a array con toArray();
-            //y necesitamos alcanzar una relación de la tabla productos, por 
-            //tanto, necesitamos una colección Laravel y utilizamos un bucle for
-            for($i=0;$i<sizeof($products_factura);$i++){
-                $p=$products_factura[$i]->productos->price;
-                $c=$products_factura[$i]->cantidad;
-                $total_product=$p*$c;
-
-                //$dato=array_merge($dato,$products_factura[$i]->cantidad);
-                
-            //con array_merge se unen array1 y array2                 
-                //$dato=array_merge($dato,$v);
-            //con array_push se añade elemento a un array, no se puede igualar
-                //a una variable
-                array_push($dato,$total_product);
+            $producto=Producto::where("id",$request->id)->first();
+            $cant_final=$request->cantidad_final;
+            $cant_inicial = $request->cantidad_inicial;
+            //si la cantidad final es mayor hay que comprobar el stock
+            $cant_result=$cant_final-$cant_inicial;
+            //return $cant_result;                            
+            if($producto->stock >= $cant_result){
+                $producto->update(["stock"=>$producto->stock-$cant_result]);
+                return "true";
+            }else{
+                return "false";
             }
-            //con array_reduce sumamos todos los elementos del array
-            $net=array_reduce($dato,$suma);
-            $factura=Factura::where("id",$factura_id)->first();
-            $factura->net=$net;
-
-            $total=round($net*((100+$factura->vat)/100));
-            $factura->total=$total;
-            $factura->save();
-            return response()->json(["net"=>$net,"total"=>$total]);
         }
     }
-
+    //load_venta devuelve el total del importe neto de todas las facturas
     public function load_venta($venta_id){
         $facturas=Factura::where("venta_id",$venta_id)->get()->toArray();
         $call=function($item){
@@ -433,34 +260,9 @@ class FacturasController extends Controller
         };
         $result=array_reduce($listTotal,$suma);
         return $result;
-    }
-    //anulado
-    /*
-    public function storeResult(Request $request){
-        if($request->ajax()){
-            $req=$request->all();
-            //quita un elemento del principio del array
-            array_shift($req);
-            $factura=Factura::where("id",$request->id)->first();
-            $factura->update($req);
-            print_r($request->all());
-        }
-    }
-    */
+    }    
 
     public function export($id){
-        
-
-    //crear collection
-        //$collection=new Collection(["id"=>"2","nombre"=>"hola"]);
-        //$collection=new Collection(["id"=>"2","nombre"=>"hola"]);
-        //$var=["id"=>"2","nombre"=>"hola"];
-        //con alias Collection
-        //$collection=Collection::make($var);
-        //con helper        
-        //$collection=collect([1,2,3]);
-        
-        
         //pasamos la colección en el constructor o pasamos el $id y
         //creamos en el método view o collection la colección
         $productos_factura=Detalle_factura::where("id_factura",$id)->get();
@@ -472,16 +274,13 @@ class FacturasController extends Controller
         //$pdf = \PDF::loadView("facturas.ajax-product",compact("productos_factura"))->setPaper("a3");
         $view="facturas.ajax-product";
         $html="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown.";
-
         $pdf= \PDF::loadView($view,compact("productos_factura"));
         //$pdf->setOptions(["defaultFont"=>"arial","dpi"=>"150"]);
-
         return $pdf->download("factura.pdf");
     }
     //necesario SendEmailRequest
     public function exportEmail(Request $request){
-        if(isset($request)){ 
-        
+        if(isset($request)){
             //email de destino seleccionado
             $destino=$request->hiddenEmail;            
             $id_factura=$request->id_factura;
@@ -491,12 +290,84 @@ class FacturasController extends Controller
             Mail::to($destino)->send(new emailFactura($productos_factura,$destino));
         }
         return back();
-
-        //$mensaje= new class{};
-        //$mensaje->email=$request->email;
-
-
-        
+    }
+    //método de comprobación de stock del productos o productos, en caso afirmativo
+    //se realiza el descuento del campo stock de cada producto
+    public function testStockFactura(Request $request){
+        //return "nada";
+        $list=[];
+        $list_name=[];       
+        $switch="true";
+        if($request->ajax()){
+        //primero comprobar si alguno de los productos está falto de stock y después realizar el descuento de todos los productos
+            foreach ($request->data as $key => $value) {
+                //array_push($a,$value["id"]);
+                $producto=Producto::where("id",$value["id"])->first();
+                if($producto!=null){
+                    if($producto->stock > $value["amount"]){
+                        //si existe stock se mantiene el array para descontar el stock
+                        $list[$key]= $value;                        
+                    }else{
+                        //si no existe suficiente stock se añaden en $switch los nombres de los productos sin stock
+                        array_push($list_name,$producto->name);
+                        $switch="false";
+                    }
+                }else{
+                    //si no existe producto
+                    $switch="error";
+                    break;
+                }
+            }
+            //devolvemos los datos de la petición ajax:
+            //true: descontamos el stock de dichos productos y enviamos un mensaje, //después de el submit (añadido desde el método store).
+            //false: enviamos un mensaje con los nombres de los productos que no //disponen de stock suficiente 
+            //error: enviamos un mensaje de error
+            switch ($switch){
+                case "true":
+                    //método map de Laravel (similar a array_map de PHP) para
+                    //descontar la cantidad de stock de cada producto
+                    $data=collect($list)->map(function ($list){
+                        $producto=Producto::where("id",$list["id"])->first();
+                        $producto->update(["stock"=>$producto->stock-$list["amount"]]);
+                    });
+                    $data["data"]="true";                    
+                    break;
+                case "false":
+                    $data["name"]=$list_name;
+                    $data["data"]="false";                    
+                    break;
+                case "error":
+                    $data["data"]="error";
+                    $data="error";
+                    break;
+            }            
+            return $data;
+        }        
+    }
+    //método update_edit actualiza la factura al aumentar o disminuir (desde el input number)
+    //la cantidad de algún producto en la edición de la factura
+    public function update_edit(Request $request){
+        if($request->ajax()){
+            if($request->id){
+                //actualizamos la cantidad del producto en la factura en la tabla detalle_factura
+                $detalle_factura=Detalle_factura::where("id_factura",$request->idFactura)->where("id_producto",$request->id)->first();
+                $detalle_factura->update(["cantidad"=>$request->cantidad]);
+                //actualizamos la factura
+                $factura=Factura::where("id",$request->idFactura)->first();
+                $factura->update(["net"=>$request->neto,"vat"=>$request->iva,"total"=>$request->totalSum,"state"=>$request->state,"order_buy"=>$request->orderBuy,"office_guide"=>$request->officeGuide]);
+                //actualizar venta comprobar 
+                $total_venta=self::load_venta($factura->venta_id);
+                $venta=Venta::where("id",$factura->venta_id)->first();
+                $venta->total=$total_venta;
+                $venta->save();
+            }            
+            return "hecho";            
+        }
     }
 
+    public function test_code_create(Request $request){
+        if($request->ajax()){
+            return $request;
+        }
+    }
 }

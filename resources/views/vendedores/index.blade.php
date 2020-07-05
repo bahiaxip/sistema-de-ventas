@@ -44,12 +44,9 @@
 			ruta=window.location.href;
 		}				
 		window.location=ruta+"?value="+id;
-		
 	});
 
 	</script>
 	@endsection
-	
-	
 
 @endsection

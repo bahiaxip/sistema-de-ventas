@@ -26,8 +26,8 @@
 	</div>	
 </div>
 <div class="form-group row">
-		<div class="col col-auto">
-			{{Form::submit("Guardar",["class"=> "btn btn-sm btn-black"])}}
-		</div>
+	<div class="col col-auto">
+		{{Form::submit("Guardar",["class"=> "btn btn-sm btn-black"])}}
 	</div>
+</div>
 		

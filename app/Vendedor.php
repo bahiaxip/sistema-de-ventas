@@ -17,7 +17,4 @@ class Vendedor extends Model
     public function supervisor(){
     	return $this->belongsTo(Supervisor::class,"id_supervisor");
     }
-
-
-
 }

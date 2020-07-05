@@ -78,7 +78,8 @@
 
 	//eventos que permiten mostrar o ocultar el select province.
 
-	//Si se selecciona España se muestra el select province, ya que es //el único del que tenemos provincias añadidas. Si se selecciona 
+	//Si se selecciona España se muestra el select province, ya que es 
+	//el único del que tenemos provincias añadidas. Si se selecciona 
 	//cualquier país y anteriormente se tenía España se elimina la provincia
 
 	var provincia=$("#pais").val();
@@ -86,7 +87,6 @@
 	if(provincia != "España"){
 		$(".provincia").hide();
 	}
-	
 
 	$("#pais").on("change",function(){
 

@@ -10,59 +10,18 @@ use App\Http\Requests\SettingsUpdateRequest;
 use App\Category;
 use App\Producto;
 class HomeController extends Controller
-{
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
+{    
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth');        
     }
-
-    /*
-    public function getIndex(Route $route){
-        
-        echo "getIndex";
-        echo $route->getActionName();        
-    }
-    */
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
+ 
     public function index()
     {        
         return view('home');
-    }
-    /*
-    public function deleteData(Request $request){
-        if($request->ajax()){
-            $a=Route::getCurrentRoute()->getActionName();
-            $b=explode("@",Route::getCurrentRoute()->getActionName())[0];
-            $c=explode("\\",$b)[3];
-            $d=explode("Controller",$c)[0];
-            //$c=$b."@destroy";
-            $d=strtolower($d);
-
-            print_r($d.".destroy");
-            redirect()->route('$d',)
-
-            //print_r($request->all());
-            //$id=$request->id;
-            
-        }
-    }
-*/
-    //método estático que obtiene el nombre del controlador, lo pasa a 
-    //minúsculas y le añade el sufijo .destroy
-    //anulado
+    }    
     
-    public static function ruta(){
-        //ruta del controlador con su método
-        //$ruta=Route::getCurrentRoute()->getActionName();
+    public static function ruta(){     
         //array de ruta del controlador
         $ruta=Route::getCurrentRoute()->getAction();
         //extraemos el nombre del controlador   
@@ -79,11 +38,10 @@ class HomeController extends Controller
 
     public function settings(){
         $design_index=DB::table("data")->where("name","DESIGN_INDEX")->first();
-        //dd($design_index);
         $vat=DB::table("data")->where("name","IVA")->first();
-
         return view("settings",compact("design_index","vat"));
     }
+
     public function settingsUpdate(SettingsUpdateRequest $request){
 
         if(isset($request->design_index)){
@@ -108,8 +66,8 @@ class HomeController extends Controller
         return view("warehouse",compact("categorias","productos"));
     }
 
-    public function add_warehouse(Request $request){
-        if($request->ajax()){
+    public function add_warehouse(Request $request){        
+        if($request->ajax()){            
             $id=$request->id;
             $producto=$request->producto;
             $producto=Producto::where("id",$id)->first();            
@@ -135,6 +93,8 @@ class HomeController extends Controller
             </div>
             ';
         return $html;            
+        }else{
+            return "No existe $reqeustajax";
         }
     }
 
@@ -151,4 +111,39 @@ class HomeController extends Controller
         }
     }
     
+    public function test_code(Request $request){        
+        if($request->ajax()){
+            if($request->code){
+                $producto=Producto::where("code",$request->code)->first();
+                if($producto!=null){
+                    $html=
+                        '<div class="col-12 ">
+                                <h4 class="text-center fondo-gris pt-2 pb-2">'.$producto->name.'</h4>
+                            <table class="table table-hover bg-white" >
+                                <tbody>
+                                    <tr>
+                                        <td><button class="btn btn-orange text-white">Stock</button></td>
+                                        <td id="stock">'.$producto->stock.'</td>
+                                        <input type="hidden" value="'.$producto->id.'" id="product_id">
+                                    </tr>
+                                    <tr>
+                                        <td><button class="btn btn-orange text-white">Cantidad</button></td>
+                                        <td><input style="width:50px" type="number" value="1" id="amount"></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class=""><button class="btn btn-black text-white" onclick="addWarehouse(this,event)">Añadir</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        ';
+                    return $html;
+
+                }else{
+                    return "false";
+
+                }
+            }
+        }
+    }
 }

@@ -17,12 +17,5 @@
 
 		
 	</div>
-	@section("scripts")
-	<script>
-	
-	</script>
-	@endsection
-	
-	
 
 @endsection

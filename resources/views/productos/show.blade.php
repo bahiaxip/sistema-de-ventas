@@ -87,7 +87,8 @@
 					</div>
 					<div class="col-12 text-center col-md-9 text-md-left pt-2">
 						<span>
-							{!! DNS1D::getBarcodeHTML($producto->code,"C128",3,33,"black") !!}
+							{{--{!! DNS1D::getBarcodeHTML($producto->code,"C128",3,33,"black") !!}--}}
+							{!! DNS1D::getBarcodeHTML($producto->code,"C128",2,33,"black") !!}
 						</span>
 					</div>
 				</div>								

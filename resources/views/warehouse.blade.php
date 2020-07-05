@@ -38,18 +38,20 @@
 				{{ Form::label("producto","Productos") }}
 				{{ Form::select("producto",$productos,null,["class"=>"form-control"])}}
 			</div>
-			<div class="col-12 mt-3 col-lg-4 col-xl-4  align-self-end">
-				{{ Form::button("Seleccionar",["class"=>"btn btn-black","onclick"=>"selectProductWarehouse(this,event)"])}}
+			<div class="col-6 mt-3 col-lg-2 col-xl-2  align-self-end">
+				{{ Form::button("Seleccionar",["class"=>"btn btn-black","onclick"=>"selectProductWarehouse(event)"])}}
+			</div>
+			<div class="col-6 mt-3 col-lg-2 col-xl-2  align-self-end">
+				{{ Form::button("Escaner",["class"=>"btn btn-black","id"=>"btn-modal-scanner","data-toggle"=>"modal","data-target"=>"#modal-scanner"])}}				
 			</div>
 			<div class="col-12 selectProduct pt-2">
 		
 			</div>
 		</div>
-		{{Form::close()}}		
-	
-
-	
+		{{Form::close()}}
 </div>
+
+
 <div class="col-12">
 	
 </div>
@@ -57,7 +59,7 @@
 
 @section("scripts")
 <script>
-	
+	//seleccionar categoría
 $("#categoria").on("change",function(){
 		if($(this).val!=0){
 			var datos=$(this).val();
@@ -81,9 +83,11 @@ $("#categoria").on("change",function(){
 			})
 		}
 	});
-function selectProductWarehouse(ide,e){
+//seleccionar producto (al pulsar el botón Seleccionar)
+//function selectProductWarehouse(ide,e){
+function selectProductWarehouse(e){
 	e.preventDefault();
-	let form=ide.parentElement.parentElement.parentElement;
+	//let form=ide.parentElement.parentElement.parentElement;	
 	let productoId=document.querySelector("#producto").value;
 	let url="select_product_warehouse";
 	$.ajax({
@@ -91,7 +95,7 @@ function selectProductWarehouse(ide,e){
 		url:url,
 		data:{id:productoId,_token:"{{csrf_token()}}"},
 		success:function(data){
-			console.log(data);
+			//console.log(data);
 			document.querySelector(".selectProduct").innerHTML=data;
 		},
 		error:function(){
@@ -100,7 +104,7 @@ function selectProductWarehouse(ide,e){
 	});
 	//form.submit();
 }
-
+//Añadir producto incluido en HomeController método add_warehouse(request)
 function addWarehouse(ide,e){
 	e.preventDefault();	
 	let cantidad=document.querySelector("#amount").value;
@@ -111,12 +115,76 @@ function addWarehouse(ide,e){
 		data:{id:id,amount:cantidad,_token:"{{csrf_token()}}"},
 		success:function(data){
 			document.querySelector("#stock").innerHTML=data;
+			document.querySelector("#amount").value="1";
+			//añadir un mensaje de producto añadido
 		},
 		error:function(){
 			console.log("ErRor");
 		}
 	})
-}
+};
+
+//ventana modal del escaner
+
+$("#modal-scanner").on("shown.bs.modal",function(){	
+	let scan=$("#input-scanner");
+	$("#input-scanner").trigger("focus");
+	$("#input-scanner").one("change",function(ev){
+		$("#modal-scanner").modal("hide");
+
+		//console.log($("#input-scanner").val());
+		if(scan.val()!=""){
+			//consulta con ajax
+			$.ajax({
+				type:"POST",
+				url:"test_code",
+				data:{code:scan.val(),_token:"{{csrf_token()}}"},
+				success:function(data){
+					if(data!="false"){
+						//actualizar campos y eliminar el código del input; descontar el stock al añadir producto en factura
+						//necesario crear array de id y cantidad y al guardar realizar un filter y detectar si hay cambios en el array
+						//si los hay actualizar el stock de ese id.
+						document.querySelector(".selectProduct").innerHTML=data;
+						document.querySelector("#input-scanner").value="";
+					}else{
+						alert("No es un código válido");
+						document.querySelector("#input-scanner").value="";
+						document.querySelector(".selectProduct").innerHTML="";
+					}
+					document.querySelector("#producto").value=0;
+
+				},
+				error:function(){
+					console.log("Error enviando barcode de producto");
+				}
+
+			})
+		}else{
+			console.log("No se ha introducido ningún código");
+		}		
+	})
+})
+
+/*$("#btn-modal-scanner").on("click",function(e){
+	e.preventDefault();
+	$("#modal-scanner").on("shown.bs.modal",function(){
+		console.log("bien");
+	})
+	//$("#modal-scanner").modal("show");
+	$("#input-scanner").change();
+	$("#input-scanner").one("change",function(ev){
+		$("#modal-scanner").modal("hide");
+		console.log($("#input-scanner").val());
+		//consulta con ajax
+		$.ajax({
+			type:"POST",
+			url:"select_product",
+
+		})
+	})
+})
+*/
+
 	
 </script>
 @endsection

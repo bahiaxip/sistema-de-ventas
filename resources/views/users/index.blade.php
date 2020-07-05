@@ -12,13 +12,10 @@
 			@include("users.table_users")
 		</div>
 			
-		</div>				
-		<!--<div class="container">
-			<div class="row mt-3">-->
-				<div class="col-10 offset-2">
-					{{ $users->links("pagination::bootstrap-4")}}
-				</div>
-			<!--</div>
-		</div>-->
-	</div>
+	</div>				
+		
+	<div class="col-10 offset-2">
+		{{ $users->links("pagination::bootstrap-4")}}
+	</div>		
+<!--</div>-->
 @endsection

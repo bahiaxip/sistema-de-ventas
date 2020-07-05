@@ -13,16 +13,7 @@
 		</div>
 		<div class="cliente_table">
 			@include("clientes.table_clientes")
-		</div>	
-
-		
-	</div>	
-	@section("scripts")
-	<script>
-
-	</script>
-	@endsection
+		</div>
+	</div>
 	
-	
-
 @endsection

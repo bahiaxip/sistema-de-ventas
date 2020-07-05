@@ -24,6 +24,7 @@ class CreateDetalleFacturaTable extends Migration
             $table->foreign("id_producto")->references("id")->on("productos")
                 ->onDelete("cascade")
                 ->onUpdate("cascade");
+                
             $table->foreign("id_factura")->references("id")->on("facturas")
                 ->onDelete("cascade")
                 ->onUpdate("cascade");

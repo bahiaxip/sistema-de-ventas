@@ -16,7 +16,5 @@
 			@include("supervisores.table_supervisores")
 		</div>
 	</div>
-	
-	
 
 @endsection
