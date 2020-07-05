@@ -13,7 +13,8 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\User::class,22)->create([]);
+        //omitimos usuarios
+        //factory(App\User::class,22)->create([]);
         //añadimos el user xip, los 3 roles y asignamos el rol admin al usuario xip
         $user=App\User::create([
             "name" => "xip",
