@@ -64,6 +64,7 @@ class ProductosController extends Controller
         $producto=Producto::where("id",$producto->id)->first();
         $producto->name=$request->name;
         $producto->product_model=$request->product_model;
+        $producto->brand=$request->brand;
         $producto->price=$request->price;
         $producto->description=$request->description;
         $producto->stock=$request->stock;

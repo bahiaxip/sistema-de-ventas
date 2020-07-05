@@ -16,6 +16,7 @@ class ProductoUpdateRequest extends FormRequest
         return [
             "name"=>"required|string",
             "product_model"=>"required|string",
+            "brand"=>"nullable|string",
             "price"=>"required|numeric",
             "description"=>"required|string",
             "stock"=>"required|integer",

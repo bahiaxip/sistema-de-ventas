@@ -11,6 +11,10 @@
 	{{ Form::text("product_model",null,["class" => "form-control"]) }}
 </div>
 <div class="form-group">
+	{{ Form::label("brand","Marca") }}
+	{{ Form::text("brand",null,["class" => "form-control"]) }}
+</div>
+<div class="form-group">
 	{{ Form::label("price","Precio") }}
 	{{ Form::text("price",null,["class" => "form-control"]) }}
 </div>

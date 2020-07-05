@@ -17,6 +17,7 @@ class ProductoStoreRequest extends FormRequest
             "name"=>"required|string",
             "product_model"=>"required|string",
             "price"=>"required|numeric",
+            "brand"=>"nullable|string",
             "description"=>"required|string",
             "stock"=>"required|integer",
             "category_id"=>"required|string",

@@ -46,6 +46,18 @@
 				<div class="row div-show pt-3">
 					<div class="col-12 text-center col-md-3 text-md-left">
 						<span class="badge span-show p-2">
+							Marca:
+						</span>
+					</div>
+					<div class="col-12 text-center col-md-9 text-md-left pt-2">
+						<span>
+							{{$producto->brand}}
+						</span>
+					</div>
+				</div>
+				<div class="row div-show pt-3">
+					<div class="col-12 text-center col-md-3 text-md-left">
+						<span class="badge span-show p-2">
 							Precio:
 						</span>
 					</div>
