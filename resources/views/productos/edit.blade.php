@@ -13,7 +13,7 @@
         </div>
     @endif
 
-	{{ Form::model($producto,["route"=>["productos.update",$producto->id],"method"=> "PUT"]) }}
+	{{ Form::model($producto,["route"=>["productos.update",$producto->id],"method"=> "PUT","id"=>"formProducts"]) }}
 	@include("productos.form")
 	{{ Form::close() }}
 </div>

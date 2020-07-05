@@ -52,7 +52,7 @@ class UserSeeder extends Seeder
         //rol temporal para user temporal (xip) con el role admin
         DB::table("role_user")->insert([
             "role_id"=> 1,
-            "user_id"=>23
+            "user_id"=>1
         ]);
 //Asignamos permisos a los roles anteriores por defecto, si se modifican
 //los permisos pueden no coincidir los permission_id y cambiarse los permisos o dar error el migrate
