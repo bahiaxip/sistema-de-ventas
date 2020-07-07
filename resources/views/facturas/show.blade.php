@@ -39,7 +39,8 @@
 				</div>
 				<div class="col-12 text-center col-md-4  pt-2">
 					<span id="neto">
-						{{number_format($factura->net,0,",",".")}}
+						{{number_format($factura->net,2,",",".")}}
+						{{-- $factura->net --}}
 						</span>€
 				</div>
 			@if($factura->order_buy!=null)				
@@ -88,7 +89,8 @@
 				</div>
 				<div class="col-12 text-center col-md-4  pt-2">
 					<span id="total">
-						{{number_format($factura->total,0,",",".")}}
+						{{number_format($factura->total,2,",",".")}}
+						{{-- $factura->total --}}
 					</span>€
 				</div>
 			</div>

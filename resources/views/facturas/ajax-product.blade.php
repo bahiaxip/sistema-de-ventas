@@ -17,9 +17,9 @@
 		<tr>
 			<td>{{$pro->productos->id}}</td>
 			<td>{{$pro->productos->name}}</td>
-			<td>{{$pro->productos->price}}</td>
+			<td>{{number_format($pro->productos->price,2,",",".")}}</td>
 			<td>{{$pro->cantidad}}</td>
-			<td>{{$pro->productos->price*$pro->cantidad}}</td>
+			<td>{{number_format($pro->productos->price*$pro->cantidad,2,",",".")}}</td>
 		</tr>
 		<?php 
 		$sum=$sum+$pro->productos->price*$pro->cantidad;		
@@ -30,7 +30,8 @@
 		@endphp
 		<tr>
 			<td style="text-align:right" colspan="4">Total Neto</td>
-			<td class="suma"><?php echo number_format($sum,0,",","."); ?></td>
+			<td class="suma"><?php echo number_format($sum,2,",","."); ?></td>
+			<!--<td class="suma"><?php echo $sum; ?></td>-->
 		</tr>
 		<tr>
 			<td style="text-align:right" colspan="4">IVA</td>
@@ -42,7 +43,8 @@
 			session()->put(["suma"=>$sum]);
 			@endphp
 
-			<td><?php echo number_format($total_sum,0,",","."); ?>€</td>
+			<td><?php echo number_format($total_sum,2,",","."); ?>€</td>
+			<!--<td><?php echo $total_sum;?>€</td>-->
 		</tr>
 	</tbody>
 </table>

@@ -68,6 +68,7 @@ class FacturasController extends Controller
                 //actualizamos importe total de venta
                 $total_venta=self::load_venta($factura->venta_id);
                 $venta=Venta::where("id",$factura->venta_id)->first();        
+                //$venta->total=number_format($total_venta,2,",",".");
                 $venta->total=$total_venta;
                 $venta->save();
         }
@@ -96,6 +97,7 @@ class FacturasController extends Controller
         $add_productos->prepend("Seleccione producto");
         $categorias=Category::all()->pluck("name","id");
         $categorias->prepend("Seleccione categoría");
+        
         //mediante session("suma") obtenemos el neto, la suma de todos los productos
         //multiplicado por sus cantidades. en el ajax-edit-table se realiza la suma
         if(!session()->has("suma"))
@@ -215,11 +217,13 @@ class FacturasController extends Controller
             //con array_reduce sumamos todos los elementos del array
             $net=array_reduce($dato,$suma);
             $factura=Factura::where("id",$factura_id)->first();
+            
             //actualizamos el neto y el total de la factura
             $factura->net=$net;
-            $total=round($net*((100+$factura->vat)/100));
+            //$total=round($net*((100+$factura->vat)/100));
+            $total=$net*((100+$factura->vat)/100);
             $factura->total=$total;
-            $factura->save();
+            $factura->save();            
             //actualizamos importe total de venta
             $total_venta=self::load_venta($factura->venta_id);
             $venta=Venta::where("id",$factura->venta_id)->first();        
@@ -247,17 +251,22 @@ class FacturasController extends Controller
             }
         }
     }
-    //load_venta devuelve el total del importe neto de todas las facturas
+    //load_venta devuelve el total del importe neto de todas las facturas de una venta
     public function load_venta($venta_id){
         $facturas=Factura::where("venta_id",$venta_id)->get()->toArray();
+        //$call es un callback que devuelve todos los campos net
         $call=function($item){
             return $item["net"];
         };
+        //$listTotal es un array con los totales(importes netos) de todas las facturas de esa 
+        //venta
         $listTotal=array_map($call,(array) $facturas);
+        //$suma es un callback que realiza una suma 
         $suma=function($a,$b){
             $a+=$b;
             return $a;
         };
+        //$result es el resultado de la operación (suma) de todos los elementos de $listTotal
         $result=array_reduce($listTotal,$suma);
         return $result;
     }    
@@ -354,20 +363,25 @@ class FacturasController extends Controller
                 $detalle_factura->update(["cantidad"=>$request->cantidad]);
                 //actualizamos la factura
                 $factura=Factura::where("id",$request->idFactura)->first();
-                $factura->update(["net"=>$request->neto,"vat"=>$request->iva,"total"=>$request->totalSum,"state"=>$request->state,"order_buy"=>$request->orderBuy,"office_guide"=>$request->officeGuide]);
+                //$net=number_format($request->net,2,",",".");
+                $net=$request->neto;
+                //$total=number_format($request->totalSum,2,",",".");
+                $total=$request->totalSum;
+                $factura->update(["net"=>$net,"vat"=>$request->iva,"total"=>$total,"state"=>$request->state,"order_buy"=>$request->orderBuy,"office_guide"=>$request->officeGuide]);
                 //actualizar venta comprobar 
                 $total_venta=self::load_venta($factura->venta_id);
                 $venta=Venta::where("id",$factura->venta_id)->first();
+                //$venta->total=number_format($total_venta,2,",",".");
                 $venta->total=$total_venta;
                 $venta->save();
             }            
             return "hecho";            
         }
     }
-
-    public function test_code_create(Request $request){
+    //anulado solo javascript
+    /*public function test_code_create(Request $request){
         if($request->ajax()){
             return $request;
         }
-    }
+    }*/
 }

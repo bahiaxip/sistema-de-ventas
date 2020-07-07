@@ -17,14 +17,12 @@
 			@endforeach
 		</select>
 	</td>				
-	<td>
-		{{ Form::number("precio",$pro->productos->price,["readonly"=>true,"class"=>"form-control"]) }}
+	<td>{{-- El number muestra los puntos como una coma --}}
+		{{ Form::text("precio",$pro->productos->price,["readonly"=>true,"class"=>"form-control"]) }}		
 	</td>
+	<td>{{ Form::number("cantidades",$pro->cantidad,["class"=>"cantidad form-control"]) }}</td>
 	<td>
-		{{ Form::number("cantidades",$pro->cantidad,["class"=>"cantidad form-control"]) }}
-	</td>
-	<td>
-		{{Form::number("total",$pro->productos->price*$pro->cantidad,["readonly"=>true,"class"=>"total form-control"])}}
+		{{Form::text("total",number_format($pro->productos->price*$pro->cantidad,2,".","."),["readonly"=>true,"class"=>"total form-control"])}}
 	</td>
 	<td>
 		<a class="btn btn-danger delete_prod " href="javascript:void(0)" onclick="deleteProd(this,event)"  title="Eliminar">Eliminar</a>

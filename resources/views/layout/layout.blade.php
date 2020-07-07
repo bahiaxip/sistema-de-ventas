@@ -18,6 +18,12 @@
 			</style>
 		</head>
 		<body>
+			<!-- panel oculto -->
+			<div id="panel_oculto" class="panel_fondo">
+				<center style="padding-top:20%">
+					<img src="{{asset('ajax-loader.gif')}}" >
+				</center>
+			</div>
 			<div id="fondo_menu">
 			</div>
 			<div id="latleft_oculto" class="barra_lateral  ">
@@ -251,8 +257,7 @@
 							type:"POST",
 							url:url,
 							data:{id:_id,checkBox:check,_token:"{{csrf_token()}}" },
-							success:function(data){
-								console.log(data);return;
+							success:function(data){								
 								$(data.div).html("");
 								$(data.div).html(data.dato);
 								console.log(data);						

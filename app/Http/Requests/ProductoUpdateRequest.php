@@ -17,10 +17,17 @@ class ProductoUpdateRequest extends FormRequest
             "name"=>"required|string",
             "product_model"=>"required|string",
             "brand"=>"nullable|string",
-            "price"=>"required|numeric",
+            "price"=>"required|regex:/^\d{1,5}(?:\.\d\d\d)*.\d\d$/",
             "description"=>"required|string",
             "stock"=>"required|integer",
             "category_id"=>"required|string"
+        ];
+    }
+    public function messages(){
+        return [
+            "price.required"=>"Es necesario agregar un precio",
+            "price.regex"=>"El precio debe incluir 2 decimales"
+            
         ];
     }
 }

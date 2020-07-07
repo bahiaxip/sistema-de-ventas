@@ -14,7 +14,7 @@
 	@endif
 	@foreach($facturas as $factura)
 		<tr class="">
-			<td>{{ $factura->net}}</td>
+			<td>{{ number_format($factura->net,2,",",".")}}</td>
 			<td>{{ $factura->vat }}</td>
 			@can("ventas.show")				
 			<td class="text-center">

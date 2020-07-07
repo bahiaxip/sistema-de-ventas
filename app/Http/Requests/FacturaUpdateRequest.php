@@ -14,7 +14,7 @@ class FacturaUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            "net"=>"required|numeric",
+            "net"=>"required|numeric|",
             "vat"=>"required|integer",
             "total"=>"required|numeric",
             "state"=>"required|string",
@@ -25,11 +25,11 @@ class FacturaUpdateRequest extends FormRequest
     public function messages(){
         return [
             "net.required"=>"Es necesario agregar algún producto",
-            "net.integer"=>"Hubo un error",
+            "net.numeric"=>"El importe neto debe ser numérico",
             "vat.required"=>"Es necesario agregar algún producto",
-            "vat.integer"=>"Hubo un error",
+            "vat.integer"=>"El IVA debe ser entero",
             "total.required"=>"Es necesario agregar algún producto",
-            "total.integer"=>"Hubo un error",
+            "total.numeric"=>"El importe total debe ser numérico",
             "state.required"=>"Hubo un error con el estado del pedido",
             "state.string"=>"Hubo un error con el estado del pedido",
             "order_buy.numeric"=>"El número de pedido debe ser numérico",

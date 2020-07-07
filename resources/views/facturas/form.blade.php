@@ -98,7 +98,7 @@
 	@section("scripts")
 	<script>		
 		let productsSelected=listSelected();
-
+		let panelOculto=document.querySelector(".panel_fondo");
 //BLOQUE PARA EDIT
 			//Recuerde: Śe encuentra en la sección de edición: las opciones agregar y eliminar actualizan la factura automáticamente.
 @if(isset($factura))
@@ -119,11 +119,15 @@
 		let listTr=document.querySelector(".list_edit_products").children;
 		arrayTr=[].slice.call(listTr);
 		//lista de importes de cada producto de la lista
-		lista=arrayTr.map( function(item) {
-			return item.children[4].children[0].value;
-		})
+		lista=arrayTr.map( item => {
+			return Number(item.children[4].children[0].value);
+		})		
+		//convertimos a número //anulado (añadido Number al map de lista)
+		//let totalNet=lista.map(Number);
+		
 		//suma de todos los totales de la lista convertido a entero
-		let net=parseFloat(lista.reduce((a,b)=>a+b));
+		let net=lista.reduce((a,b)=>a+b).toFixed(2);
+
 		//IVA convertido a entero
 		let vat=parseInt(document.querySelector("#vat").value);	
 		//redondeo de operación matemática con Math.round
@@ -157,8 +161,10 @@
 		//incluimos la opción de no descontar el stock mediante un modal
 		$("#modal-stock-edit").modal("show");
 		//si pulsamos Aceptar continuamos si no detenemos
-		$("#btn-modal-stock-edit").on("click",function(e){
-			e.preventDefault();			
+		$("#btn-modal-stock-edit").one("click",function(e){
+			e.preventDefault();
+			//mostrar loading...			
+			mostrarPanelOculto(panelOculto);
 			//comprobar stock		
 			var url="../../addProduct";			
 			//ocultamos el div de info-factura (create.blade y edit.blade)				
@@ -166,6 +172,7 @@
 			var idProducto=$("#producto").val();
 			var idFactura=id;
 			let cantidadVal=cantidad.value;
+			console.log(cantidadVal);
 			let check;
 			if(document.querySelector("#checkbox-stock-edit").checked){
 				check="true";
@@ -188,12 +195,17 @@
 					$("#cantidadAdd").val(1);
 					$(".list_edit_products").html("");
 					$(".list_edit_products").html(data.dato);
-					$("#net").val(data.suma);
+					$("#net").val(data.suma.toFixed(2));
+					
 					let total=data.suma*((100+parseInt($("#vat").val()))/100);
-					$("#total").val(Math.round(total));
+					$("#total").val(total.toFixed(2));
 					productsSelected=listSelected();
 					//actualizamos la variable global tabla
 					tabla=listaCantidad();				
+				},
+				complete:function(){
+					//ocultar loading...
+					ocultarPanelOculto(panelOculto);
 				},
 				error:function(){
 					console.log("ErRor");
@@ -203,7 +215,7 @@
 	}
 
 	//evento del input cantidad de un producto	
-	$(".seccion_factura").on("input",".cantidad",function(){
+	$(".seccion_factura").on("input",".cantidad",function(){		
 		let form=this;		
 		let inputCantidad=$(this).val();
 		let inputTouch=$(this);
@@ -224,25 +236,30 @@
 		let id=parseInt($(this).parents("tr").find("input").first().val());
 		let name=$(this).parents("td").prev().prev().first().find("option:selected").html();		
 		//valor de precio asociado al producto seleccionado
-		let precio=parseInt($(this).parent().prev().find("input").val());		
+		let precio=$(this).parent().prev().find("input").val();		
 		//valor de cantidad
 		let cantidad = parseInt($(this).val());
 		//total del producto			
-		let total=precio*cantidad;
-		let cantidadInicial;		
+		let total=(parseFloat(precio)*cantidad).toFixed(2);		
+		let cantidadInicial;
+		//mediante tabla obtenemos la cantidad inicial al cargar la página
 		tabla.forEach((element) => {
 			if(element.id==id){
 				cantidadInicial=element.cantidad;
 			}
-		})		
+		})				
 		//petición AJAX de comprobación de stock
+		//mostrar loading...			
+		mostrarPanelOculto(panelOculto);
 		var keyStock="false";
 		var promise=$.ajax({
 			type:"POST",
 			url:"../../test_stock_edit",
 			data:{id:id,cantidad_final:cantidad,cantidad_inicial:cantidadInicial,_token:"{{csrf_token()}}"},
 			success:function(data){
+				//console.log(data);return;
 				if(data=="true"){
+
 					//sendMsg("El producto se ha actualizado satisfactoriamente");
 				}
 				else if(data=="false"){
@@ -260,23 +277,32 @@
 				}					
 				tabla=listaCantidad();
 			},
+			complete:function(){
+				ocultarPanelOculto(panelOculto);	
+			},
 			error:function(){
+				ocultarPanelOculto(panelOculto);
 				console.log("Error en la petición AJAX");
 			}
-		});		
+			
+		});
+				
 		promise.then(function(){		
 			if(keyStock!="true"){
+				mostrarPanelOculto(panelOculto);
 				//actualizamos el total del producto multiplicado por la cantidad
 				inputTouch.parent().next().find("input").val(total);			
 				//almacenamos neto con el método sumaFinal()
 				let neto=sumaFinal();
 				//actualizamos el neto
-				$("#net").val(neto);
+				$("#net").val(neto.toFixed(2));
 				//convertimos iva a entero
 				let iva=parseInt($("#vat").val());
 				//total con iva y redondeado
-				let totalSum=Math.round(neto*((100+iva)/100));
-				$("#total").val(totalSum);
+				//anulamos redondeo
+				//let totalSum=Math.round(neto*((100+iva)/100));
+				let totalSum=(neto*((100+iva)/100)).toFixed(2);
+				$("#total").val(totalSum);				
 				let state= $("#state").val();
 				let order_buy=$("#order_buy").val();
 				let office_guide=$("#office_guide").val();
@@ -288,7 +314,10 @@
 					url:url2,
 					data:data2,
 					success:function(data){
-						//console.log(data);
+						console.log(data);
+					},
+					complete:function(){
+						ocultarPanelOculto(panelOculto);
 					},
 					error:function(){
 						console.log("Error en la petición AJAX");			
@@ -296,22 +325,23 @@
 				})				
 				promise2;
 			}
-		});
+		});		
 	});
-
+	
 	//evento del input iva
 	$("input[name=vat]").on("input",function(){
 		//almacenamos neto,iva y total con método loadTotal()
-		let neto=parseInt($("#net").val());
+		let neto=$("#net").val();
 		let iva=parseInt($("#vat").val());
 		loadTotal(".list_edit_products");		
 	});
-	
+	/*anulado
 	$("input[type=submit]").on("click",function(e){
 		e.preventDefault();
 		$("form").submit();
 
 	});
+	*/
 	//sumaFinal es la suma de todos los input total de los productos
 	function sumaFinal(){
 		let total=[];
@@ -350,22 +380,25 @@
 			let check="false";
 			if(document.querySelector("#checkbox-delete-register").checked)
 				check="true";
-			
+			//console.log("data");return;
+			mostrarPanelOculto(panelOculto);
 			var promise = $.ajax({
 				type:"POST",
 				data:{producto:producto_id,factura:factura_id,checkBox:check,_token:"{{csrf_token()}}"},
 				url:"{{route('destroyProdFactura')}}"
 			})
-			.done(function(data){				
+			.done(function(data){
+				//console.log(data);
 				updateNetTotal(data.net,data.total);
 				productsSelected=listSelected();
 				//actualizamos tabla (variable global)
 				tabla=listaCantidad();
+				ocultarPanelOculto(panelOculto);
 			});
 			//actualizar campo neto y total de la factura
 			const updateNetTotal= (net,total)=> {
-				document.querySelector("#net").value=net;
-				document.querySelector("#total").value=total;
+				document.querySelector("#net").value=net.toFixed(2);
+				document.querySelector("#total").value=total.toFixed(2);
 			}
 		});
 	}
@@ -452,10 +485,10 @@
 		let productIndex=product.options[product.selectedIndex];
 		Product.id=parseInt(product.value);
 		Product.name=productIndex.text;
-		Product.price=parseFloat(productIndex.getAttribute("data-price"));
+		Product.price=parseFloat(productIndex.getAttribute("data-price")).toFixed(2);
 		console.log("productIndex: ",Product.price);
 		Product.amount=parseInt(cantidad.value);
-		Product.total=Product.price*Product.amount;
+		Product.total=(Product.price*Product.amount).toFixed(2);
 		return Product;
 	}
 	//buildRow crea un elemento tr con 5 elementos td con el objeto pasado
@@ -474,7 +507,8 @@
 			tr.append(td,td2,td3,td4,td5);
 			return tr;
 	} 
-
+	//añade el producto a la lista o aumenta o disminuye su cantidad si ya se
+	//encuentra en la lista
 	const addListProd= (product,amount,listProducts) => {
 		let productMatch=[];
 		productMatch=datos.filter(item => item.id==product.value);
@@ -493,7 +527,8 @@
 			//que coincide con el que se quiere agregar
 			listaTd=[].slice.call(listaTr[0].children);
 			listaTd[3].firstElementChild.value=parseInt(listaTd[3].firstElementChild.value)+parseInt(amount.value);
-			listaTd[4].firstElementChild.value=parseFloat(listaTd[2].firstElementChild.value)*listaTd[3].firstElementChild.value;			
+			let total=parseFloat(listaTd[2].firstElementChild.value)*listaTd[3].firstElementChild.value;
+			listaTd[4].firstElementChild.value=total.toFixed(2);
 		}else{			
 			let Dato=buildProduct(product);
 			console.log(Dato);		
@@ -654,6 +689,22 @@
 			return {id:tr0.firstElementChild.value,cantidad:tr3.firstElementChild.value};
 		})
 		return productId;
-	}	
+	}
+
+	//mostrar panel oculto
+	const mostrarPanelOculto = (panel) => {
+
+		panel.style.visibility="visible";
+		//panel.style.width="100%";
+		//panel.style.height="100%";
+		//panel.style.left="0";
+		console.log("ei");
+	}
+	const ocultarPanelOculto = (panel) => {
+		panel.style.visibility="hidden";
+		//panel.style.width="0%";
+		//panel.style.height="0%";
+		//panel.style.left="-100";	
+	}
 	</script>
 	@endsection

@@ -243,6 +243,7 @@ Route::middleware(["auth"])->group(function(){
 //cambiado a post con ajax
 	Route::post("facturas_destroy","FacturasController@destroy")->name("facturas.destroy")->middleware("permission:ventas.destroy");
 
+//anulado (solo javascript)
 	//añadir a producto a factura mediante scanner
-	Route::post("test_code_create","FacturasController@test_code_create")->name("test_code_create")->middleware("permission:ventas.create");
+	//Route::post("test_code_create","FacturasController@test_code_create")->name("test_code_create")->middleware("permission:ventas.create");
 });

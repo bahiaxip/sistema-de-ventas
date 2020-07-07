@@ -64,7 +64,7 @@
 					</div>
 					<div class="col-12 text-center col-md-9 pt-1 text-md-left">	
 						<span>
-							{{number_format($venta->total,0,",",".")}}€
+							{{number_format($venta->total,2,",",".")}}€
 						</span>
 					</div>
 				</div>
