@@ -16,21 +16,20 @@
 			<div class="card navegador">
 				<div class="card-header ">
 					<h2 class="text-white text-center">Sistema de Ventas en Laravel</h2>
-				
+					@can("productos.edit")
 					<div class="row mt-5 pt-3 pb-5">
 						<div class="col-6  d-flex align-items-center  justify-content-center">
 							<a href="{{route('warehouse')}}" class="" style="border:white 1px solid;padding:5px;border-radius:10px;background-color:#FFF">
 								<img src="{{asset('ima/almacen_1.png')}}" title="Almacén" width="80">
 							</a>			
-						</div>
-
+						</div>					
 						<div class="col-6  d-flex align-items-center  justify-content-center">
 							<a href="{{url('settings')}}" style="border:white 1px solid;padding:5px;border-radius:10px;background-color:#FFF">
 								<img src="{{asset('ima/lista.png')}}" title="Opciones" width="80">
 							</a>
 						</div>
 					</div>
-				
+					@endcan
 				</div>
 			</div>
 		</div>

@@ -30,7 +30,7 @@ Route::post("exportarEmail","FacturasController@exportEmail")->name("exportarEma
 Route::get("settings","HomeController@settings")->name("settings");
 Route::put("settings","HomeController@settingsUpdate")->name("settings.update");
 //almacén
-Route::get("warehouse","HomeController@warehouse")->name("warehouse");
+
 Route::post("select_product_warehouse","HomeController@add_warehouse")->name("select_product_warehouse");
 Route::post("add_stock","HomeController@add_stock")->name("add_stock");
 Route::post("test_code","HomeController@test_code")->name("test_code");
@@ -66,6 +66,9 @@ Route::get('/home', 'HomeController@index')->name('home');
 //Routes
 
 Route::middleware(["auth"])->group(function(){
+
+	Route::get("warehouse","HomeController@warehouse")->name("warehouse")//;
+	->middleware("permission:productos.edit");
 	//Users
 
 	Route::get("users","UserController@index")->name("users.index")

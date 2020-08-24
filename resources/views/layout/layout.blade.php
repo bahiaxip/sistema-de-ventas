@@ -5,7 +5,7 @@
 			<meta name="viewport" content="width=device-width,initial-scale=1.0">
 			<meta charset="UTF-8">
 			<title>Sistema de Gestión de Ventas</title>
-			<link href="{{ asset('/css/bootstrap.min.css') }}" type="text/css" rel="stylesheet" >
+			<link href="{{ asset('css/bootstrap.min.css') }}" type="text/css" rel="stylesheet" >
 			<link href="{{ asset('css/estilos.css') }}" rel="stylesheet" type="text/css">
 			<link href="{{ asset("css/select2.css") }}" rel="stylesheet">
 			<script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
@@ -93,8 +93,9 @@
 									@can("clientes.create")
 									<a href="{{ route('clientes.create') }}" class="nav-link d-none d-sm-block" title="Crear cliente"><i class="fas fa-plus-circle"></i>Cliente</a>
 									@endcan
+									@can("productos.edit")
 									<a href="{{ url('/warehouse') }}" class="nav-link" title="Almacén">Almacén</a>
-													
+									@endcan
 								@if (Route::has('login'))
 				                    @auth			                    
 				                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" title="{{Auth::user()->name}}">{{Auth::user()->name}}</a>

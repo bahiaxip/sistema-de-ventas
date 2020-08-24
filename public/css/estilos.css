@@ -1,4 +1,7 @@
-
+*{
+/*solución temporal para diferencia entre local y servidor*/
+zoom:99%;
+}
 #panel_oculto{
 	background-color:rgba(0,0,0,0.8);
 }

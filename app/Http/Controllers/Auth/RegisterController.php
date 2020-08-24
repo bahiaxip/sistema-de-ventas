@@ -7,7 +7,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Welcome;
 class RegisterController extends Controller
 {
     /*
@@ -73,7 +74,21 @@ class RegisterController extends Controller
             "design_bar"=>"false",
             "design_index"=>"false",
             "user_id"=>$user->id
+        ]);        
+        //añadir suscriptor
+        DB::table("role_user")->insert([
+            "role_id"=>4,
+            "user_id"=>$user->id
         ]);
+
+        //añadir mail
+        Mail::to($user->email,$user->name)
+                //con vista
+                //->send(new Activate($user));
+                //->from("supergormita@hotmail.com","Sistema de Ventas")
+                //->subject("Bienvenido a Sistema de Ventas en Laravel");
+                ->send(new Welcome($user));
+
 
         return $user;
     }
