@@ -36,9 +36,6 @@ class ProductosController extends Controller
             $newCategory = Category::firstOrCreate(["name"=>ucwords($category)]);
             $producto->category_id=$newCategory->id;
         }
-        //remplazamos caracter "," por el caracter "."" por si se ha escrito con coma el precio del producto.
-        $producto->price=str_replace(",", ".", $producto->price);        
-
         //dd($request->stock);
         //añadimos un código de barras aleatorio
         /*
@@ -68,7 +65,7 @@ class ProductosController extends Controller
         $producto->name=$request->name;
         $producto->product_model=$request->product_model;
         $producto->brand=$request->brand;
-        $producto->price=str_replace(",",".",$request->price);
+        $producto->price=$request->price;
         $producto->description=$request->description;
         $producto->stock=$request->stock;
         $category=$request->category_id;
