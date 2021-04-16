@@ -7,9 +7,9 @@
     "require": {
         "php": ">=7.2.5",
         "barryvdh/laravel-dompdf": "^0.8.5",
-        "caffeinated/shinobi": "^5.0",        
+        "caffeinated/shinobi": "^5.0",
         "fideloper/proxy": "~3.3",
-        "laravel/framework": "6.20.14",
+        "laravel/framework": "6.20.20",
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.5",
         "maatwebsite/excel": "^3.1",
