@@ -77,7 +77,7 @@ class RegisterController extends Controller
         ]);        
         //añadir suscriptor
         DB::table("role_user")->insert([
-            "role_id"=>4,
+            "role_id"=>2,
             "user_id"=>$user->id
         ]);
 
