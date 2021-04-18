@@ -41,7 +41,7 @@ Route::post("test_stock_edit","FacturasController@test_stock_edit")->name("test_
 Route::post("update_edit","FacturasController@update_edit")->name("update_edit");
 
 
-Route::get("/loadProduct","ProductosController@loadProduct");
+Route::get("loadProduct","ProductosController@loadProduct");
 Route::post("addProduct","ProductosController@addProduct")->name("addProduct");
 //editar productos de la factura (Detalle_factura)
 //anulado

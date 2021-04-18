@@ -104,6 +104,8 @@ class ProductosController extends Controller
     public function loadProduct(Request $request){        
         if($request->ajax()){
             $product_id= $request->data;
+            $productos=NULL;
+            $total_productos=NULL;
             if($product_id==0){
                 $total_productos=Producto::all();
             }else{                

@@ -9,7 +9,6 @@
 </div>
 {{-- si existe $productos_factura es la sección de edición(edit) --}}
 @if(isset($productos_factura))
-
 <div class="row seccion_factura">
 	@include("facturas.ajax-edit")
 </div>
@@ -139,14 +138,17 @@
 		//enviar formulario
 		element.parentNode.submit();
 	}
-	
+	//simplificamos: un evento sirve para el create y para el edit
+	/*
 	$("#categoria").on("change",function(){
 		if($(this).val!=0){
-			var datos=$(this).val();		
-			var url="../../loadProduct";
+			var datos=$(this).val();
+			let rootUrl="{{asset('/')}}";
+			var url=rootUrl+"/loadProduct";
 			asignId(datos,url);
 		}
 	});
+	*/
 	
 	let	editedProducts=[],
 		sumaTotal;
@@ -451,14 +453,15 @@
 			}	
 		})		
 	}
-
+	//simplificamos: un evento sirve para el create y para el edit
 	//evento categoría que actualiza el select de productos que se encuentra a justo al lado.
+	/*
 	$("#categoria").on("change",function(){		
-			var datos=$(this).val();
-			var url="../loadProduct";
-			asignId(datos,url);
-			console.log("llega");			
+			var datos=$(this).val();			
+			let rootUrl="{{asset('/')}}";			
+			asignId(datos,rootUrl+"loadProduct");			
 	});
+	*/
 
 	let listProducts=[];			
 	let datos=[];
@@ -578,6 +581,13 @@
 @endif
 
 //MÉTODOS COMPATIBLES CON LAS 2 VISTAS
+
+	$("#categoria").on("change",function(){		
+		var datos=$(this).val();			
+		let rootUrl="{{asset('/')}}";			
+		asignId(datos,rootUrl+"loadProduct");			
+	});
+
 	const asignId = (datos,url) =>{
 		$.ajax({
 			type:"GET",
@@ -587,8 +597,8 @@
 				$("select[name='producto'").html("");
 				$("select[name='producto'").html(data.datos);					
 			},
-			error: function(){
-				console.log("Error");
+			error: function(data){
+				console.log("Error en assignId, datos: ",data);
 			}
 		})
 	}	
