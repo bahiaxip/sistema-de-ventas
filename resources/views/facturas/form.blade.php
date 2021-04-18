@@ -649,14 +649,15 @@
 
 	//validación del select producto y campo cantidad al agregar un nuevo producto, ya sea en la creación o en la edición
 	function validacionProducto(product,cantidad){
-		if(!product||product.value==null||product.value==0){
+		console.log("valor: ",product.value);
+		if(!product||product.value==null||product.value==0|| product.value=="No existen resultados"){
 			//alert("debe seleccionar un producto");
-			sendMsg("debe seleccionar un producto");
+			sendMsg("Es necesario seleccionar un producto");
 			return;
 		}
 		else if(cantidad.value <= 0){
 			//alert("la cantidad no puede ser menor a 1");
-			sendMsg("la cantidad no puede ser menor a 1");
+			sendMsg("La cantidad no puede ser menor a 1");
 			return;
 		}
 		else{
