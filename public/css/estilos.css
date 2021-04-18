@@ -30,6 +30,21 @@ zoom:99%;
 	background-color:#363636;
 	color:#FFF;
 }
+.home{
+	background:#FFF !important;
+	border:none !important;outline:0;
+}
+.home>.card-header{
+	 background: transparent;
+	 border:0;
+}
+.home .btn_gris{
+	background-color: #363636
+}
+.home .btn_gris:hover{
+	background-color:#060606;
+	color:#EE7600 !important;
+}
 .navegador.layout{
 	
 }
@@ -51,6 +66,19 @@ zoom:99%;
 	background-color:#EE7600;
 }
 
+.c_orange{
+	color:#FFF;
+	
+
+}
+
+.home .title h2{
+	background-color:#363636;
+	padding:20px;
+	display:inside-flex;
+	border-radius:10px;
+	color:#EE7600;
+}
 /*****desplegable de sesión**************/
 
 .navegador .submenu-user {
@@ -124,8 +152,9 @@ zoom:99%;
 
 body
 {
-	background-image:url("../fondo_sistemaventas1.jpg");
-	/*background-color:rgba(0,0,0,.9);*/
+	/*background-image:url("../fondo_sistemaventas1.jpg");*/
+	background-color:rgba(120,120,120,.6);
+	/*background-color: #FFF;*/
 	font-family:"Titillium";
 	font-size:18px;
 }
